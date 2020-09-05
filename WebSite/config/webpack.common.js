@@ -35,7 +35,6 @@ const configureBabelLoader = (browserList) => {
                         ],
                     ],
                     plugins: [
-                        '@babel/plugin-transform-runtime',
                         '@babel/plugin-proposal-class-properties',
                     ],
                 },
@@ -43,6 +42,37 @@ const configureBabelLoader = (browserList) => {
         ],
     };
 };
+
+// Configure Image loader
+const configureImageLoader = () => {
+    return {
+        test: /\.(png|jpe?g|gif|svg|webp|woff(2)?|ttf|eot)$/i,
+        use: [
+            {
+                loader: 'file-loader',
+                options: {
+                    name: './img/[name].[hash].[ext]',
+                },
+            },
+        ],
+    };
+};
+
+// Configure the css loader
+const configureScssLoader = () => {
+    return {
+        test: /\.(scss|css)$/,
+        use: [
+            // Creates `style` nodes from JS strings
+            'style-loader',
+            // Translates CSS into CommonJS
+            'css-loader',
+            // Compiles Sass to CSS
+            'sass-loader',
+        ],
+    };
+};
+
 
 // Configure Entries
 const configureEntries = () => {
@@ -81,16 +111,22 @@ const configure200Html = () => {
     };
 };
 
+const configureFavicon = () => {
+    return {
+        favicon : './public/favicon.ico'
+    };
+};
+
 // The base webpack config
 const baseConfig = {
     name: pkg.name,
     entry: configureEntries(),
     output: {
         path: path.resolve(__dirname, settings.paths.dist.base),
-        publicPath: settings.urls.publicPath(),
+        filename: './js/[name].[hash].js',
     },
     module: {
-        rules: [configureBabelLoader()],
+        rules: [configureImageLoader(), configureScssLoader()],
     },
     plugins: [
         new WebpackNotifierPlugin({
@@ -99,8 +135,9 @@ const baseConfig = {
             alwaysNotify: true,
         }),
         new ManifestPlugin(configureManifest('manifest.json')),
-        new HtmlWebpackPlugin(configureIndexHtml()),
         new HtmlWebpackPlugin(configure200Html()),
+        new HtmlWebpackPlugin(configureFavicon()),
+        new HtmlWebpackPlugin(configureIndexHtml()),
     ],
 };
 
@@ -112,7 +149,7 @@ const browsersConfig = {
     }
 };
 
-// Put here values to be passed to the website
+// Put here base values to be passed to the website, use .env if you want to changes values for yourself
 const valuesConfig = {
     plugins: [
         new EnvironmentPlugin({

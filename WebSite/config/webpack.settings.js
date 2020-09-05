@@ -22,12 +22,6 @@ module.exports = {
     entries: {
         app: 'index.js',
     },
-    copyWebpackConfig: [
-        {
-            from: './dist/index.html',
-            to: '200.[ext]',
-        },
-    ],
     devServerConfig: {
         public: () => process.env.DEVSERVER_PUBLIC || 'http://localhost:3000',
         host: () => process.env.DEVSERVER_HOST || 'localhost',

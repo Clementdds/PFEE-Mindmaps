@@ -19,17 +19,13 @@ class Viewer extends Component {
         const convert = require('xml-js');
         const result = convert.xml2js(this.state.textFile, {ignoreComment: true, alwaysChildren: true});
 
-        this.createD3Data(result.elements[0].elements[0])
+        this.createD3Data(result.elements[0].elements[0]);
 
-        const tree = this.constructTree();
-
-        this.state.tree = tree;
+        this.state.tree = this.constructTree();
     }
 
     createD3Data = (xmlTextFile) => {
-        const data = this.recurseD3Data(xmlTextFile);
-
-        this.state.data = data;
+        this.state.data = this.recurseD3Data(xmlTextFile);
     };
 
     recurseD3Data = function recurse(root) {

@@ -30,64 +30,17 @@ const configureDevServer = () => {
     };
 };
 
-// Configure Image loader
-const configureImageLoader = () => {
-    return {
-        test: /\.(png|jpe?g|gif|svg|webp|woff(2)?|ttf|eot)$/i,
-        use: [
-            {
-                loader: 'file-loader',
-                options: {
-                    name: 'img/[name].[hash].[ext]',
-                },
-            },
-        ],
-    };
-};
 
-// Configure zip loader
-const configureZipLoader = () => {
-    return {
-        test: /\.(zip)$/i,
-        use: [
-            {
-                loader: 'file-loader',
-                options: {
-                    name: 'game/[name].[ext]',
-                },
-            },
-        ],
-    };
-};
-
-// Configure the css loader
-const configureCssLoader = () => {
-    return {
-        test: /\.(scss|css)$/,
-        use: [
-            // Creates `style` nodes from JS strings
-            'style-loader',
-            // Translates CSS into CommonJS
-            'css-loader',
-            // Compiles Sass to CSS
-            'sass-loader',
-        ],
-    };
-};
 
 // Development module exports
 module.exports = merge(common.legacyConfig,
     {
         output: {
-            filename: '[name].[hash].js',
-            publicPath: settings.devServerConfig.public() + '/',
+            filename: './js/[name].[hash].js',
         },
         mode: 'development',
         devtool: 'inline-source-map',
         devServer: configureDevServer(),
-        module: {
-            rules: [configureCssLoader(), configureImageLoader(), configureZipLoader()],
-        },
         plugins: [new webpack.HotModuleReplacementPlugin()],
     })
 ;
