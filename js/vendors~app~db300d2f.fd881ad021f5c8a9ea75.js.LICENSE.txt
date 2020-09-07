@@ -4,6 +4,8 @@ object-assign
 @license MIT
 */
 
+/*! http://mths.be/fromcodepoint v0.1.0 by @mathias */
+
 /** @license React v16.13.1
  * react-dom.production.min.js
  *
