@@ -12,9 +12,11 @@ class App extends Component {
     }
 
     showFile = async (e) => {
+
         e.preventDefault();
         const reader = new FileReader();
         reader.onload = async (e) => {
+
             const text = (e.target.result);
 
             this.setState({

@@ -71,12 +71,12 @@ class Viewer extends Component {
         const margin = ({top: 10, right: 120, bottom: 10, left: 40});
         const width = window.innerWidth;
 
-        const offsetx = 100;
-        const offsety = window.innerHeight / 2;
+        //const offsetx = 100;
+        //const offsety = window.innerHeight / 2;
 
-        const dy = width / 5;
+        const dy = width / 20;
         const dx = 30;
-        const diagonal = d3.linkHorizontal().x(d => d.y + offsetx).y(d => d.x + offsety);
+        const diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x);
         const tree = d3.tree().nodeSize([dx, dy]);
 
         const root = d3.hierarchy(this.state.data);
@@ -90,7 +90,7 @@ class Viewer extends Component {
         });
 
         const svg = d3.select("svg")
-            //.attr("viewBox", [-margin.left, -margin.top, width, dx])
+            .attr("viewBox", [-margin.left, -margin.top, width, dx])
             .style("font", "10px sans-serif")
             .style("user-select", "none");
 
@@ -123,7 +123,7 @@ class Viewer extends Component {
 
             const transition = svg.transition()
                 .duration(duration)
-                //.attr("viewBox", [-margin.left, left.x - margin.top, width, height])
+                .attr("viewBox", [-margin.left, left.x - margin.top, width, height])
                 .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
 
             // Update the nodes…
@@ -161,7 +161,7 @@ class Viewer extends Component {
 
             // Transition nodes to their new position.
             const nodeUpdate = node.merge(nodeEnter).transition(transition)
-                .attr("transform", d => `translate(${d.y + offsetx},${d.x + offsety})`)
+                .attr("transform", d => `translate(${d.y},${d.x})`)
                 .attr("fill-opacity", 1)
                 .attr("stroke-opacity", 1);
 
