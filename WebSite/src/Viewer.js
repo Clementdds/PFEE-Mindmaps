@@ -134,30 +134,38 @@ class Viewer extends Component {
             const nodeEnter = node.enter().append("g")
                 .attr("transform", d => `translate(${source.y0},${source.x0})`)
                 .attr("fill-opacity", 0)
-                .attr("stroke-opacity", 0)
-                .on("click", d => {
-                    d.children = d.children ? null : d._children;
-
-                    if (d.data.name.includes("http"))
-                        window.open(d.data.name, '_blank');
-                    update(d);
-                });
+                .attr("stroke-opacity", 0);
+                
+               
             //.attr("xlink:href", function(node) {})
 
             nodeEnter.append("circle")
                 .attr("r", 2.5)
                 .attr("fill", d => d._children ? "#555" : "#999")
-                .attr("stroke-width", 10);
+                .attr("stroke-width", 10)
+                .on("click", d => {
+                    d.children = d.children ? null : d._children;
+                    update(d);
+                });
 
             nodeEnter.append("text")
                 .attr("dy", "0.31em")
                 .attr("x", d => d._children ? -6 : 6)
                 .attr("text-anchor", d => d._children ? "end" : "start")
                 .text(d => d.data.name)
+                .on("click", d => {
+                    if (d.data.name.includes("http"))
+                        window.open(d.data.name, '_blank');
+                    update(d);
+                })
                 .clone(true).lower()
                 .attr("stroke-linejoin", "round")
                 .attr("stroke-width", 3)
                 .attr("stroke", "white");
+                
+               
+
+           
 
             // Transition nodes to their new position.
             const nodeUpdate = node.merge(nodeEnter).transition(transition)
