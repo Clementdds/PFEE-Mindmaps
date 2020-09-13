@@ -18,7 +18,7 @@ class Viewer extends Component {
     componentDidMount() {
         const convert = require('xml-js');
         const result = convert.xml2js(this.state.textFile, {ignoreComment: true, alwaysChildren: true});
-
+        
         this.createD3Data(result.elements[0].elements[0]);
 
         this.state.tree = this.constructTree();
@@ -28,41 +28,47 @@ class Viewer extends Component {
         this.state.data = this.recurseD3Data(xmlTextFile);
     };
 
-    recurseD3Data = function recurse(root) {
+    recurseD3Data = function recurse(root, newColor = "") {
 
         let currentData = {
             name: "",
             children: null,
-            value: 0
+            value: 0,
+            color:newColor
         };
 
         if (root.attributes !== undefined && root.attributes !== null) {
             currentData.name = root.attributes.TEXT;
+            
         }
 
         if (root.elements.length === 0) {
-
+           
             let value = parseInt(root.attributes.CREATED);
             currentData = {
                 name: root.attributes.TEXT,
-                value: value
+                value: value,
+                color: newColor
             };
 
         } else {
-
+            if(root.elements[0].attributes.COLOR != null)
+            {
+                newColor = root.elements[0].attributes.COLOR;
+            }
             let children = [];
             for (let i = 0; i < root.elements.length; i++) {
                 if (root.elements[i].name === "node") {
-                    children.push(recurse(root.elements[i]));
+                    children.push(recurse(root.elements[i], newColor));
                 }
             }
-
+          
             currentData = {
                 name: root.attributes.TEXT,
                 children: children,
+                color: newColor
             }
-
-        }
+        }    
 
         return currentData;
     };
@@ -73,7 +79,7 @@ class Viewer extends Component {
 
         //const offsetx = 100;
         //const offsety = window.innerHeight / 2;
-
+        
         const dy = width / 20;
         const dx = 30;
         const diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x);
@@ -151,7 +157,8 @@ class Viewer extends Component {
                 .duration(duration)
                 .attr("viewBox", [-margin.left, left.x - margin.top, width, height])
                 .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
-
+            
+                
             // Update the nodes…
             const node = gNode.selectAll("g")
                 .data(nodes, d => d.id);
@@ -169,6 +176,7 @@ class Viewer extends Component {
                 .attr("r", 2.5)
                 .attr("fill", d => d._children ? "#555" : "#999")
                 .attr("stroke-width", 10)
+                .style("fill", d => d.data.color)
                 .on("click", d => {
                     d.children = d.children ? null : d._children;
                     update(d);
@@ -179,6 +187,7 @@ class Viewer extends Component {
                 .attr("x", d => d._children ? -6 : 6)
                 .attr("text-anchor", d => d._children ? "end" : "start")
                 .text(d => d.data.name)
+                .style("fill", d => d.data.color)
                 .on("click", d => {
                     if (d.data.name.includes("http"))
                         window.open(d.data.name, '_blank');
