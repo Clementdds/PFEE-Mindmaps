@@ -66,7 +66,7 @@ class Viewer extends Component {
 
         return currentData;
     };
-
+    
     constructTree = () => {
         const margin = ({top: 10, right: 120, bottom: 10, left: 40});
         const width = window.innerWidth;
@@ -77,7 +77,33 @@ class Viewer extends Component {
         const dy = width / 20;
         const dx = 30;
         const diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x);
-        const tree = d3.tree().nodeSize([dx, dy]);
+        const tree = d3.tree().nodeSize([dx, dy]).separation(function separation(a, b) {
+            
+            function TotalNbChild(tab) {
+                if(tab.children == null){
+                    return 0;
+                }
+                let tmp = tab.children.length;
+                for (let i = 0; i < tab.children.length; i++) {
+                    tmp =  tmp + TotalNbChild(tab.children[i]);
+                }
+                return tmp;
+              }
+              
+            let sep = 0;
+            if(a.children != null)
+            {
+                
+               sep =  TotalNbChild(a);
+            }
+            if(b.children != null)
+            {
+                let tmpSep = TotalNbChild(b);
+                if(tmpSep> sep)
+                    sep = tmpSep
+            }
+            return (a.parent == b.parent ? (1 + sep/1.5) : 1 );
+        });
 
         const root = d3.hierarchy(this.state.data);
 
@@ -207,6 +233,8 @@ class Viewer extends Component {
                 d.y0 = d.y;
             });
         }
+
+
 
         update(root);
         return svg.node();
