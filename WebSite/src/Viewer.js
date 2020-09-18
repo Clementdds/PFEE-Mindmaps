@@ -34,28 +34,42 @@ class Viewer extends Component {
             name: "",
             children: null,
             value: 0,
-            color:newColor
+            color:newColor,
+            score:" "
         };
 
         if (root.attributes !== undefined && root.attributes !== null) {
             currentData.name = root.attributes.TEXT;
             
         }
+       
+        let tmpscore = ""
+        if(root.attributes.SCORE != null)
+        {
+            tmpscore =  "\n" + root.attributes.SCORE;
+        }
 
         if (root.elements.length === 0) {
            
             let value = parseInt(root.attributes.CREATED);
+
+           
             currentData = {
                 name: root.attributes.TEXT,
                 value: value,
-                color: newColor
+                color: newColor,
+                score: tmpscore
             };
-
+           
+           
         } else {
+            console.log(root.attributes)
             if(root.elements[0].attributes.COLOR != null)
             {
                 newColor = root.elements[0].attributes.COLOR;
             }
+              
+
             let children = [];
             for (let i = 0; i < root.elements.length; i++) {
                 if (root.elements[i].name === "node") {
@@ -63,10 +77,12 @@ class Viewer extends Component {
                 }
             }
           
+
             currentData = {
                 name: root.attributes.TEXT,
                 children: children,
-                color: newColor
+                color: newColor,
+                score: tmpscore
             }
         }    
 
@@ -125,7 +141,8 @@ class Viewer extends Component {
             .attr("viewBox", [-margin.left, -margin.top, width, dx])
             .style("font", "10px sans-serif")
             .style("user-select", "none");
-
+        
+        
         const gLink = svg.append("g")
             .attr("fill", "none")
             .attr("stroke", "#555")
@@ -186,7 +203,7 @@ class Viewer extends Component {
                 .attr("dy", "0.31em")
                 .attr("x", d => d._children ? -6 : 6)
                 .attr("text-anchor", d => d._children ? "end" : "start")
-                .text(d => d.data.name)
+                .text(d => d.data.name )
                 .style("fill", d => d.data.color)
                 .on("click", d => {
                     if (d.data.name.includes("http"))
@@ -197,6 +214,25 @@ class Viewer extends Component {
                 .attr("stroke-linejoin", "round")
                 .attr("stroke-width", 3)
                 .attr("stroke", "white");
+
+                
+            nodeEnter.append("text")
+            .style("font", "5px times")
+            .attr("dy", "0.31em")
+            .attr("x", d => d._children ? -10 : 10)
+            .attr("y",  10)
+            .attr("text-anchor", d => d._children ? "end" : "start")
+            .text(d =>  d.data.score)
+            .style("fill", d => d.data.color)
+            .on("click", d => {
+                if (d.data.name.includes("http"))
+                    window.open(d.data.name, '_blank');
+                update(d);
+            })
+            .clone(true).lower()
+            .attr("stroke-linejoin", "round")
+            .attr("stroke-width", 3)
+            .attr("stroke", "white");
                 
                
 
@@ -240,11 +276,9 @@ class Viewer extends Component {
             root.eachBefore(d => {
                 d.x0 = d.x;
                 d.y0 = d.y;
-            });
+            });   
         }
-
-
-
+          
         update(root);
         return svg.node();
     };
