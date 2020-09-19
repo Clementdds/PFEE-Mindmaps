@@ -1,5 +1,7 @@
 package com.mti.mindmap;
 
+import com.mti.mindmap.persistence.repository.MindmapRepository;
+import com.mti.mindmap.persistence.repository.UserRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
@@ -9,6 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 
 @Configuration
-@EnableJpaRepositories(basePackageClasses = {})
+@EnableJpaRepositories(basePackageClasses = {UserRepository.class, MindmapRepository.class})
 public class MindmapConfiguration {
 }

@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MindmapApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(com.mti.mindmap.MindmapApplication.class, args);
+        SpringApplication.run(MindmapApplication.class, args);
     }
 
 }
