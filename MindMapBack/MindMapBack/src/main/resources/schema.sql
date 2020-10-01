@@ -1,14 +1,19 @@
-DROP TABLE IF EXISTS users;
-CREATE TABLE users(id serial PRIMARY KEY, username VARCHAR(255), password VARCHAR(255));
+CREATE TABLE IF NOT EXISTS users(
+  id serial PRIMARY KEY,
+  username VARCHAR(255),
+  password VARCHAR(255)
+);
 
-DROP TABLE IF EXISTS mindmaps;
-CREATE TABLE mindmaps(id serial PRIMARY KEY, fullmaptext LONGTEXT);
+CREATE TABLE IF NOT EXISTS mindmaps(
+  id serial PRIMARY KEY,
+  fullmaptext LONGTEXT
+);
 
 DROP TABLE IF EXISTS usermaps;
 CREATE TABLE usermaps(
   userid INTEGER,
   mapid INTEGER,
-  right INTEGER,
+  userrole INTEGER,
   FOREIGN KEY (userid) REFERENCES users(id),
   FOREIGN KEY (mapid) REFERENCES mindmaps(id)
 );
@@ -20,4 +25,4 @@ CREATE TABLE links(
   mindmapid INTEGER,
   url VARCHAR(128),
   FOREIGN KEY (mindmapid) REFERENCES mindmaps(id)
-)
+);
