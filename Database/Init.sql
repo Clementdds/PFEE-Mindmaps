@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS users(
   id serial PRIMARY KEY,
   username VARCHAR(255),
-  password VARCHAR(255)
+  password VARCHAR(2048)
 );
 
 CREATE TABLE IF NOT EXISTS mindmaps(
@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS mindmaps(
 
 DROP TABLE IF EXISTS usermaps;
 CREATE TABLE usermaps(
+  id serial PRIMARY KEY,
   userid INTEGER,
   mapid INTEGER,
   userrole INTEGER,

@@ -28,7 +28,7 @@ public class UserModelToEntity implements Converter.Reversible<UserModel, UserEn
      */
     @Override
     public UserModel revertConvert(final UserEntity from) {
-        return new UserModel(from.id, from.username, from.password);
+        return new UserModel(from.id, from.username, from.password, null);
     }
 
 }

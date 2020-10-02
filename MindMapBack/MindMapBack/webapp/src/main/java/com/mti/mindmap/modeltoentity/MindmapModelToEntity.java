@@ -24,6 +24,6 @@ public class MindmapModelToEntity implements Converter.Reversible<MindmapModel, 
      */
     @Override
     public MindmapModel revertConvert(final MindmapEntity from) {
-        return new MindmapModel(from.id, from.fullmaptext);
+        return new MindmapModel(from.id, from.fullmaptext, null);
     }
 }
