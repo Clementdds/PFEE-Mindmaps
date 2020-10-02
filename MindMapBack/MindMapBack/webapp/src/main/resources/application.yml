@@ -1,11 +1,13 @@
 server:
-  port: 8085
+  port: 9999
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/mindmapsdb?serverTimezone=UTC
-    username: root
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/pfee
+    username: Thomas
     password: admin
+    schema: classpath:/schema.sql
 
   jpa:
     properties:

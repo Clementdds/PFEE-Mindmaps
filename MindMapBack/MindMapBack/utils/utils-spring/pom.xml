@@ -11,5 +11,14 @@
 
     <artifactId>utils-spring</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.2.7.RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
 
 </project>
