@@ -22,7 +22,7 @@ CREATE TABLE usermaps(
 DROP TABLE IF EXISTS links;
 CREATE TABLE links(
   id serial PRIMARY KEY,
-  nodeid INTEGER,
+  nodeid BIGINT,
   mindmapid INTEGER,
   url VARCHAR(128),
   FOREIGN KEY (mindmapid) REFERENCES mindmaps(id)

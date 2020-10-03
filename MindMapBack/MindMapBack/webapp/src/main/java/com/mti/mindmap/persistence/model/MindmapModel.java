@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
@@ -22,12 +23,25 @@ public class MindmapModel {
     @OneToMany(mappedBy = "map")
     private Set<UserMapsModel> usermaps;
 
+    @OneToMany
+    @JoinColumn(name = "mindmapid")
+    private Set<LinksModel> links;
+
     public MindmapModel(final Integer id,
                         final String fullmaptext,
-                        final Set<UserMapsModel> usermaps) {
+                        final Set<UserMapsModel> usermaps, final Set<LinksModel> links) {
         this.id = id;
         this.fullmaptext = fullmaptext;
         this.usermaps = usermaps;
+        this.links = links;
+    }
+
+    public Set<LinksModel> getLinks() {
+        return links;
+    }
+
+    public void setLinks(final Set<LinksModel> links) {
+        this.links = links;
     }
 
     public Set<UserMapsModel> getUsermaps() {

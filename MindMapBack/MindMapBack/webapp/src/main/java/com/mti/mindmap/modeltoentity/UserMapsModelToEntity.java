@@ -17,7 +17,7 @@ public class UserMapsModelToEntity implements Converter.Reversible<UserMapsModel
         this.mindmapModelToEntity = mindmapModelToEntity;
     }
     /**
-     * Convert an AccountModel to AccountEntity.
+     * Convert an UserMapsModel to UserMapsEntity.
      */
     @Override
     public UserMapsEntity convert(final UserMapsModel from) {
@@ -25,7 +25,7 @@ public class UserMapsModelToEntity implements Converter.Reversible<UserMapsModel
     }
 
     /**
-     * Convert an AccountEntity to AccountModel.
+     * Convert an UserMapsEntity to UserMapsModel.
      */
     @Override
     public UserMapsModel revertConvert(final UserMapsEntity from) {

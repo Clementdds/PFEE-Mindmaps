@@ -16,7 +16,7 @@ public class UserModelToEntity implements Converter.Reversible<UserModel, UserEn
     public UserModelToEntity() {
     }
     /**
-     * Convert an AccountModel to AccountEntity.
+     * Convert an UserModel to UserEntity.
      */
     @Override
     public UserEntity convert(final UserModel from) {
@@ -24,7 +24,7 @@ public class UserModelToEntity implements Converter.Reversible<UserModel, UserEn
     }
 
     /**
-     * Convert an AccountEntity to AccountModel.
+     * Convert an UserEntity to UserModel.
      */
     @Override
     public UserModel revertConvert(final UserEntity from) {

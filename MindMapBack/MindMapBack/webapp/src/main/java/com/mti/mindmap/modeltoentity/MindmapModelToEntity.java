@@ -12,7 +12,7 @@ public class MindmapModelToEntity implements Converter.Reversible<MindmapModel, 
     }
 
     /**
-     * Convert an AccountModel to AccountEntity.
+     * Convert an MindmapModel to MindmapEntity.
      */
     @Override
     public MindmapEntity convert(final MindmapModel from) {
@@ -20,10 +20,10 @@ public class MindmapModelToEntity implements Converter.Reversible<MindmapModel, 
     }
 
     /**
-     * Convert an AccountEntity to AccountModel.
+     * Convert an MindmapEntity to MindmapModel.
      */
     @Override
     public MindmapModel revertConvert(final MindmapEntity from) {
-        return new MindmapModel(from.id, from.fullmaptext, null);
+        return new MindmapModel(from.id, from.fullmaptext, null, null);
     }
 }

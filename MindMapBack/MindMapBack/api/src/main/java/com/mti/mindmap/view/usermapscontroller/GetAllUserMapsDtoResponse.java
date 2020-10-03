@@ -1,7 +1,5 @@
 package com.mti.mindmap.view.usermapscontroller;
 
-import com.mti.mindmap.view.mindmapscontroller.GetAllMindmapsDtoResponse;
-
 public class GetAllUserMapsDtoResponse {
 
     public final Iterable<GetAllUserMapsDtoResponse.UserMapsDtoResponse> userMapsList;

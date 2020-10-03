@@ -10,29 +10,28 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "usermaps") 
-public class UserMapsModel {
+@Table(name = "links")
+public class LinksModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "userid")
-    private UserModel user;
+    @Column(name = "nodeid", nullable = false)
+    private Integer nodeid;
 
     @ManyToOne
-    @JoinColumn(name = "mapid")
+    @JoinColumn(name = "mindmapid", insertable = true, updatable = true)
     private MindmapModel map;
 
-    @Column(name = "userrole")
-    private Integer userRole;
+    @Column(name = "url", nullable = false, length = 128)
+    private String url;
 
-    public UserMapsModel(final Integer id, final UserModel user, final MindmapModel map, final Integer userRole) {
+    public LinksModel(final Integer id, final Integer nodeid, final MindmapModel map, final String url) {
         this.id = id;
-        this.user = user;
+        this.nodeid = nodeid;
         this.map = map;
-        this.userRole = userRole;
+        this.url = url;
     }
 
     public Integer getId() {
@@ -43,12 +42,12 @@ public class UserMapsModel {
         this.id = id;
     }
 
-    public UserModel getUser() {
-        return user;
+    public Integer getNodeid() {
+        return nodeid;
     }
 
-    public void setUser(final UserModel user) {
-        this.user = user;
+    public void setNodeid(final Integer nodeid) {
+        this.nodeid = nodeid;
     }
 
     public MindmapModel getMap() {
@@ -59,11 +58,11 @@ public class UserMapsModel {
         this.map = map;
     }
 
-    public Integer getUserRole() {
-        return userRole;
+    public String getUrl() {
+        return url;
     }
 
-    public void setUserRole(final Integer userRole) {
-        this.userRole = userRole;
+    public void setUrl(final String url) {
+        this.url = url;
     }
 }

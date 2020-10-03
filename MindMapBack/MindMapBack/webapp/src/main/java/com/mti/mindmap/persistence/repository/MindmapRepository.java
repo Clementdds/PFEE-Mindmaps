@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.math.BigInteger;
 
-public interface MindmapRepository extends CrudRepository<MindmapModel, BigInteger> {
+public interface MindmapRepository extends CrudRepository<MindmapModel, Integer> {
 }

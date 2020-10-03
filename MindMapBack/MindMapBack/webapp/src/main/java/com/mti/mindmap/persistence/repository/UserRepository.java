@@ -13,5 +13,5 @@ import java.math.BigInteger;
 /**
  * Repository that discuss with User Table
  */
-public interface UserRepository extends CrudRepository<UserModel, BigInteger> {
+public interface UserRepository extends CrudRepository<UserModel, Integer> {
 }
