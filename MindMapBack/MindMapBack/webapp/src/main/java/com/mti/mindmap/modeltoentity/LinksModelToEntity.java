@@ -2,7 +2,7 @@ package com.mti.mindmap.modeltoentity;
 
 import com.mti.mindmap.domain.entity.LinkEntity;
 import com.mti.mindmap.persistence.model.LinksModel;
-import com.mti.rpg.utils.scope.ConverterService;
+import scope.ConverterService;
 import utils.Converter;
 
 @ConverterService

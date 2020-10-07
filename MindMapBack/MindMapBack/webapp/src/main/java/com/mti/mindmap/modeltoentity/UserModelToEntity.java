@@ -2,7 +2,7 @@ package com.mti.mindmap.modeltoentity;
 
 import com.mti.mindmap.domain.entity.UserEntity;
 import com.mti.mindmap.persistence.model.UserModel;
-import com.mti.rpg.utils.scope.ConverterService;
+import scope.ConverterService;
 import utils.Converter;
 
 /**
