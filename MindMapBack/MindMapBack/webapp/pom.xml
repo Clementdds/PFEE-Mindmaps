@@ -15,17 +15,17 @@
 
         <!-- Sub Modules -->
         <dependency>
-            <groupId>com.mti</groupId>
+            <groupId>com.epita.pfee</groupId>
             <artifactId>utils-lang</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.mti</groupId>
+            <groupId>com.epita.pfee</groupId>
             <artifactId>utils-spring</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.mti</groupId>
+            <groupId>com.epita.pfee</groupId>
             <artifactId>api</artifactId>
         </dependency>
 
