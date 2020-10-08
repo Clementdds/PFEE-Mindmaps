@@ -11,10 +11,12 @@ public class GetAllMindmapsDtoResponse {
     public static class MindmapDtoResponse {
         public final Integer id;
         public final String fullmaptext;
+        public final boolean ispublic;
 
-        public MindmapDtoResponse(final Integer id, final String fullmaptext) {
+        public MindmapDtoResponse(final Integer id, final String fullmaptext, final boolean ispublic) {
             this.id = id;
             this.fullmaptext = fullmaptext;
+            this.ispublic = ispublic;
         }
     }
 }

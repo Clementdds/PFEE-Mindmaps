@@ -30,7 +30,8 @@ public class MindmapController implements CanLog {
         return new GetAllMindmapsDtoResponse(
                 mindmapEntityList.stream()
                 .map(mindmapEntity -> new GetAllMindmapsDtoResponse.MindmapDtoResponse(mindmapEntity.id,
-                                                                                       mindmapEntity.fullmaptext))
+                                                                                       mindmapEntity.fullmaptext,
+                                                                                       mindmapEntity.ispublic))
                 .collect(Collectors.toList()));
     }
 }

@@ -20,6 +20,9 @@ public class MindmapModel {
     @Column(name = "fullmaptext", nullable = false, length = 50)
     private String fullmaptext;
 
+    @Column(name = "ispublic", nullable = false)
+    private boolean ispublic;
+
     @OneToMany(mappedBy = "map")
     private Set<UserMapsModel> usermaps;
 
@@ -29,9 +32,11 @@ public class MindmapModel {
 
     public MindmapModel(final Integer id,
                         final String fullmaptext,
+                        final boolean ispublic,
                         final Set<UserMapsModel> usermaps, final Set<LinksModel> links) {
         this.id = id;
         this.fullmaptext = fullmaptext;
+        this.ispublic = ispublic;
         this.usermaps = usermaps;
         this.links = links;
     }
@@ -69,4 +74,8 @@ public class MindmapModel {
     public void setFullmaptext(final String fullmaptext) {
         this.fullmaptext = fullmaptext;
     }
+
+    public boolean getIspublic() {return ispublic;}
+
+    public void setIspublic(final boolean ispublic) {this.ispublic = ispublic;}
 }
