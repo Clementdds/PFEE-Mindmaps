@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS users(
 
 CREATE TABLE IF NOT EXISTS mindmaps(
   id serial PRIMARY KEY,
-  fullmaptext LONGTEXT
+  fullmaptext TEXT,
+  ispublic BOOLEAN
 );
 
 DROP TABLE IF EXISTS usermaps;
