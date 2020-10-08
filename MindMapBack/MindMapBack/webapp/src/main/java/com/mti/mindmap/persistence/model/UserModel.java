@@ -40,6 +40,8 @@ public class UserModel {
         this.usermaps = usermaps;
     }
 
+    public UserModel() {}
+
     public Set<UserMapsModel> getUsermaps() {
         return usermaps;
     }

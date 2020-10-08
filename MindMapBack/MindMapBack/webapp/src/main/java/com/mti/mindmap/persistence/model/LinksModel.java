@@ -34,6 +34,8 @@ public class LinksModel {
         this.url = url;
     }
 
+    public LinksModel() {}
+
     public Integer getId() {
         return id;
     }

@@ -36,6 +36,8 @@ public class MindmapModel {
         this.links = links;
     }
 
+    public MindmapModel() {}
+
     public Set<LinksModel> getLinks() {
         return links;
     }

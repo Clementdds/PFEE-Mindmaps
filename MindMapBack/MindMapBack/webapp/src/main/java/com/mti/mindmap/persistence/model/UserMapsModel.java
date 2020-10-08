@@ -35,6 +35,8 @@ public class UserMapsModel {
         this.userRole = userRole;
     }
 
+    public UserMapsModel() {}
+
     public Integer getId() {
         return id;
     }
