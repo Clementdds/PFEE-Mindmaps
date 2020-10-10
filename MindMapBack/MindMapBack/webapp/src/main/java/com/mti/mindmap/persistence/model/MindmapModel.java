@@ -23,7 +23,8 @@ public class MindmapModel {
     @Column(name = "ispublic", nullable = false)
     private boolean ispublic;
 
-    @OneToMany(mappedBy = "map")
+    @OneToMany
+    @JoinColumn(name = "mapid")
     private Set<UserMapsModel> usermaps;
 
     @OneToMany

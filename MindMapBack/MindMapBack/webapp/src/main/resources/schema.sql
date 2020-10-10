@@ -1,9 +1,11 @@
+DROP TABLE users CASCADE;
 CREATE TABLE IF NOT EXISTS users(
   id serial PRIMARY KEY,
   username VARCHAR(255),
   password VARCHAR(255)
 );
 
+DROP TABLE mindmaps CASCADE;
 CREATE TABLE IF NOT EXISTS mindmaps(
   id serial PRIMARY KEY,
   fullmaptext TEXT,
@@ -12,6 +14,7 @@ CREATE TABLE IF NOT EXISTS mindmaps(
 
 DROP TABLE IF EXISTS usermaps;
 CREATE TABLE usermaps(
+  id serial PRIMARY KEY,
   userid INTEGER,
   mapid INTEGER,
   userrole INTEGER,

@@ -18,11 +18,11 @@ public class UserMapsModel {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "userid")
+    @JoinColumn(name = "userid", insertable = true, updatable = true)
     private UserModel user;
 
     @ManyToOne
-    @JoinColumn(name = "mapid")
+    @JoinColumn(name = "mapid", insertable = true, updatable = true)
     private MindmapModel map;
 
     @Column(name = "userrole")
@@ -35,7 +35,8 @@ public class UserMapsModel {
         this.userRole = userRole;
     }
 
-    public UserMapsModel() {}
+    public UserMapsModel() {
+    }
 
     public Integer getId() {
         return id;

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
@@ -27,7 +28,8 @@ public class UserModel {
     @Column(name = "password", nullable = false, length = 2048)
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany
+    @JoinColumn(name = "userid")
     private Set<UserMapsModel> usermaps;
 
     public UserModel(final Integer id,
