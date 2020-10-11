@@ -13,7 +13,7 @@ const App = ({isUploaded, textFile, dispatch}) => {
         reader.onload = async (e) => {
 
             const text = (e.target.result);
-            dispatch({type: actionTypes.GET_INPUT_FILE, payload: text});
+            dispatch({type: actionTypes.SET_INPUT_FILE, payload: text});
         };
         reader.readAsText(e.target.files[0])
     };

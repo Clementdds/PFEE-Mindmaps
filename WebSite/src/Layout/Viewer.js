@@ -2,30 +2,24 @@ import React, {Component} from "react";
 import "../Assets/Css/App.css"
 import * as d3 from "d3";
 
+import {connect} from "react-redux";
+import * as actionTypes from '../Actions/ActionsTypes';
+
 class Viewer extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            textFile: props.textFile,
-            data: null,
-            tree: null
-        };
-
-    }
 
     componentDidMount() {
         const convert = require('xml-js');
-        const result = convert.xml2js(this.state.textFile, {ignoreComment: true, alwaysChildren: true});
-        
-        this.createD3Data(result.elements[0].elements[0]);
+        const result = convert.xml2js(this.props.textFile, {ignoreComment: true, alwaysChildren: true});
 
-        this.state.tree = this.constructTree();
+        const data = this.createD3Data(result.elements[0].elements[0]);
+        const tree = this.constructTree(data);
+
+        // On laisse le dispatch pour le moment
+        this.props.dispatch({type: actionTypes.SET_TREE, payload: tree});
     }
 
     createD3Data = (xmlTextFile) => {
-        this.state.data = this.recurseD3Data(xmlTextFile);
+        return this.recurseD3Data(xmlTextFile);
     };
 
     recurseD3Data = function recurse(root, newColor = "") {
@@ -40,35 +34,32 @@ class Viewer extends Component {
 
         if (root.attributes !== undefined && root.attributes !== null) {
             currentData.name = root.attributes.TEXT;
-            
+
         }
-       
-        let tmpscore = ""
+
+        let tmpscore = "";
         if(root.attributes.SCORE != null)
         {
             tmpscore =  "\n" + root.attributes.SCORE;
         }
 
         if (root.elements.length === 0) {
-           
+
             let value = parseInt(root.attributes.CREATED);
 
-           
             currentData = {
                 name: root.attributes.TEXT,
                 value: value,
                 color: newColor,
                 score: tmpscore
             };
-           
-           
+
         } else {
-            console.log(root.attributes)
+            //console.log(root.attributes);
             if(root.elements[0].attributes.COLOR != null)
             {
                 newColor = root.elements[0].attributes.COLOR;
             }
-              
 
             let children = [];
             for (let i = 0; i < root.elements.length; i++) {
@@ -76,7 +67,6 @@ class Viewer extends Component {
                     children.push(recurse(root.elements[i], newColor));
                 }
             }
-          
 
             currentData = {
                 name: root.attributes.TEXT,
@@ -84,23 +74,23 @@ class Viewer extends Component {
                 color: newColor,
                 score: tmpscore
             }
-        }    
+        }
 
         return currentData;
     };
-    
-    constructTree = () => {
+
+    constructTree = (data) => {
         const margin = ({top: 10, right: 120, bottom: 10, left: 40});
         const width = window.innerWidth;
 
         //const offsetx = 100;
         //const offsety = window.innerHeight / 2;
-        
+
         const dy = width / 20;
         const dx = 30;
         const diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x);
         const tree = d3.tree().nodeSize([dx, dy]).separation(function separation(a, b) {
-            
+
             function TotalNbChild(tab) {
                 if(tab.children == null){
                     return 0;
@@ -111,11 +101,10 @@ class Viewer extends Component {
                 }
                 return tmp;
               }
-              
+
             let sep = 0;
             if(a.children != null)
             {
-                
                sep =  TotalNbChild(a);
             }
             if(b.children != null)
@@ -124,10 +113,10 @@ class Viewer extends Component {
                 if(tmpSep> sep)
                     sep = tmpSep
             }
-            return (a.parent == b.parent ? (1 + sep/1.5) : 1 );
+            return (a.parent === b.parent ? (1 + sep/1.5) : 1 );
         });
 
-        const root = d3.hierarchy(this.state.data);
+        const root = d3.hierarchy(data);
 
         root.x0 = dy / 2;
         root.y0 = 0;
@@ -141,8 +130,7 @@ class Viewer extends Component {
             .attr("viewBox", [-margin.left, -margin.top, width, dx])
             .style("font", "10px sans-serif")
             .style("user-select", "none");
-        
-        
+
         const gLink = svg.append("g")
             .attr("fill", "none")
             .attr("stroke", "#555")
@@ -174,8 +162,7 @@ class Viewer extends Component {
                 .duration(duration)
                 .attr("viewBox", [-margin.left, left.x - margin.top, width, height])
                 .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
-            
-                
+
             // Update the nodes…
             const node = gNode.selectAll("g")
                 .data(nodes, d => d.id);
@@ -185,8 +172,7 @@ class Viewer extends Component {
                 .attr("transform", d => `translate(${source.y0},${source.x0})`)
                 .attr("fill-opacity", 0)
                 .attr("stroke-opacity", 0);
-                
-               
+
             //.attr("xlink:href", function(node) {})
 
             nodeEnter.append("circle")
@@ -215,7 +201,6 @@ class Viewer extends Component {
                 .attr("stroke-width", 3)
                 .attr("stroke", "white");
 
-                
             nodeEnter.append("text")
             .style("font", "5px times")
             .attr("dy", "0.31em")
@@ -233,10 +218,6 @@ class Viewer extends Component {
             .attr("stroke-linejoin", "round")
             .attr("stroke-width", 3)
             .attr("stroke", "white");
-                
-               
-
-           
 
             // Transition nodes to their new position.
             const nodeUpdate = node.merge(nodeEnter).transition(transition)
@@ -276,9 +257,9 @@ class Viewer extends Component {
             root.eachBefore(d => {
                 d.x0 = d.x;
                 d.y0 = d.y;
-            });   
+            });
         }
-          
+
         update(root);
         return svg.node();
     };
@@ -286,11 +267,18 @@ class Viewer extends Component {
     render = () => {
         return (
             <div className="Viewer-div">
-                <svg className="Viewer-svg" style={{height: window.innerHeight - 20}} id="svg">
+                <svg className="Viewer-svg" viewBox={200} id="svg">
                 </svg>
             </div>
         )
     }
 }
 
-export default Viewer;
+const mapStateToProps = state => {
+    return {
+        textFile: state.Viewer.textFile,
+        dispatch: state.Viewer.dispatch
+    };
+};
+
+export default connect(mapStateToProps)(Viewer);
