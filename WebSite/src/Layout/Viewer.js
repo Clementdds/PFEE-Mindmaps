@@ -175,11 +175,14 @@ class Viewer extends Component {
 
             //.attr("xlink:href", function(node) {})
 
+
             nodeEnter.append("circle")
-                .attr("r", 2.5)
-                .attr("fill", d => d._children ? "#555" : "#999")
-                .attr("stroke-width", 10)
-                .style("fill", d => d.data.color)
+                .attr("cx", d => d._children ? 0 : 1)
+                .attr("r", d => d._children ? 2.5 : 1)
+                //attr("fill", d => d._children ? "#555" : "    ")
+                .attr("stroke", d => d._children? "none" : d.data.color)
+                .attr("stroke-width", 5)
+                .style("fill", d => d._children ?  d.data.color : "none")
                 .on("click", d => {
                     d.children = d.children ? null : d._children;
                     update(d);
@@ -190,7 +193,7 @@ class Viewer extends Component {
                 .attr("x", d => d._children ? -6 : 6)
                 .attr("text-anchor", d => d._children ? "end" : "start")
                 .text(d => d.data.name )
-                .style("fill", d => d.data.color)
+                .style("fill", "#000")
                 .on("click", d => {
                     if (d.data.name.includes("http"))
                         window.open(d.data.name, '_blank');
@@ -208,7 +211,7 @@ class Viewer extends Component {
             .attr("y",  10)
             .attr("text-anchor", d => d._children ? "end" : "start")
             .text(d =>  d.data.score)
-            .style("fill", d => d.data.color)
+            .style("fill", "#000" )
             .on("click", d => {
                 if (d.data.name.includes("http"))
                     window.open(d.data.name, '_blank');
@@ -235,12 +238,15 @@ class Viewer extends Component {
             const link = gLink.selectAll("path")
                 .data(links, d => d.target.id);
 
+
             // Enter any new links at the parent's previous position.
             const linkEnter = link.enter().append("path")
                 .attr("d", d => {
                     const o = {x: source.x0, y: source.y0};
                     return diagonal({source: o, target: o});
-                });
+                })
+                .attr("stroke", function(d){ 
+                    return (d.target.data.color)});
 
             // Transition links to their new position.
             link.merge(linkEnter).transition(transition)
