@@ -1,41 +1,37 @@
-import React from 'react';
-import Viewer from "./Viewer";
+import React, {Suspense, lazy} from 'react';
 
-import {connect} from "react-redux";
-import * as actionTypes from '../Actions/ActionsTypes'
+// React-Dom
+import {Router, Switch, Route} from 'react-router-dom';
+import {createBrowserHistory} from 'history';
 
-const App = ({isUploaded, textFile, dispatch}) => {
+// Components
+import GetInputFile from "./GetInputFile";
 
-    const showFile = async (e) => {
-        e.preventDefault();
-        const reader = new FileReader();
+// Error Page
+const Error404Page = lazy(() => import('../ErrorsPages/Error404'));
 
-        reader.onload = async (e) => {
+const history = createBrowserHistory();
 
-            const text = (e.target.result);
-            dispatch({type: actionTypes.SET_INPUT_FILE, payload: text});
-        };
-        reader.readAsText(e.target.files[0])
-    };
+const App = () => {
 
     return (
-        <div>
-            {isUploaded ?
-                (
-                    <Viewer textFile={textFile}/>
-                ) :
-                (
-                    <div><input type="file" onChange={(e) => showFile(e)}/></div>
-                )}
-        </div>
+        <Router history={history}>
+            <Suspense fallback={<div>loading...</div>}>
+                <Switch>
+                    {/* Home  */}
+                    <Route exact path={"/"}>
+                        <GetInputFile/>
+                    </Route>
+
+                    {/* 404  */}
+                    <Route>
+                        <Error404Page/>
+                    </Route>
+                </Switch>
+            </Suspense>
+        </Router>
     );
 };
 
-const mapStateToProps = state => {
-    return {
-        isUploaded: state.Viewer.isUploaded,
-        textFile: state.Viewer.textFile,
-    };
-};
 
-export default connect(mapStateToProps)(App);
+export default App;
