@@ -2,25 +2,38 @@ import React, {Suspense, lazy} from 'react';
 
 // React-Dom
 import {Router, Switch, Route} from 'react-router-dom';
-import {createBrowserHistory} from 'history';
 
 // Components
 import GetInputFile from "./GetInputFile";
+import Header from "./Header";
+import PrivateRoute from "../Components/Routes/PrivateRoute";
+import LoginPage from "./LoginPage";
+import SignUpPage from "./SignUpPage";
+import history from "../Helpers/History";
 
 // Error Page
-const Error404Page = lazy(() => import('../ErrorsPages/Error404'));
-
-const history = createBrowserHistory();
+const Error404Page = lazy(() => import('../Components/ErrorsPages/Error404'));
 
 const App = () => {
 
     return (
         <Router history={history}>
             <Suspense fallback={<div>loading...</div>}>
+                <Header/>
                 <Switch>
                     {/* Home  */}
-                    <Route exact path={"/"}>
+                    <PrivateRoute exact path={"/"}>
                         <GetInputFile/>
+                    </PrivateRoute>
+
+                    {/* Login  */}
+                    <Route exact path={"/login"}>
+                        <LoginPage/>
+                    </Route>
+
+                    {/* Sign Up  */}
+                    <Route exact path={"/sign"}>
+                        <SignUpPage/>
                     </Route>
 
                     {/* 404  */}
