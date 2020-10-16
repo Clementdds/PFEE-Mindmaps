@@ -21,6 +21,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.11.0</version>
+        </dependency>
     </dependencies>
 
     <parent>
@@ -86,6 +91,11 @@
                 <version>${versions.project}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.epita.pfee</groupId>
+                <artifactId>utils-jwt</artifactId>
+                <version>${versions.project}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.epita.pfee</groupId>

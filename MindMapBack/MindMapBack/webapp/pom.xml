@@ -26,6 +26,11 @@
 
         <dependency>
             <groupId>com.epita.pfee</groupId>
+            <artifactId>utils-jwt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.epita.pfee</groupId>
             <artifactId>api</artifactId>
         </dependency>
 
