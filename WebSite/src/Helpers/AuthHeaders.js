@@ -1,7 +1,9 @@
-import {connect} from "react-redux";
+import store from "../Store/ConfigureStore";
 
-const AuthHeader = ({token}) => {
+const AuthHeader = () => {
     // return authorization header with jwt token
+    const token = store.getState().User.token;
+
     if (token) {
         return { 'Authorization': 'Bearer ' + token };
     } else {
@@ -9,10 +11,4 @@ const AuthHeader = ({token}) => {
     }
 };
 
-const MapStateToProps = state => {
-    return {
-        token: state.User.token
-    };
-};
-
-export default connect(MapStateToProps)(AuthHeader);
+export default AuthHeader;

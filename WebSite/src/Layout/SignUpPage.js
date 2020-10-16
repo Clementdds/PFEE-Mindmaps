@@ -1,13 +1,18 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {connect} from "react-redux";
 import userService from '../Services/UserService'
 import {Link} from "react-router-dom";
+import * as actionTypes from "../Actions/ActionsTypes";
 
-const SignUpPage = ({error}) => {
+const SignUpPage = ({error, dispatch}) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [verifyPassword, setVerifyPassword] = useState('');
+
+    useEffect(() => {
+        dispatch({type: actionTypes.USER_RESET_ERROR})
+    }, [dispatch]);
 
     const handleAuth = () => {
         userService.signUP({email: email, password: password})
@@ -48,7 +53,7 @@ const SignUpPage = ({error}) => {
                         Sign Up !
                     </h2>
                     <Link to={"/login"}>
-                        Go to sign up
+                        Go to login
                     </Link>
                 </div>
                 <div>

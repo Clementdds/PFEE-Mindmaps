@@ -10,6 +10,7 @@ import PrivateRoute from "../Components/Routes/PrivateRoute";
 import LoginPage from "./LoginPage";
 import SignUpPage from "./SignUpPage";
 import history from "../Helpers/History";
+import userService from "../Services/UserService";
 
 // Error Page
 const Error404Page = lazy(() => import('../Components/ErrorsPages/Error404'));
@@ -23,6 +24,7 @@ const App = () => {
                 <Switch>
                     {/* Home  */}
                     <PrivateRoute exact path={"/"}>
+                        <button onClick={userService.logout}/>
                         <GetInputFile/>
                     </PrivateRoute>
 

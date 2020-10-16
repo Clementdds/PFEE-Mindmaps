@@ -12,12 +12,14 @@ const UserReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isSignedIn: true,
+                token: action.payload.token,
                 error: null,
             };
         case actionTypes.USER_SIGN_IN:
             return {
                 ...state,
                 isSignedIn: true,
+                token: action.payload.token,
                 error: null,
             };
         case actionTypes.USER_SIGN_OUT:
@@ -30,7 +32,12 @@ const UserReducer = (state = initialState, action) => {
         case actionTypes.USER_ERROR:
             return {
                 ...state,
-                error: null,
+                error: action.payload,
+            };
+        case actionTypes.USER_RESET_ERROR:
+            return {
+                ...state,
+                error: null
             };
         default:
             return state;

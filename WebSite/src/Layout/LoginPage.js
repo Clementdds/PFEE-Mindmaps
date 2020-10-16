@@ -1,12 +1,17 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {Link, Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 import userService from '../Services/UserService'
+import * as actionTypes from '../Actions/ActionsTypes'
 
-const LoginPage = ({isSignedIn, error}) => {
+const LoginPage = ({isSignedIn, error, dispatch}) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    useEffect(() => {
+        dispatch({type: actionTypes.USER_RESET_ERROR})
+    }, [dispatch]);
 
     const handleAuth = () => {
         userService.login({email: email, password: password});
@@ -43,7 +48,7 @@ const LoginPage = ({isSignedIn, error}) => {
                         Sign in to your account !
                     </h2>
                     <Link to={"/sign"}>
-                        Go to login
+                        Go to sign up
                     </Link>
                 </div>
                 <div>
