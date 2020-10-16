@@ -2,11 +2,10 @@ package com.pfee.mindmap.view;
 
 import com.pfee.mindmap.domain.entity.UserEntity;
 import com.pfee.mindmap.domain.service.UserService;
-import com.pfee.mindmap.view.userscontroller.GetAllUserDtoResponse;
-import com.pfee.mindmap.view.userscontroller.SignUpDtoRequest;
-import com.pfee.mindmap.view.userscontroller.SignUpDtoResponse;
+import com.pfee.mindmap.view.userscontroller.*;
 import org.springframework.web.bind.annotation.*;
 import utils.CanLog;
+import utils.Pair;
 import utils.TokenManager;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public class UserController implements CanLog {
     }
 
     @PostMapping(path = "/signup", consumes = "application/json", produces = "application/json")
-    public SignUpDtoResponse signUp(@RequestBody SignUpDtoRequest body) {
+    public SignUpDtoResponse SignUp(@RequestBody SignUpDtoRequest body) {
         String error = null;
         String token = null;
         logger().trace("Start user find email");
@@ -64,5 +63,21 @@ public class UserController implements CanLog {
         if (resultEntity != null)
             token = TokenManager.ProduceToken(resultEntity.id, resultEntity.username);
         return new SignUpDtoResponse(token, error);
+    }
+
+    @PostMapping(path = "login", consumes = "application/json", produces = "application/json")
+    public LogInDtoResponse LogIn(@RequestBody LogInDtoRequest body)
+    {
+        String error = null;
+        String token = null;
+        logger().trace("Start user match password");
+        Pair<Boolean, String> matchResult = userService.matchPassword(body.email, body.password);
+        logger().trace("Finish user match password");
+        if (matchResult.first)
+            token = matchResult.second;
+        else
+            error = matchResult.second;
+
+        return new LogInDtoResponse(token, error);
     }
 }

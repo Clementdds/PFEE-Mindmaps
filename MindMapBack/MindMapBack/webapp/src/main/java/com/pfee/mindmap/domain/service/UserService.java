@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utils.CanLog;
 import utils.IterableUtils;
+import utils.Pair;
+import utils.TokenManager;
 
 import java.util.List;
 
@@ -38,6 +40,25 @@ public class UserService implements CanLog {
 
     public boolean containsEmail(String email) {
         return userRepository.findByUsername(email) != null;
+    }
+
+    /**
+     * This method handles the login phase via password matching.
+     * @param email the user's inputted email.
+     * @param password the user's inputted password.
+     * @return A pair of values. The first is true when login succeeds, false otherwise.
+     * The second is the token when login succeeds, the error message otherwise.
+     */
+    public Pair<Boolean, String> matchPassword(String email, String password)
+    {
+        UserModel user = userRepository.findByUsername(email);
+        if (user == null)
+            return new Pair<>(false, "Email not registered");
+        if (user.getPassword().equals(password)) {
+            String token = TokenManager.ProduceToken(user.getId(), user.getUsername());
+            return new Pair<>(true, token);
+        }
+        return new Pair<>(false, "Incorrect password");
     }
 
     @Transactional
