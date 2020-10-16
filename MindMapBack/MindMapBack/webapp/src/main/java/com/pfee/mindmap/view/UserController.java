@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 
+@CrossOrigin
 @RestController
 @RequestMapping("/users")
 public class UserController implements CanLog {

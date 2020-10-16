@@ -3,6 +3,7 @@ package com.pfee.mindmap.view;
 import com.pfee.mindmap.domain.entity.LinkEntity;
 import com.pfee.mindmap.domain.service.LinksService;
 import com.pfee.mindmap.view.linkcontroller.GetAllLinksDtoResponse;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import utils.CanLog;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/links")
 public class LinkController implements CanLog {

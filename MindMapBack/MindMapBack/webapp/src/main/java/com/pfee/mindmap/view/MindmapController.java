@@ -3,6 +3,7 @@ package com.pfee.mindmap.view;
 import com.pfee.mindmap.domain.entity.MindmapEntity;
 import com.pfee.mindmap.domain.service.MindmapService;
 import com.pfee.mindmap.view.mindmapscontroller.GetAllMindmapsDtoResponse;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import utils.CanLog;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/mindmaps")
 public class MindmapController implements CanLog {
