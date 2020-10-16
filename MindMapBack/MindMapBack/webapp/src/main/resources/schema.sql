@@ -1,7 +1,7 @@
 DROP TABLE users CASCADE;
 CREATE TABLE IF NOT EXISTS users(
   id serial PRIMARY KEY,
-  username VARCHAR(255),
+  username VARCHAR(255) UNIQUE,
   password VARCHAR(255)
 );
 
