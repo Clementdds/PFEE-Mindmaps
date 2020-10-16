@@ -26,3 +26,23 @@ Response :
 }
 ```
 NB : If there was no error, the error field will be null. If there was one, the token field will be null.
+
+###### Login
+
+POST http://DOMAIN:9999/users/login
+
+Body:
+```
+{
+    email : "xxx@xxx.xxx",
+    password : "xxx"
+}
+```
+Response :
+```
+{
+    token : "xxx",
+    error : "xxx"
+}
+```
+NB : same as signup
