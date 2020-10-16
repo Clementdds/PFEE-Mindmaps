@@ -38,6 +38,13 @@ public class UserService implements CanLog {
         return userModelToEntity.convertList(userList);
     }
 
+    public boolean userExists(Integer userId)
+    {
+        if (userId < 0)
+            return false;
+        return userRepository.existsById(userId);
+    }
+
     public boolean containsEmail(String email) {
         return userRepository.findByUsername(email) != null;
     }
