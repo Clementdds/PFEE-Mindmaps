@@ -46,3 +46,20 @@ Response :
 }
 ```
 NB : same as signup
+
+###### Logout
+
+GET http://DOMAIN:9999/users/logout
+
+Header :
+
+`Authorization : Bearer xxxTOKENxxx`
+
+Response :
+
+```
+{
+    error : "xxx"
+}
+```
+NB : error is null if logout succeeds.
