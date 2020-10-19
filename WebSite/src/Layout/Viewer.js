@@ -42,7 +42,7 @@ class Viewer extends Component {
         {
             tmpscore =  "\n" + root.attributes.SCORE;
         }
-
+        //console.log(root);
         if (root.elements.length === 0) {
 
             let value = parseInt(root.attributes.CREATED);
@@ -55,7 +55,7 @@ class Viewer extends Component {
             };
 
         } else {
-            //console.log(root.attributes);
+            
             if(root.elements[0].attributes.COLOR != null)
             {
                 newColor = root.elements[0].attributes.COLOR;
@@ -80,13 +80,14 @@ class Viewer extends Component {
     };
 
     constructTree = (data) => {
+        console.log(data)
         const margin = ({top: 10, right: 120, bottom: 10, left: 40});
         const width = window.innerWidth;
 
         //const offsetx = 100;
         //const offsety = window.innerHeight / 2;
 
-        const dy = width / 20;
+        const dy = width / 5;
         const dx = 30;
         const diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x);
         const tree = d3.tree().nodeSize([dx, dy]).separation(function separation(a, b) {
@@ -119,7 +120,7 @@ class Viewer extends Component {
         const root = d3.hierarchy(data);
 
         root.x0 = dy / 2;
-        root.y0 = 0;
+        root.y0 = 30;
         root.descendants().forEach((d, i) => {
             d.id = i;
             d._children = d.children;
@@ -129,18 +130,28 @@ class Viewer extends Component {
         const svg = d3.select("svg")
             .attr("viewBox", [-margin.left, -margin.top, width, dx])
             .style("font", "10px sans-serif")
-            .style("user-select", "none");
-
+            .style("user-select", "none")
+            .call(d3.zoom()
+            .extent([[0, 0], [width, dx]])
+            .scaleExtent([1, 5])
+            .on("zoom", function()
+            {
+                d3.select("g").attr("transform", d3.event.transform)
+            }));;
+        
         const gLink = svg.append("g")
             .attr("fill", "none")
             .attr("stroke", "#555")
             .attr("stroke-opacity", 0.4)
             .attr("stroke-width", 1.5);
-
-        const gNode = svg.append("g")
+            
+        const gNode = svg.select("g").append("g")
             .attr("cursor", "pointer")
-            .attr("pointer-events", "all");
+            .attr("pointer-events", "all")
+            .attr("stroke-opacity", 0)
+            .attr("stroke-width", 0);
 
+            
         function update(source) {
             const duration = d3.event && d3.event.altKey ? 2500 : 250;
             const nodes = root.descendants().reverse();
@@ -184,13 +195,14 @@ class Viewer extends Component {
                 .attr("stroke-width", 5)
                 .style("fill", d => d._children ?  d.data.color : "none")
                 .on("click", d => {
-                    d.children = d.children ? null : d._children;
+                    d.children = d.children ? null : d._children 
                     update(d);
                 });
-
+            
             nodeEnter.append("text")
                 .attr("dy", "0.31em")
                 .attr("x", d => d._children ? -6 : 6)
+                .attr("y", d => d._children ? -7 : 0)
                 .attr("text-anchor", d => d._children ? "end" : "start")
                 .text(d => d.data.name )
                 .style("fill", "#000")
@@ -244,7 +256,7 @@ class Viewer extends Component {
                 .attr("d", d => {
                     const o = {x: source.x0, y: source.y0};
                     return diagonal({source: o, target: o});
-                })
+                })               
                 .attr("stroke", function(d){ 
                     return (d.target.data.color)});
 
@@ -263,7 +275,7 @@ class Viewer extends Component {
             root.eachBefore(d => {
                 d.x0 = d.x;
                 d.y0 = d.y;
-            });
+            });  
         }
 
         update(root);
@@ -272,9 +284,8 @@ class Viewer extends Component {
 
     render = () => {
         return (
-            <div className="Viewer-div">
-                <svg className="Viewer-svg" viewBox={200} id="svg">
-                </svg>
+            <div className="Viewer-div" id="viewer_div">
+                < svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" /> 
             </div>
         )
     }
