@@ -9,6 +9,8 @@ import com.pfee.mindmap.domain.service.UserService;
 import com.pfee.mindmap.view.mindmapscontroller.CreateMindMapDtoResponse;
 import com.pfee.mindmap.view.mindmapscontroller.CreateMindMapDtoRequest;
 import com.pfee.mindmap.view.mindmapscontroller.GetAllMindmapsDtoResponse;
+import com.pfee.mindmap.view.mindmapscontroller.GetOwnedMindMapsDtoResponse;
+import com.pfee.mindmap.view.userscontroller.LogOutDtoResponse;
 import org.springframework.web.bind.annotation.*;
 import utils.CanLog;
 import utils.TokenManager;
@@ -54,6 +56,8 @@ public class MindmapController implements CanLog {
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
         if (userId == -1)
             error = "Invalid token";
+        if (error == null && !userService.userExists(userId))
+            error = "User does not exist";
         MindmapEntity entity = new MindmapEntity(0, body.text, body.name, false);
         MindmapEntity resultEntity = null;
         if (error == null){
@@ -62,9 +66,9 @@ public class MindmapController implements CanLog {
             logger().trace("Finish TX Mindmap save");
             id = resultEntity.id;
         }
-        if (resultEntity == null)
+        if (error == null && resultEntity == null)
             error = "error on DB insertion";
-        else
+        else if (resultEntity != null)
         {
             UserEntity user = userService.findById(userId);
             UserMapsEntity userMap = new UserMapsEntity(0, user, resultEntity, 0);
@@ -76,5 +80,26 @@ public class MindmapController implements CanLog {
         return new CreateMindMapDtoResponse(id, error);
     }
 
+    @RequestMapping(produces = "application/json", method = RequestMethod.GET, value = "getowned")
+    public GetOwnedMindMapsDtoResponse GetOwnedMindMaps(@RequestHeader(value="Authorization") String header)
+    {
+        String error = null;
+        Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
+        if (userId == -1)
+            error = "Invalid token";
+        if (error == null && !userService.userExists(userId))
+            error = "User does not exist";
+        if (error != null)
+            return new GetOwnedMindMapsDtoResponse(null, error);
 
+        final List<MindmapEntity> entities = mindmapService.findOwnedMindMaps(userId);
+        return new GetOwnedMindMapsDtoResponse(
+                entities.stream()
+                .map(entity -> new GetOwnedMindMapsDtoResponse.MindmapDtoResponse(entity.id,
+                        entity.name,
+                        entity.ispublic))
+                .collect(Collectors.toList()),
+                null
+        );
+    }
 }

@@ -1,17 +1,18 @@
 package com.pfee.mindmap.domain.service;
 
 import com.pfee.mindmap.domain.entity.MindmapEntity;
-import com.pfee.mindmap.domain.entity.UserEntity;
 import com.pfee.mindmap.modeltoentity.MindmapModelToEntity;
 import com.pfee.mindmap.persistence.model.MindmapModel;
-import com.pfee.mindmap.persistence.model.UserModel;
+import com.pfee.mindmap.persistence.model.UserMapsModel;
 import com.pfee.mindmap.persistence.repository.MindmapRepository;
+import com.pfee.mindmap.persistence.repository.UserMapsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utils.CanLog;
 import utils.IterableUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MindmapService implements CanLog {
@@ -19,11 +20,14 @@ public class MindmapService implements CanLog {
     private final MindmapRepository mindmapRepository;
 
     private final MindmapModelToEntity mindmapModelToEntity;
+    private final UserMapsRepository userMapsRepository;
 
     public MindmapService(final MindmapRepository mindmapRepository,
-                          final MindmapModelToEntity mindmapModelToEntity) {
+                          final MindmapModelToEntity mindmapModelToEntity,
+                          final UserMapsRepository userMapsRepository) {
         this.mindmapRepository = mindmapRepository;
         this.mindmapModelToEntity = mindmapModelToEntity;
+        this.userMapsRepository = userMapsRepository;
     }
 
     public List<MindmapEntity> findAllMindMap() {
@@ -32,6 +36,16 @@ public class MindmapService implements CanLog {
         logger().trace("Found all mindmaps & cast Iterable to List");
         final var mindmapList = IterableUtils.toList(mindmapIterable);
         return mindmapModelToEntity.convertList(mindmapList);
+    }
+
+    public List<MindmapEntity> findOwnedMindMaps(Integer userId) {
+        List<MindmapModel> maps = userMapsRepository.findAll()
+                .stream()
+                .filter(um -> um.getUser().getId().equals(userId))
+                .filter(um -> um.getUserRole() == 0)
+                .map(UserMapsModel::getMap)
+                .collect(Collectors.toList());
+        return mindmapModelToEntity.convertList(maps);
     }
 
     @Transactional
