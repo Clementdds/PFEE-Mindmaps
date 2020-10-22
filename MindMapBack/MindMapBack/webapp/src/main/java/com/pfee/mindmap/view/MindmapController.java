@@ -1,7 +1,11 @@
 package com.pfee.mindmap.view;
 
 import com.pfee.mindmap.domain.entity.MindmapEntity;
+import com.pfee.mindmap.domain.entity.UserEntity;
+import com.pfee.mindmap.domain.entity.UserMapsEntity;
 import com.pfee.mindmap.domain.service.MindmapService;
+import com.pfee.mindmap.domain.service.UserMapsService;
+import com.pfee.mindmap.domain.service.UserService;
 import com.pfee.mindmap.view.mindmapscontroller.CreateMindMapDtoResponse;
 import com.pfee.mindmap.view.mindmapscontroller.CreateMindMapDtoRequest;
 import com.pfee.mindmap.view.mindmapscontroller.GetAllMindmapsDtoResponse;
@@ -18,9 +22,15 @@ import java.util.stream.Collectors;
 public class MindmapController implements CanLog {
 
     private final MindmapService mindmapService;
+    private final UserMapsService userMapsService;
+    private final UserService userService;
 
-    public MindmapController(final MindmapService mindmapService) {
+    public MindmapController(final MindmapService mindmapService,
+                             final UserMapsService userMapsService,
+                             final UserService userService) {
         this.mindmapService = mindmapService;
+        this.userMapsService = userMapsService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -54,6 +64,14 @@ public class MindmapController implements CanLog {
         }
         if (resultEntity == null)
             error = "error on DB insertion";
+        else
+        {
+            UserEntity user = userService.findById(userId);
+            UserMapsEntity userMap = new UserMapsEntity(0, user, resultEntity, 0);
+            logger().trace("Start TX usermap save");
+            UserMapsEntity resultUsermap = userMapsService.save(userMap);
+            logger().trace("Start TX usermap save");
+        }
 
         return new CreateMindMapDtoResponse(id, error);
     }
