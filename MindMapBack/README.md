@@ -63,3 +63,28 @@ Response :
 }
 ```
 NB : error is null if logout succeeds.
+
+### MINDMAPS
+
+###### Upload a new mindmap
+
+POST http://DOMAIN:9999/mindmaps/create
+
+Header :
+
+`Authorization : Bearer xxxTOKENxxx`
+
+Body:
+```
+{
+    text : "JSON_DOC",
+}
+```
+Response :
+```
+{
+    id : "xxx",
+    error : "xxx"
+}
+```
+NB : id can later be user to access the uploaded mindmap.
