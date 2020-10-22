@@ -14,15 +14,15 @@ POST http://DOMAIN:9999/users/signup
 Body :
 ```
 {
-    email : "xxx@xxx.xxx",
-    password : "xxx"
+    "email" : "xxx@xxx.xxx",
+    "password" : "xxx"
 }
 ```
 Response :
 ```
 {
-    token : "xxx",
-    error : "xxx"
+    "token" : "xxx",
+    "error" : "xxx"
 }
 ```
 NB : If there was no error, the error field will be null. If there was one, the token field will be null.
@@ -34,15 +34,15 @@ POST http://DOMAIN:9999/users/login
 Body:
 ```
 {
-    email : "xxx@xxx.xxx",
-    password : "xxx"
+    "email" : "xxx@xxx.xxx",
+    "password" : "xxx"
 }
 ```
 Response :
 ```
 {
-    token : "xxx",
-    error : "xxx"
+    "token" : "xxx",
+    "error" : "xxx"
 }
 ```
 NB : same as signup
@@ -59,7 +59,7 @@ Response :
 
 ```
 {
-    error : "xxx"
+    "error" : "xxx"
 }
 ```
 NB : error is null if logout succeeds.
@@ -77,14 +77,37 @@ Header :
 Body:
 ```
 {
-    text : "JSON_DOC",
+    "text" : "JSON_DOC",
 }
 ```
 Response :
 ```
 {
-    id : "xxx",
-    error : "xxx"
+    "id" : "xxx",
+    "error" : "xxx"
 }
 ```
 NB : id can later be user to access the uploaded mindmap.
+
+###### Get owned mindmaps
+
+GET http://DOMAIN:9999/mindmaps/getowned
+
+Header :
+
+`Authorization : Bearer xxxTOKENxxx`
+
+Response :
+```
+{
+    "mindmapsList": [
+        {
+            "id": X,
+            "name": "XXX",
+            "isPublic": true/false
+        },
+        ...
+    ],
+    "error": null
+}
+```
