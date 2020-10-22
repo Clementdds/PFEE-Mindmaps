@@ -83,12 +83,10 @@ public class UserController implements CanLog {
     }
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, value = "logout")
-    public LogOutDtoResponse LogOut(@RequestHeader(value="Authorization") String tokenString)
+    public LogOutDtoResponse LogOut(@RequestHeader(value="Authorization") String header)
     {
         String error = null;
-        String[] tokenArray = tokenString.split(" ");
-        String token = tokenArray[1];
-        Integer userId = TokenManager.GetIdFromToken(token);
+        Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
         if (userId == -1)
             error = "Invalid token";
         if (error == null && !userService.userExists(userId))

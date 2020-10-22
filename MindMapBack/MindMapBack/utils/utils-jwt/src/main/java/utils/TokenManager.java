@@ -27,7 +27,7 @@ public class TokenManager {
         return token;
     }
 
-    public static Integer GetIdFromToken(String token)
+    private static Integer GetIdFromToken(String token)
     {
         DecodedJWT jwt = null;
         try {
@@ -40,5 +40,12 @@ public class TokenManager {
             return -1;
         }
         return jwt.getClaim("userId").asInt();
+    }
+
+    public static Integer GetIdFromAuthorizationHeader(String header)
+    {
+        String[] tokenArray = header.split(" ");
+        String token = tokenArray[1];
+        return TokenManager.GetIdFromToken(token);
     }
 }
