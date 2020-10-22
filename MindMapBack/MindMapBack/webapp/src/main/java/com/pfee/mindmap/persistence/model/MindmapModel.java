@@ -17,8 +17,11 @@ public class MindmapModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "fullmaptext", nullable = false, length = 50)
+    @Column(name = "fullmaptext", nullable = false, length = 65536)
     private String fullmaptext;
+
+    @Column(name = "name", nullable = false, length = 128)
+    private String name;
 
     @Column(name = "ispublic", nullable = false)
     private boolean ispublic;
@@ -33,10 +36,12 @@ public class MindmapModel {
 
     public MindmapModel(final Integer id,
                         final String fullmaptext,
+                        final String name,
                         final boolean ispublic,
                         final Set<UserMapsModel> usermaps, final Set<LinksModel> links) {
         this.id = id;
         this.fullmaptext = fullmaptext;
+        this.name = name;
         this.ispublic = ispublic;
         this.usermaps = usermaps;
         this.links = links;
@@ -74,6 +79,14 @@ public class MindmapModel {
 
     public void setFullmaptext(final String fullmaptext) {
         this.fullmaptext = fullmaptext;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
     }
 
     public boolean getIspublic() {return ispublic;}

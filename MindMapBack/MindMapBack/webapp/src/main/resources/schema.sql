@@ -9,6 +9,7 @@ DROP TABLE mindmaps CASCADE;
 CREATE TABLE IF NOT EXISTS mindmaps(
   id serial PRIMARY KEY,
   fullmaptext TEXT,
+  name VARCHAR(128),
   ispublic BOOLEAN
 );
 

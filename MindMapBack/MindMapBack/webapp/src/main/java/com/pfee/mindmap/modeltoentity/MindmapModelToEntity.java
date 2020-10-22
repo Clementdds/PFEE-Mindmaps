@@ -16,7 +16,7 @@ public class MindmapModelToEntity implements Converter.Reversible<MindmapModel, 
      */
     @Override
     public MindmapEntity convert(final MindmapModel from) {
-        return new MindmapEntity(from.getId(), from.getFullmaptext(), from.getIspublic());
+        return new MindmapEntity(from.getId(), from.getFullmaptext(), from.getName(), from.getIspublic());
     }
 
     /**
@@ -24,6 +24,6 @@ public class MindmapModelToEntity implements Converter.Reversible<MindmapModel, 
      */
     @Override
     public MindmapModel revertConvert(final MindmapEntity from) {
-        return new MindmapModel(from.id, from.fullmaptext, from.ispublic, null, null);
+        return new MindmapModel(from.id, from.fullmaptext, from.name, from.ispublic, null, null);
     }
 }

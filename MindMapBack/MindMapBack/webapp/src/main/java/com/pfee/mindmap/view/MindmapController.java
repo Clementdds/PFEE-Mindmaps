@@ -54,7 +54,7 @@ public class MindmapController implements CanLog {
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
         if (userId == -1)
             error = "Invalid token";
-        MindmapEntity entity = new MindmapEntity(0, body.text, false);
+        MindmapEntity entity = new MindmapEntity(0, body.text, body.name, false);
         MindmapEntity resultEntity = null;
         if (error == null){
             logger().trace("Start TX Mindmap save");
@@ -75,4 +75,6 @@ public class MindmapController implements CanLog {
 
         return new CreateMindMapDtoResponse(id, error);
     }
+
+
 }
