@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, useState } from "react";
 import "../Assets/Css/App.css"
 import * as d3 from "d3";
 
@@ -21,7 +21,7 @@ class Viewer extends Component {
     createD3Data = (xmlTextFile) => {
         return this.recurseD3Data(xmlTextFile);
     };
-
+ 
     recurseD3Data = function recurse(root, newColor = "") {
 
         let currentData = {
@@ -42,7 +42,6 @@ class Viewer extends Component {
         {
             tmpscore =  "\n" + root.attributes.SCORE;
         }
-        //console.log(root);
         if (root.elements.length === 0) {
 
             let value = parseInt(root.attributes.CREATED);
@@ -67,7 +66,10 @@ class Viewer extends Component {
                     children.push(recurse(root.elements[i], newColor));
                 }
             }
-
+            if(newColor == "")
+            {
+                newColor ="#000000"
+            }
             currentData = {
                 name: root.attributes.TEXT,
                 children: children,
@@ -80,14 +82,14 @@ class Viewer extends Component {
     };
 
     constructTree = (data) => {
-        console.log(data)
+
         const margin = ({top: 10, right: 120, bottom: 10, left: 40});
         const width = window.innerWidth;
 
         //const offsetx = 100;
         //const offsety = window.innerHeight / 2;
 
-        const dy = width / 5;
+        const dy = width / 4;
         const dx = 30;
         const diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x);
         const tree = d3.tree().nodeSize([dx, dy]).separation(function separation(a, b) {
@@ -133,7 +135,7 @@ class Viewer extends Component {
             .style("user-select", "none")
             .call(d3.zoom()
             .extent([[0, 0], [width, dx]])
-            .scaleExtent([1, 5])
+            .scaleExtent([0.5, 5])
             .on("zoom", function()
             {
                 d3.select("g").attr("transform", d3.event.transform)
@@ -141,16 +143,15 @@ class Viewer extends Component {
         
         const gLink = svg.append("g")
             .attr("fill", "none")
-            .attr("stroke", "#555")
+            .attr("stroke", "#000")
             .attr("stroke-opacity", 0.4)
             .attr("stroke-width", 1.5);
             
         const gNode = svg.select("g").append("g")
             .attr("cursor", "pointer")
-            .attr("pointer-events", "all")
-            .attr("stroke-opacity", 0)
+            .attr("pointer-events","all")
+            .attr("stroke-opacity", 1)
             .attr("stroke-width", 0);
-
             
         function update(source) {
             const duration = d3.event && d3.event.altKey ? 2500 : 250;
@@ -171,7 +172,7 @@ class Viewer extends Component {
 
             const transition = svg.transition()
                 .duration(duration)
-                .attr("viewBox", [-margin.left, left.x - margin.top, width, height])
+                .attr("viewBox", [-margin.left, left.x - margin.top, window.innerWidth, window.innerHeight])
                 .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
 
             // Update the nodes…
@@ -181,16 +182,12 @@ class Viewer extends Component {
             // Enter any new nodes at the parent's previous position.
             const nodeEnter = node.enter().append("g")
                 .attr("transform", d => `translate(${source.y0},${source.x0})`)
-                .attr("fill-opacity", 0)
-                .attr("stroke-opacity", 0);
-
-            //.attr("xlink:href", function(node) {})
-
+                .attr("fill-opacity", 1)
+                .attr("stroke-opacity", 1);
 
             nodeEnter.append("circle")
                 .attr("cx", d => d._children ? 0 : 1)
                 .attr("r", d => d._children ? 2.5 : 1)
-                //attr("fill", d => d._children ? "#555" : "    ")
                 .attr("stroke", d => d._children? "none" : d.data.color)
                 .attr("stroke-width", 5)
                 .style("fill", d => d._children ?  d.data.color : "none")
@@ -279,13 +276,13 @@ class Viewer extends Component {
         }
 
         update(root);
-        return svg.node();
+        return svg.node();       
     };
-
+    
     render = () => {
         return (
             <div className="Viewer-div" id="viewer_div">
-                < svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" /> 
+                < svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
         )
     }
