@@ -1,5 +1,7 @@
 package com.pfee.mindmap.view.linkcontroller;
 
+import java.math.BigInteger;
+
 public class GetAllLinksDtoResponse {
 
     public final Iterable<GetAllLinksDtoResponse.LinksDtoResponse> linksList;
@@ -10,12 +12,12 @@ public class GetAllLinksDtoResponse {
 
     public static class LinksDtoResponse {
         public final Integer id;
-        public final Integer nodeid;
+        public final BigInteger nodeid;
         public final MindmapDtoResponse map;
         public final String url;
 
         public LinksDtoResponse(final Integer id,
-                                final Integer nodeid,
+                                final BigInteger nodeid,
                                 final MindmapDtoResponse map, final String url) {
             this.id = id;
             this.nodeid = nodeid;

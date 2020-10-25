@@ -111,3 +111,52 @@ Response :
     "error": null
 }
 ```
+
+###### Get mindmap from id
+
+GET http://DOMAIN:9999/mindmaps/getMindmap
+
+Header :
+
+`Authorization : Bearer xxxTOKENxxx`
+
+Body:
+```
+{
+    "id" : Int du mindmap,
+}
+```
+
+Response :
+```
+{
+    "mindmap" : "Json du mindmap"
+    "error"   : "null"
+}
+```
+
+### LINKS
+
+###### Add a mindmap link in public
+
+POST http://DOMAIN:9999/links/addPublicLink
+
+Header :
+
+`Authorization : Bearer xxxTOKENxxx`
+
+Body:
+```
+{
+    "idMindmap" : Int du mindmap,
+    "nodeid"    : Bigint Id du node
+}
+```
+
+Response :
+```
+{
+    "url": "UrlGenerated",
+    "error": "null"
+}
+```

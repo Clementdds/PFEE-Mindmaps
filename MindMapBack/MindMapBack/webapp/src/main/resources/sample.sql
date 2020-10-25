@@ -27,4 +27,4 @@ INSERT INTO users (username, password)
  (1767526745, (SELECT id FROM mindmaps WHERE fullmaptext='fullmaptext1'), 'https://example.com'),
  (1767526746, (SELECT id FROM mindmaps WHERE fullmaptext='fullmaptext2'), 'https://google.com'),
  (1767526748, (SELECT id FROM mindmaps WHERE fullmaptext='fullmaptext3'), 'https://epita.fr'),
- (1767526740, (SELECT id FROM mindmaps WHERE fullmaptext='fullmaptext4'), 'https://example.com');
+ (1767526740, (SELECT id FROM mindmaps WHERE fullmaptext='fullmaptext4'), 'https://example2.com');

@@ -104,13 +104,6 @@ public class MindmapController implements CanLog {
         );
     }
 
-    /*
-    * récupérer un mindmaps par son Id
-        Header : token
-        Call : adresse fixe + id
-        Retour : json de l'arbre
-    * */
-
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getMindmap")
     public GetMindmapFromIdDtoResponse GetMindmapFromId(@RequestHeader(value="Authorization") String header,
                                                         @RequestBody GetMindmapFromIdDtoRequest request)

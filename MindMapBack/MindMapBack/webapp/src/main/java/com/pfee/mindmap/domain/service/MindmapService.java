@@ -64,4 +64,19 @@ public class MindmapService implements CanLog {
         var mindmapEntity = mindmapModelToEntity.convert(mindmapModel.get());
         return mindmapEntity;
     }
+
+    public MindmapEntity ChangeMindmapVisibility(boolean isPublic, int id)
+    {
+        var modelOpt = mindmapRepository.findById(id);
+        if (modelOpt.isEmpty())
+            return null;
+
+        var model = modelOpt.get();
+        model.setIspublic(isPublic);
+        model = mindmapRepository.save(model);
+
+        var mindmapEntity = mindmapModelToEntity.convert(model);
+        return mindmapEntity;
+    }
+
 }

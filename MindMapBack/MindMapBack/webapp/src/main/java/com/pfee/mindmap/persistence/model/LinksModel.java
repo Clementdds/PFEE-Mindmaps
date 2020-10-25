@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.math.BigInteger;
 
 @Entity
 @Table(name = "links")
@@ -17,8 +18,8 @@ public class LinksModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "nodeid", nullable = false)
-    private Integer nodeid;
+    @Column(name = "nodeid", nullable = true)
+    private BigInteger nodeid;
 
     @ManyToOne
     @JoinColumn(name = "mindmapid", insertable = true, updatable = true)
@@ -27,7 +28,7 @@ public class LinksModel {
     @Column(name = "url", nullable = false, length = 128)
     private String url;
 
-    public LinksModel(final Integer id, final Integer nodeid, final MindmapModel map, final String url) {
+    public LinksModel(final Integer id, final BigInteger nodeid, final MindmapModel map, final String url) {
         this.id = id;
         this.nodeid = nodeid;
         this.map = map;
@@ -44,11 +45,11 @@ public class LinksModel {
         this.id = id;
     }
 
-    public Integer getNodeid() {
+    public BigInteger getNodeid() {
         return nodeid;
     }
 
-    public void setNodeid(final Integer nodeid) {
+    public void setNodeid(final BigInteger nodeid) {
         this.nodeid = nodeid;
     }
 
