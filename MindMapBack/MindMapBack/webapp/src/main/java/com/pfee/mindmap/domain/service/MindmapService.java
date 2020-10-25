@@ -54,4 +54,14 @@ public class MindmapService implements CanLog {
         final var resultModel = mindmapRepository.save(model);
         return mindmapModelToEntity.convert(resultModel);
     }
+
+    public MindmapEntity findMindmapById(Integer mindmapId)
+    {
+        var mindmapModel = mindmapRepository.findById(mindmapId);
+        if (mindmapModel.isEmpty())
+            return null;
+
+        var mindmapEntity = mindmapModelToEntity.convert(mindmapModel.get());
+        return mindmapEntity;
+    }
 }

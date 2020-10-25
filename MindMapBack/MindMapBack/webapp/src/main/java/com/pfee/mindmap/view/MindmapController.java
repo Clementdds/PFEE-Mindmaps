@@ -9,8 +9,9 @@ import com.pfee.mindmap.domain.service.UserService;
 import com.pfee.mindmap.view.mindmapscontroller.CreateMindMapDtoResponse;
 import com.pfee.mindmap.view.mindmapscontroller.CreateMindMapDtoRequest;
 import com.pfee.mindmap.view.mindmapscontroller.GetAllMindmapsDtoResponse;
+import com.pfee.mindmap.view.mindmapscontroller.GetMindmapFromIdDtoRequest;
+import com.pfee.mindmap.view.mindmapscontroller.GetMindmapFromIdDtoResponse;
 import com.pfee.mindmap.view.mindmapscontroller.GetOwnedMindMapsDtoResponse;
-import com.pfee.mindmap.view.userscontroller.LogOutDtoResponse;
 import org.springframework.web.bind.annotation.*;
 import utils.CanLog;
 import utils.TokenManager;
@@ -101,5 +102,43 @@ public class MindmapController implements CanLog {
                 .collect(Collectors.toList()),
                 null
         );
+    }
+
+    /*
+    * récupérer un mindmaps par son Id
+        Header : token
+        Call : adresse fixe + id
+        Retour : json de l'arbre
+    * */
+
+    @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getMindmap")
+    public GetMindmapFromIdDtoResponse GetMindmapFromId(@RequestHeader(value="Authorization") String header,
+                                                        @RequestBody GetMindmapFromIdDtoRequest request)
+    {
+        String error = null;
+        Integer id = -1;
+        Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
+        if (userId == -1)
+            error = "Invalid token";
+        if (error == null && !userService.userExists(userId))
+            error = "User does not exist";
+
+        if (error != null)
+        {
+            logger().error("Error when trying to get mindmap from id: " + error);
+            return new GetMindmapFromIdDtoResponse(null , error);
+        }
+
+        logger().trace("Start TX get mindmap from id");
+        var mindmapEntity = mindmapService.findMindmapById(request.id);
+        logger().trace("Finish TX get mindmap from id");
+
+        if (mindmapEntity == null)
+        {
+            logger().error("Get mindmap from id fail, no entity found");
+            return new GetMindmapFromIdDtoResponse(null , "Couldn't find the mindmap in database, are you sure that your id is good ?");
+        }
+
+        return new GetMindmapFromIdDtoResponse(mindmapEntity.fullmaptext, null);
     }
 }

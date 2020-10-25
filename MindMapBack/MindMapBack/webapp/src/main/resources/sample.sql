@@ -6,12 +6,12 @@ INSERT INTO users (username, password)
  ('Jeremy', 'passwordJeremy');
  
  
- INSERT INTO mindmaps (fullmaptext, ispublic)
+ INSERT INTO mindmaps (fullmaptext, name, ispublic)
  VALUES
- ('fullmaptext1', true),
- ('fullmaptext2', false),
- ('fullmaptext3', false),
- ('fullmaptext4', true);
+ ('fullmaptext1', 'map1', true),
+ ('fullmaptext2', 'map2', false),
+ ('fullmaptext3', 'map3', false),
+ ('fullmaptext4', 'map4', true);
  
 
  INSERT INTO usermaps (userid, mapid, userrole)
