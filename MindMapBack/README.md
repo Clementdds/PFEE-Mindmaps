@@ -139,6 +139,8 @@ Response :
 
 ###### Add a mindmap link in public
 
+*N.B. the owner id of a private mindmap is the id of the user that send the request*
+
 POST http://DOMAIN:9999/links/addPublicLink
 
 Header :
@@ -149,7 +151,9 @@ Body:
 ```
 {
     "idMindmap" : Int du mindmap,
-    "nodeid"    : Bigint Id du node
+    "nodeid"    : Bigint Id du node,
+    "isPublic"  : true/false,
+    "emails"     : Array of Username -- should be emails
 }
 ```
 
@@ -158,5 +162,9 @@ Response :
 {
     "url": "UrlGenerated",
     "error": "null"
+    "addedEmails": [
+        "thomas.curti@epita.fr",
+        "vincent1.masson@epita.fr"
+    ]
 }
 ```
