@@ -78,21 +78,21 @@ const getMindmapsById = (id) => {
  * Post Mindmaps
  */
 
-const callPostMindmaps = ({tree, name}) => {
+const callPostMindmaps = ({tree, name, isPublic}) => {
     const requestOptions = {
         method: 'POST',
         headers: requestHeader.AuthPostHeader(),
-        body: JSON.stringify({text: tree, name: name})
+        body: JSON.stringify({text: tree, name: name, isPublic: isPublic})
     };
 
     return fetch(API_POST_MINDMAPS_ENDPOINT, requestOptions)
         .then(callHandler.handleResponse);
 };
 
-const postMindmaps = ({tree, name}) => {
+const postMindmaps = ({tree, name, isPublic}) => {
     console.log("Post Mindmaps");
 
-    callPostMindmaps({tree, name})
+    callPostMindmaps({tree, name, isPublic})
         .then((data) => {
                 if (data) {
                     console.log(data);
