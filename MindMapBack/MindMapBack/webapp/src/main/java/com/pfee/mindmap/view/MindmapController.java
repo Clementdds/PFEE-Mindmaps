@@ -59,7 +59,7 @@ public class MindmapController implements CanLog {
             error = "Invalid token";
         if (error == null && !userService.userExists(userId))
             error = "User does not exist";
-        MindmapEntity entity = new MindmapEntity(0, body.text, body.name, false);
+        MindmapEntity entity = new MindmapEntity(0, body.text, body.name, body.isPublic);
         MindmapEntity resultEntity = null;
         if (error == null){
             logger().trace("Start TX Mindmap save");
