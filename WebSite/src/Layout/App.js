@@ -1,41 +1,50 @@
-import React from 'react';
-import Viewer from "./Viewer";
+import React, {Suspense, lazy} from 'react';
 
-import {connect} from "react-redux";
-import * as actionTypes from '../Actions/ActionsTypes'
+// React-Dom
+import {Router, Switch, Route} from 'react-router-dom';
 
-const App = ({isUploaded, textFile, dispatch}) => {
+// Components
+import Header from "./Header";
+import PrivateRoute from "../Components/Routes/PrivateRoute";
+import LoginPage from "./LoginPage";
+import SignUpPage from "./SignUpPage";
+import history from "../Helpers/History";
+import HomePage from "./HomePage";
 
-    const showFile = async (e) => {
-        e.preventDefault();
-        const reader = new FileReader();
+// Error Page
+const Error404Page = lazy(() => import('../Components/ErrorsPages/Error404'));
 
-        reader.onload = async (e) => {
-
-            const text = (e.target.result);
-            dispatch({type: actionTypes.SET_INPUT_FILE, payload: text});
-        };
-        reader.readAsText(e.target.files[0])
-    };
+const App = () => {
 
     return (
-        <div>
-            {isUploaded ?
-                (
-                    <Viewer textFile={textFile}/>
-                ) :
-                (
-                    <div><input type="file" onChange={(e) => showFile(e)}/></div>
-                )}
-        </div>
+        <Router history={history}>
+            <Suspense fallback={<div>loading...</div>}>
+                <Header/>
+                <Switch>
+                    {/* Home  */}
+                    <PrivateRoute exact path={"/"}>
+                        <HomePage/>
+                    </PrivateRoute>
+
+                    {/* Login  */}
+                    <Route exact path={"/login"}>
+                        <LoginPage/>
+                    </Route>
+
+                    {/* Sign Up  */}
+                    <Route exact path={"/sign"}>
+                        <SignUpPage/>
+                    </Route>
+
+                    {/* 404  */}
+                    <Route>
+                        <Error404Page/>
+                    </Route>
+                </Switch>
+            </Suspense>
+        </Router>
     );
 };
 
-const mapStateToProps = state => {
-    return {
-        isUploaded: state.Viewer.isUploaded,
-        textFile: state.Viewer.textFile,
-    };
-};
 
-export default connect(mapStateToProps)(App);
+export default App;
