@@ -78,6 +78,8 @@ Body:
 ```
 {
     "text" : "JSON_DOC",
+    "name" : "example_mindmap"
+    "isPublic" : true|false
 }
 ```
 Response :
@@ -87,7 +89,7 @@ Response :
     "error" : "xxx"
 }
 ```
-NB : id can later be user to access the uploaded mindmap.
+NB : id can later be used to access the uploaded mindmap.
 
 ###### Get owned mindmaps
 
