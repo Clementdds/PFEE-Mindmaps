@@ -1,9 +1,9 @@
 import React from 'react';
 import {connect} from "react-redux";
-import * as actionTypes from '../Actions/ActionsTypes'
-import Viewer from "./Viewer";
+import * as actionTypes from '../../Actions/ActionsTypes'
+import Viewer from "../../Layout/Viewer";
 
-const GetInputFile = ({isUploaded, textFile, dispatch}) => {
+const FormNewMindmap = ({isUploaded, textFile, dispatch}) => {
 
     const showFile = async (e) => {
         e.preventDefault();
@@ -37,4 +37,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(GetInputFile);
+export default connect(mapStateToProps)(FormNewMindmap);

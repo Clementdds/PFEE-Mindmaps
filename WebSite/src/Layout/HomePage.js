@@ -1,8 +1,9 @@
 import React, {useEffect} from "react";
 import userService from "../Services/UserService";
-import GetInputFile from "./GetInputFile";
+import GetInputFile from "../Components/Forms/FormNewMindmap";
 import {connect} from "react-redux";
 import mindmapsService from "../Services/MindMapsService";
+import MindmapData from "../Components/List/MindmapData";
 
 const HomePage = ({mindmapsList, error, dispatch}) => {
 
@@ -17,9 +18,7 @@ const HomePage = ({mindmapsList, error, dispatch}) => {
             {mindmapsList.length ?
                 mindmapsList.map((x) => {
                     return (
-                        <div key={x}>
-                            {x}
-                        </div>
+                        <MindmapData Mindmap={x}/>
                     );
                 }) :
                 <div>
