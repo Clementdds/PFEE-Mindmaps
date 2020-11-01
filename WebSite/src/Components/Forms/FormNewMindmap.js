@@ -91,7 +91,7 @@ const FormNewMindmap = ({error, dispatch}) => {
                         file: JSON.stringify(result),
                         isPublic: isPublic,
                         name: name,
-                        emails: listEmails
+                        emails: listEmails.trim().split(';')
                     });
                 } catch (e) {
                     dispatch({type: actionTypes.FORM_ERROR, payload: "File does not respect xml format"});

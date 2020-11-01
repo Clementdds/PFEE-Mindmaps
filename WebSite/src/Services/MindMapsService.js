@@ -3,31 +3,32 @@ import requestHeader from "../Helpers/AuthHeaders";
 import * as actionTypes from '../Actions/ActionsTypes'
 import store from "../Store/ConfigureStore";
 import callHandler from "../Helpers/HandleResponse";
+import linkService from "./LinksService";
 
-const API_GET_LIST_MINDMAPS_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getowned";
+const API_GET_MINDMAPS_OWNED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getowned";
 const API_GET_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getMindmap";
-const API_POST_MINDMAPS_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/create";
+const API_POST_MINDMAPS_CREATE_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/create";
 
 /*
  * Get list Mindmaps based on the Header token
  */
 
-const callGetListMindmaps = () => {
+const callGetOwnedMindmaps = () => {
     const requestOptions = {
         method: 'GET',
         headers: requestHeader.AuthHeader(),
     };
 
-    return fetch(API_GET_LIST_MINDMAPS_ENDPOINT, requestOptions)
+    return fetch(API_GET_MINDMAPS_OWNED_ENDPOINT, requestOptions)
         .then(callHandler.handleResponse);
 };
 
-const getListMindmaps = () => {
+const getOwnedMindmaps = () => {
     console.log("Get list Mindmaps service");
 
     store.dispatch({type: actionTypes.MINDMAPS_LOADING});
 
-    callGetListMindmaps()
+    callGetOwnedMindmaps()
         .then(
             (data) => {
                 if (Array.isArray(data.mindmapsList) && data.mindmapsList.length) {
@@ -45,23 +46,23 @@ const getListMindmaps = () => {
  * Get Mindmaps by id
  */
 
-const callGetMindmapsById = ({id}) => {
+const callGetMindmapsById = ({id, url}) => {
     const requestOptions = {
         method: 'GET',
         headers: requestHeader.AuthHeader(),
-        body: JSON.stringify({id: id})
+        body: JSON.stringify({id: id, url: url})
     };
 
     return fetch(API_GET_MINDMAPS_BY_ID_ENDPOINT, requestOptions)
         .then(callHandler.handleResponse);
 };
 
-const getMindmapsById = (id) => {
+const getMindmapsById = ({id, url}) => {
     console.log("Get Mindmaps by id service");
 
     store.dispatch({type: actionTypes.MINDMAPS_LOADING});
 
-    callGetMindmapsById(id)
+    callGetMindmapsById({id, url})
         .then((data) => {
                 if (data.mindmapsList) {
                     // Dispatch to state
@@ -78,36 +79,43 @@ const getMindmapsById = (id) => {
  * Post Mindmaps
  */
 
-const callPostMindmaps = ({tree, name, isPublic}) => {
+const callPostCreateMindmaps = ({file, name, isPublic}) => {
     const requestOptions = {
         method: 'POST',
         headers: requestHeader.AuthPostHeader(),
-        body: JSON.stringify({text: tree, name: name, isPublic: isPublic})
+        body: JSON.stringify({text: file, name: name, isPublic: isPublic})
     };
+    console.log(requestOptions);
 
-    return fetch(API_POST_MINDMAPS_ENDPOINT, requestOptions)
+    return fetch(API_POST_MINDMAPS_CREATE_ENDPOINT, requestOptions)
         .then(callHandler.handleResponse);
 };
 
-const postMindmaps = ({tree, name, isPublic}) => {
+const postCreateMindmaps = ({file, name, isPublic, emails}) => {
     console.log("Post Mindmaps");
 
-    callPostMindmaps({tree, name, isPublic})
+    callPostCreateMindmaps({file, name, isPublic})
         .then((data) => {
                 if (data) {
                     console.log(data);
+                    linkService.postAddPublicLink({
+                        idMindmap: data.id,
+                        nodeid: null,
+                        isPublic: isPublic,
+                        emails: emails
+                    })
                 }
             },
             (error) => {
-                store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: error})
+                store.dispatch({type: actionTypes.FORM_ERROR, payload: error})
             }
         );
 };
 
 const mindmapsService = {
-    getListMindmaps,
+    getOwnedMindmaps,
     getMindmapsById,
-    postMindmaps,
+    postCreateMindmaps,
 };
 
 export default mindmapsService;
