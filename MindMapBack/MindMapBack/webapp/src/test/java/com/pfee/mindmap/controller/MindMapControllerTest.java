@@ -74,7 +74,7 @@ public class MindMapControllerTest {
         String authHeader = "Bearer " + token;
         var result = mindmapController.CreateMindMap(authHeader, body);
         Assert.assertNotNull(result);
-        Assert.assertNotEquals(java.util.Optional.of(-1), result.id);
+        Assert.assertNotEquals(-1, (long)result.id);
         Assert.assertNull(result.error);
         var mms = mindmapRepository.findAll();
         Assert.assertEquals(1, mms.size());
@@ -86,5 +86,6 @@ public class MindMapControllerTest {
         UserMapsModel um = ums.iterator().next();
         Assert.assertEquals(EMAIL, um.getUser().getUsername());
         Assert.assertEquals(result.id, um.getMap().getId());
+        Assert.assertEquals(0, (long)um.getUserRole());
     }
 }
