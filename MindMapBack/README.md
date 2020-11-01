@@ -114,7 +114,9 @@ Response :
 }
 ```
 
-###### Get mindmap from id
+###### Get mindmap from id or url
+
+/!\ You cannot put id AND url, there is ALWAYS one of them with the null value
 
 GET http://DOMAIN:9999/mindmaps/getMindmap
 
@@ -126,6 +128,7 @@ Body:
 ```
 {
     "id" : Int du mindmap,
+    "url": Url du mindmap
 }
 ```
 

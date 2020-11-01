@@ -9,12 +9,12 @@ import com.pfee.mindmap.domain.service.UserService;
 import com.pfee.mindmap.modeltoentity.MindmapModelToEntity;
 import com.pfee.mindmap.modeltoentity.UserMapsModelToEntity;
 import com.pfee.mindmap.modeltoentity.UserModelToEntity;
-import com.pfee.mindmap.persistence.model.UserMapsModel;
+import com.pfee.mindmap.persistence.repository.LinksRepository;
 import com.pfee.mindmap.persistence.repository.MindmapRepository;
 import com.pfee.mindmap.persistence.repository.UserMapsRepository;
 import com.pfee.mindmap.persistence.repository.UserRepository;
 import com.pfee.mindmap.view.MindmapController;
-import com.pfee.mindmap.view.mindmapscontroller.GetMindmapFromIdDtoRequest;
+import com.pfee.mindmap.view.mindmapscontroller.GetMindmapDtoRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +37,9 @@ public class MindMapControllerWithContextTest {
     @Autowired
     UserMapsRepository userMapsRepository;
 
+    @Autowired
+    LinksRepository linksRepository;
+
     UserService userService;
     MindmapService mindmapService;
     UserMapsService userMapsService;
@@ -57,12 +60,14 @@ public class MindMapControllerWithContextTest {
         userMapsRepository.deleteAll();
         userService = new UserService(userRepository, new UserModelToEntity());
         mindmapService = new MindmapService(mindmapRepository,
-                new MindmapModelToEntity(),
-                userMapsRepository);
+                                            linksRepository,
+                                            new MindmapModelToEntity(),
+                                            userMapsRepository);
         userMapsService = new UserMapsService(userMapsRepository,
-                userRepository,
-                mindmapRepository,
-                new UserMapsModelToEntity(new UserModelToEntity(), new MindmapModelToEntity()));
+                                              userRepository,
+                                              mindmapRepository,
+                                              new UserMapsModelToEntity(new UserModelToEntity(),
+                                                                        new MindmapModelToEntity()));
         mindmapController = new MindmapController(mindmapService, userMapsService, userService);
 
         UserEntity defaultEntity = userService.save(new UserEntity(0, EMAIL, PWD));
@@ -73,8 +78,7 @@ public class MindMapControllerWithContextTest {
     }
 
     @Test
-    public void GetOwnedMindMapSuccessTest()
-    {
+    public void GetOwnedMindMapSuccessTest() {
         String authToken = "Bearer " + token;
         var result = mindmapController.GetOwnedMindMaps(authToken);
         Assert.assertNotNull(result);
@@ -82,17 +86,16 @@ public class MindMapControllerWithContextTest {
         Assert.assertNull(result.error);
         Assert.assertTrue(result.mindmapsList.iterator().hasNext());
         var item = result.mindmapsList.iterator().next();
-        Assert.assertEquals(MM_ID, (long)item.id);
+        Assert.assertEquals(MM_ID, (long) item.id);
         Assert.assertEquals(MM_NAME, item.name);
         Assert.assertFalse(item.isPublic);
     }
 
     @Test
-    public void GetMindMapByIdSuccessTest()
-    {
+    public void GetMindMapByIdSuccessTest() {
         String authHeader = "Bearer " + token;
-        var body = new GetMindmapFromIdDtoRequest((int)MM_ID);
-        var result = mindmapController.GetMindmapFromId(authHeader, body);
+        var body = new GetMindmapDtoRequest((int) MM_ID, null);
+        var result = mindmapController.GetMindmap(authHeader, body);
         Assert.assertNotNull(result);
         Assert.assertNull(result.error);
         Assert.assertEquals(MM_TEXT, result.mindmap);

@@ -9,6 +9,7 @@ import com.pfee.mindmap.modeltoentity.UserMapsModelToEntity;
 import com.pfee.mindmap.modeltoentity.UserModelToEntity;
 import com.pfee.mindmap.persistence.model.MindmapModel;
 import com.pfee.mindmap.persistence.model.UserMapsModel;
+import com.pfee.mindmap.persistence.repository.LinksRepository;
 import com.pfee.mindmap.persistence.repository.MindmapRepository;
 import com.pfee.mindmap.persistence.repository.UserMapsRepository;
 import com.pfee.mindmap.persistence.repository.UserRepository;
@@ -36,6 +37,9 @@ public class MindMapControllerTest {
     @Autowired
     UserMapsRepository userMapsRepository;
 
+    @Autowired
+    LinksRepository linksRepository;
+
     UserService userService;
     MindmapService mindmapService;
     UserMapsService userMapsService;
@@ -53,12 +57,14 @@ public class MindMapControllerTest {
         userMapsRepository.deleteAll();
         userService = new UserService(userRepository, new UserModelToEntity());
         mindmapService = new MindmapService(mindmapRepository,
-                new MindmapModelToEntity(),
-                userMapsRepository);
+                                            linksRepository,
+                                            new MindmapModelToEntity(),
+                                            userMapsRepository);
         userMapsService = new UserMapsService(userMapsRepository,
-                userRepository,
-                mindmapRepository,
-                new UserMapsModelToEntity(new UserModelToEntity(), new MindmapModelToEntity()));
+                                              userRepository,
+                                              mindmapRepository,
+                                              new UserMapsModelToEntity(new UserModelToEntity(),
+                                                                        new MindmapModelToEntity()));
         mindmapController = new MindmapController(mindmapService, userMapsService, userService);
 
         UserEntity defaultEntity = userService.save(new UserEntity(0, EMAIL, PWD));
@@ -66,15 +72,14 @@ public class MindMapControllerTest {
     }
 
     @Test
-    public void CreateMindMapSuccessTest()
-    {
+    public void CreateMindMapSuccessTest() {
         mindmapRepository.deleteAll();
         userMapsRepository.deleteAll();
         CreateMindMapDtoRequest body = new CreateMindMapDtoRequest("json body", "MyMindMap", false);
         String authHeader = "Bearer " + token;
         var result = mindmapController.CreateMindMap(authHeader, body);
         Assert.assertNotNull(result);
-        Assert.assertNotEquals(-1, (long)result.id);
+        Assert.assertNotEquals(-1, (long) result.id);
         Assert.assertNull(result.error);
         var mms = mindmapRepository.findAll();
         Assert.assertEquals(1, mms.size());
@@ -86,6 +91,6 @@ public class MindMapControllerTest {
         UserMapsModel um = ums.iterator().next();
         Assert.assertEquals(EMAIL, um.getUser().getUsername());
         Assert.assertEquals(result.id, um.getMap().getId());
-        Assert.assertEquals(0, (long)um.getUserRole());
+        Assert.assertEquals(0, (long) um.getUserRole());
     }
 }

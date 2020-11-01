@@ -4,6 +4,7 @@ import com.pfee.mindmap.domain.entity.MindmapEntity;
 import com.pfee.mindmap.modeltoentity.MindmapModelToEntity;
 import com.pfee.mindmap.persistence.model.MindmapModel;
 import com.pfee.mindmap.persistence.model.UserMapsModel;
+import com.pfee.mindmap.persistence.repository.LinksRepository;
 import com.pfee.mindmap.persistence.repository.MindmapRepository;
 import com.pfee.mindmap.persistence.repository.UserMapsRepository;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,17 @@ import java.util.stream.Collectors;
 public class MindmapService implements CanLog {
 
     private final MindmapRepository mindmapRepository;
+    private final LinksRepository linksRepository;
 
     private final MindmapModelToEntity mindmapModelToEntity;
     private final UserMapsRepository userMapsRepository;
 
     public MindmapService(final MindmapRepository mindmapRepository,
+                          final LinksRepository linksRepository,
                           final MindmapModelToEntity mindmapModelToEntity,
                           final UserMapsRepository userMapsRepository) {
         this.mindmapRepository = mindmapRepository;
+        this.linksRepository = linksRepository;
         this.mindmapModelToEntity = mindmapModelToEntity;
         this.userMapsRepository = userMapsRepository;
     }
@@ -55,14 +59,37 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convert(resultModel);
     }
 
-    public MindmapEntity findMindmapById(Integer mindmapId)
+    public MindmapEntity findMindmapById(Integer mindmapId, String url)
     {
-        var mindmapModel = mindmapRepository.findById(mindmapId);
-        if (mindmapModel.isEmpty())
-            return null;
+        //find by url
+        MindmapModel mindmapModel = null;
+        if (mindmapId == null)
+        {
+            var links = linksRepository.findAll();
+            if (links == null)
+                return null;
 
-        var mindmapEntity = mindmapModelToEntity.convert(mindmapModel.get());
+            for (var link: links) {
+                if (url.equals(link.getUrl())){
+                    mindmapModel = link.getMap();
+                    break;
+                }
+            }
+
+            if (mindmapModel == null)
+                return null;
+        }
+        //find by id
+        else {
+            var model = mindmapRepository.findById(mindmapId);
+            if (model.isEmpty())
+                return null;
+            mindmapModel = model.get();
+        }
+
+        var mindmapEntity = mindmapModelToEntity.convert(mindmapModel);
         return mindmapEntity;
+
     }
 
     public MindmapEntity ChangeMindmapVisibility(boolean isPublic, int id)
