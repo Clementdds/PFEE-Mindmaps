@@ -14,6 +14,7 @@ import com.pfee.mindmap.persistence.repository.MindmapRepository;
 import com.pfee.mindmap.persistence.repository.UserMapsRepository;
 import com.pfee.mindmap.persistence.repository.UserRepository;
 import com.pfee.mindmap.view.MindmapController;
+import com.pfee.mindmap.view.mindmapscontroller.GetMindmapFromIdDtoRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,5 +85,16 @@ public class MindMapControllerWithContextTest {
         Assert.assertEquals(MM_ID, (long)item.id);
         Assert.assertEquals(MM_NAME, item.name);
         Assert.assertFalse(item.isPublic);
+    }
+
+    @Test
+    public void GetMindMapByIdSuccessTest()
+    {
+        String authHeader = "Bearer " + token;
+        var body = new GetMindmapFromIdDtoRequest((int)MM_ID);
+        var result = mindmapController.GetMindmapFromId(authHeader, body);
+        Assert.assertNotNull(result);
+        Assert.assertNull(result.error);
+        Assert.assertEquals(MM_TEXT, result.mindmap);
     }
 }
