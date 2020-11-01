@@ -42,12 +42,15 @@ public class UserControllerTest {
     {
         SignUpDtoRequest body = new SignUpDtoRequest("user.user@user.fr",
                 "ouioui123");
-        userController.SignUp(body);
+        var result = userController.SignUp(body);
         var test = userRepository.findAll();
         Assert.assertEquals(1, test.size());
         UserModel m = test.iterator().next();
         Assert.assertEquals("user.user@user.fr", m.getUsername());
         Assert.assertEquals("ouioui123", m.getPassword());
+        Assert.assertNotNull(result);
+        Assert.assertNull(result.error);
+        Assert.assertNotNull(result.token);
     }
 
 }
