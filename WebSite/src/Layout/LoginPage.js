@@ -17,19 +17,27 @@ const LoginPage = ({isSignedIn, error, dispatch}) => {
         userService.login({email: email, password: password});
     };
 
+    /*
+     *  Email
+     */
+
     const handleEmailChange = useCallback(
         (newEmail) => setEmail(newEmail),
-        []
-    );
-
-    const handlePasswordChange = useCallback(
-        (newPassword) => setPassword(newPassword),
         []
     );
 
     const handleEmailOnchange = useCallback((e) => handleEmailChange(e.target.value), [
         handleEmailChange,
     ]);
+
+    /*
+     *  Password
+     */
+
+    const handlePasswordChange = useCallback(
+        (newPassword) => setPassword(newPassword),
+        []
+    );
 
     const handlePasswordOnchange = useCallback((e) => handlePasswordChange(e.target.value), [
         handlePasswordChange,
@@ -56,14 +64,12 @@ const LoginPage = ({isSignedIn, error, dispatch}) => {
                         <div>
                             <input aria-label="Email address" type="email" required
                                    placeholder="Email address"
-                                   value={email}
                                    onChange={handleEmailOnchange}
                             />
                         </div>
                         <div>
                             <input aria-label="Password" type="password" required
                                    placeholder="Password"
-                                   value={password}
                                    onChange={handlePasswordOnchange}
                             />
                         </div>

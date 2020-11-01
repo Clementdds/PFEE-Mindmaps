@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import userService from "../Services/UserService";
-import GetInputFile from "../Components/Forms/FormNewMindmap";
+import FormNewMindmap from "../Components/Forms/FormNewMindmap";
 import {connect} from "react-redux";
 import mindmapsService from "../Services/MindMapsService";
 import MindmapData from "../Components/List/MindmapData";
@@ -8,7 +8,7 @@ import MindmapData from "../Components/List/MindmapData";
 const HomePage = ({mindmapsList, error, dispatch}) => {
 
     useEffect(() => {
-        mindmapsService.getListMindmaps();
+        mindmapsService.getOwnedMindmaps();
     }, [dispatch]);
 
     return (
@@ -18,7 +18,7 @@ const HomePage = ({mindmapsList, error, dispatch}) => {
             {mindmapsList.length ?
                 mindmapsList.map((x) => {
                     return (
-                        <MindmapData Mindmap={x}/>
+                        <MindmapData Mindmap={x} key={x.id}/>
                     );
                 }) :
                 <div>
@@ -28,7 +28,7 @@ const HomePage = ({mindmapsList, error, dispatch}) => {
 
             {error && <div>Error : {error}</div>}
 
-            <GetInputFile/>
+            <FormNewMindmap/>
         </React.Fragment>
     );
 };

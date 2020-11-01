@@ -1,9 +1,8 @@
-import React, {Component, useState } from "react";
+import React, {Component} from "react";
 import "../Assets/Css/App.css"
 import * as d3 from "d3";
 
 import {connect} from "react-redux";
-import * as actionTypes from '../Actions/ActionsTypes';
 
 class Viewer extends Component {
 
@@ -12,10 +11,7 @@ class Viewer extends Component {
         const result = convert.xml2js(this.props.textFile, {ignoreComment: true, alwaysChildren: true});
 
         const data = this.createD3Data(result.elements[0].elements[0]);
-        const tree = this.constructTree(data);
-
-        // On laisse le dispatch pour le moment
-        this.props.dispatch({type: actionTypes.SET_TREE, payload: tree});
+        this.constructTree(data);
     }
 
     createD3Data = (xmlTextFile) => {
@@ -38,7 +34,7 @@ class Viewer extends Component {
         }
 
         let tmpscore = "";
-        if(root.attributes.SCORE != null)
+        if(root.attributes && root.attributes.SCORE != null)
         {
             tmpscore =  "\n" + root.attributes.SCORE;
         }
@@ -66,7 +62,7 @@ class Viewer extends Component {
                     children.push(recurse(root.elements[i], newColor));
                 }
             }
-            if(newColor == "")
+            if(newColor === "")
             {
                 newColor ="#000000"
             }
@@ -139,7 +135,7 @@ class Viewer extends Component {
             .on("zoom", function()
             {
                 d3.select("g").attr("transform", d3.event.transform)
-            }));;
+            }));
         
         const gLink = svg.append("g")
             .attr("fill", "none")
@@ -282,7 +278,7 @@ class Viewer extends Component {
     render = () => {
         return (
             <div className="Viewer-div" id="viewer_div">
-                < svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
+                <svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
         )
     }
