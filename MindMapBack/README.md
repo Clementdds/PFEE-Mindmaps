@@ -154,17 +154,11 @@ Response :
 
 ###### Get the mindmap's json body from its id
 
-GET http://DOMAIN:9999/mindmaps/getMindmapFromId
+GET http://DOMAIN:9999/mindmaps/getMindmapFromId?mapId=X
 
 Header :
 
 `Authorization : Bearer xxxTOKENxxx`
-
-Body:
-```
-{
-    "id" : Int, id du mindmap
-}
 ```
 
 Response :
