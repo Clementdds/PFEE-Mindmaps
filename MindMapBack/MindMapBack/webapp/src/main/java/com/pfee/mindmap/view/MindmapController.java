@@ -104,6 +104,29 @@ public class MindmapController implements CanLog {
         );
     }
 
+    @RequestMapping(produces = "application/json", method = RequestMethod.GET, value = "getowned")
+    public GetOwnedMindMapsDtoResponse GetSharedMindMaps(@RequestHeader(value="Authorization") String header)
+    {
+        String error = null;
+        Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
+        if (userId == -1)
+            error = "Invalid token";
+        if (error == null && !userService.userExists(userId))
+            error = "User does not exist";
+        if (error != null)
+            return new GetOwnedMindMapsDtoResponse(null, error);
+
+        final List<MindmapEntity> entities = mindmapService.findSharedMindMaps(userId);
+        return new GetOwnedMindMapsDtoResponse(
+                entities.stream()
+                        .map(entity -> new GetOwnedMindMapsDtoResponse.MindmapDtoResponse(entity.id,
+                                entity.name,
+                                entity.ispublic))
+                        .collect(Collectors.toList()),
+                null
+        );
+    }
+
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getMindmapFromId")
     public GetMindmapFromIdDtoResponse GetMindmapFromid(@RequestHeader(value="Authorization") String header,
                                                   @RequestBody GetMindmapFromIdDtoRequest request)

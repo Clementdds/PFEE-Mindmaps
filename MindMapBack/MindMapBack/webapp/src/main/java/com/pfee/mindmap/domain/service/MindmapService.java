@@ -49,6 +49,16 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convertList(maps);
     }
 
+    public List<MindmapEntity> findSharedMindMaps(Integer userId) {
+        List<MindmapModel> maps = userMapsRepository.findAll()
+                .stream()
+                .filter(um -> um.getUser().getId().equals(userId))
+                .filter(um -> um.getUserRole() == 1)
+                .map(UserMapsModel::getMap)
+                .collect(Collectors.toList());
+        return mindmapModelToEntity.convertList(maps);
+    }
+
     @Transactional
     public MindmapEntity save(final MindmapEntity entity) {
         final MindmapModel model = mindmapModelToEntity.revertConvert(entity);
