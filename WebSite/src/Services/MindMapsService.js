@@ -46,23 +46,23 @@ const getOwnedMindmaps = () => {
  * Get Mindmaps by id
  */
 
-const callGetMindmapsById = ({id, url}) => {
+const callGetMindmapsById = ({id}) => {
     const requestOptions = {
         method: 'GET',
         headers: requestHeader.AuthHeader(),
-        body: JSON.stringify({id: id, url: url})
+        body: JSON.stringify({id: id})
     };
 
     return fetch(API_GET_MINDMAPS_BY_ID_ENDPOINT, requestOptions)
         .then(callHandler.handleResponse);
 };
 
-const getMindmapsById = ({id, url}) => {
+const getMindmapsById = ({id}) => {
     console.log("Get Mindmaps by id service");
 
     store.dispatch({type: actionTypes.MINDMAPS_LOADING});
 
-    callGetMindmapsById({id, url})
+    callGetMindmapsById({id})
         .then((data) => {
                 if (data.mindmapsList) {
                     // Dispatch to state
