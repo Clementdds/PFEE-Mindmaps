@@ -109,6 +109,15 @@ public class LinkController implements CanLog {
     public GetMindmapFromUrlDtoResponse GetMindmapFromUrl(@RequestHeader(value="Authorization") String header,
                                                           @RequestBody GetMindmapFromUrlDtoRequest request)
     {
+        String error = null;
+        Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
+        if (userId == -1)
+            error = "Invalid token";
+        if (error == null && !userService.userExists(userId))
+            error = "User does not exist";
+        if (error != null)
+            return new GetMindmapFromUrlDtoResponse(null , null, error);
+
         var entity = linksService.GetMindmapFromUrl(request.url);
         if (entity == null)
             return new GetMindmapFromUrlDtoResponse(null, null, "Couldn't retrieve the entity, are you sure that your url is good ?");
