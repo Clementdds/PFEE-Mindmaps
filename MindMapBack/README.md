@@ -145,6 +145,13 @@ Header :
 
 `Authorization : Bearer xxxTOKENxxx`
 
+Body:
+```
+{
+    "mapId" : Int, id du mindmap,
+    "emails": Array of Username -- should be emails
+}
+```
 Response :
 ```
 {
@@ -158,8 +165,9 @@ GET http://DOMAIN:9999/mindmaps/getMindmapFromId?mapId=X
 
 Header :
 
+
 `Authorization : Bearer xxxTOKENxxx`
-```
+
 
 Response :
 ```
