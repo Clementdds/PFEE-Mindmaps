@@ -114,7 +114,45 @@ Response :
 }
 ```
 
-###### Get mindmap from id
+###### Get Shared mindmaps
+
+GET http://DOMAIN:9999/mindmaps/getshared
+
+Header :
+
+`Authorization : Bearer xxxTOKENxxx`
+
+Response :
+```
+{
+    "mindmapsList": [
+        {
+            "id": X,
+            "name": "XXX",
+            "isPublic": false
+        },
+        ...
+    ],
+    "error": null
+}
+```
+
+###### Share a mindmap with other users
+
+POST http://DOMAIN:9999/mindmaps/share
+
+Header :
+
+`Authorization : Bearer xxxTOKENxxx`
+
+Response :
+```
+{
+    "error" : "xxx"
+}
+```
+
+###### Get the mindmap's json body from its id
 
 GET http://DOMAIN:9999/mindmaps/getMindmapFromId
 
@@ -136,6 +174,8 @@ Response :
     "error"   : "null"
 }
 ```
+
+### LINKS
 
 ###### Get mindmap from url
 
@@ -160,8 +200,6 @@ Response :
     "error"   : null
 }
 ```
-
-### LINKS
 
 ###### Add a mindmap link in public
 
