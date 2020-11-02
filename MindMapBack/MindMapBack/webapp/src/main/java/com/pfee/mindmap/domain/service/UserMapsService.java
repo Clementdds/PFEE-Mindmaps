@@ -14,6 +14,7 @@ import utils.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserMapsService implements CanLog {
@@ -47,6 +48,17 @@ public class UserMapsService implements CanLog {
         final UserMapsModel model = userMapsModelToEntity.revertConvert(entity);
         final var resultModel = userMapsRepository.save(model);
         return userMapsModelToEntity.convert(resultModel);
+    }
+
+    public Integer getUserRole(Integer userId, Integer mapId)
+    {
+        var entry = userMapsRepository.findAll()
+                .stream()
+                .filter(um -> um.getUser().getId().equals(userId) && um.getMap().getId().equals(mapId))
+                .collect(Collectors.toList());
+        if (entry.isEmpty())
+            return -1;
+        return entry.get(0).getUserRole();
     }
 
     public List<String> addUsersForPrivateMap(String[] emails, Integer ownerId, Integer mapId)

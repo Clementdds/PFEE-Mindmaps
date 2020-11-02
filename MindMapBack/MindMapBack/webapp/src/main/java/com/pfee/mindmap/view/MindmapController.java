@@ -122,6 +122,40 @@ public class MindmapController implements CanLog {
         );
     }
 
+    @PostMapping(path = "share", consumes = "application/json", produces = "application/json")
+    public ShareMindMapDtoResponse ShareMindMap(@RequestHeader(value="Authorization") String header,
+                                                  @RequestBody ShareMindMapDtoRequest body) {
+        String error = null;
+        Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
+        if (userId == -1)
+            error = "Invalid token";
+        if (error == null && !userService.userExists(userId))
+            error = "User does not exist";
+        var currentMap = mindmapService.findMindmapById(body.mapId);
+        if (currentMap.ispublic)
+            error = "You cannot share a public mindmap";
+        if (error != null)
+            return new ShareMindMapDtoResponse(error);
+
+        int actionCount = 0;
+        for (var email : body.emails)
+        {
+            UserEntity user = userService.findByUsername(email);
+            if (user == null)
+                continue; //FIXME maybe notify the caller that the user was not found
+            if (userMapsService.getUserRole(user.id, body.mapId) >= 0)
+                continue; //because this user already has a role with this map
+            UserMapsEntity um = new UserMapsEntity(0, user, currentMap, 1);
+            userMapsService.save(um);
+            actionCount++;
+        }
+
+        if (actionCount == 0)
+            error = "No one was added. The users may not exist or they may already have a role";
+
+        return new ShareMindMapDtoResponse(error);
+    }
+
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getMindmapFromId")
     public GetMindmapFromIdDtoResponse GetMindmapFromid(@RequestHeader(value="Authorization") String header,
                                                   @RequestBody GetMindmapFromIdDtoRequest request)
