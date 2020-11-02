@@ -90,8 +90,7 @@ public class MindMapControllerWithContextTest {
     @Test
     public void GetMindMapByIdSuccessTest() {
         String authHeader = "Bearer " + token;
-        var body = new GetMindmapFromIdDtoRequest((int) MM_ID);
-        var result = mindmapController.GetMindmapFromid(authHeader, body);
+        var result = mindmapController.GetMindmapFromid(authHeader, String.valueOf(MM_ID));
         Assert.assertNotNull(result);
         Assert.assertNull(result.error);
         Assert.assertEquals(MM_TEXT, result.mindmap);

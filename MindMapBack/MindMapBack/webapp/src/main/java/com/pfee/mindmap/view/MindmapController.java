@@ -158,7 +158,7 @@ public class MindmapController implements CanLog {
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getMindmapFromId")
     public GetMindmapFromIdDtoResponse GetMindmapFromid(@RequestHeader(value="Authorization") String header,
-                                                  @RequestBody GetMindmapFromIdDtoRequest request)
+                                                  @RequestParam String mapId)
     {
         String error = null;
         Integer id = -1;
@@ -175,7 +175,7 @@ public class MindmapController implements CanLog {
         }
 
         logger().trace("Start TX get mindmap from id");
-        var mindmapEntity = mindmapService.findMindmapById(request.id);
+        var mindmapEntity = mindmapService.findMindmapById(Integer.parseInt(mapId));
         logger().trace("Finish TX get mindmap from id");
 
         if (mindmapEntity == null)
