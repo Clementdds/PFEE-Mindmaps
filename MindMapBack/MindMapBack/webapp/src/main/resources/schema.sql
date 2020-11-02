@@ -20,7 +20,8 @@ CREATE TABLE usermaps(
   mapid INTEGER,
   userrole INTEGER,
   FOREIGN KEY (userid) REFERENCES users(id),
-  FOREIGN KEY (mapid) REFERENCES mindmaps(id)
+  FOREIGN KEY (mapid) REFERENCES mindmaps(id),
+  UNIQUE (userid, mapid)
 );
 
 DROP TABLE IF EXISTS links;
