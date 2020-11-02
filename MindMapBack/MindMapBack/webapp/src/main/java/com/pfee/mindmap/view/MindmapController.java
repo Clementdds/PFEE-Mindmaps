@@ -6,12 +6,7 @@ import com.pfee.mindmap.domain.entity.UserMapsEntity;
 import com.pfee.mindmap.domain.service.MindmapService;
 import com.pfee.mindmap.domain.service.UserMapsService;
 import com.pfee.mindmap.domain.service.UserService;
-import com.pfee.mindmap.view.mindmapscontroller.CreateMindMapDtoResponse;
-import com.pfee.mindmap.view.mindmapscontroller.CreateMindMapDtoRequest;
-import com.pfee.mindmap.view.mindmapscontroller.GetAllMindmapsDtoResponse;
-import com.pfee.mindmap.view.mindmapscontroller.GetMindmapFromIdDtoRequest;
-import com.pfee.mindmap.view.mindmapscontroller.GetMindmapFromIdDtoResponse;
-import com.pfee.mindmap.view.mindmapscontroller.GetOwnedMindMapsDtoResponse;
+import com.pfee.mindmap.view.mindmapscontroller.*;
 import org.springframework.web.bind.annotation.*;
 import utils.CanLog;
 import utils.TokenManager;
@@ -104,8 +99,8 @@ public class MindmapController implements CanLog {
         );
     }
 
-    @RequestMapping(produces = "application/json", method = RequestMethod.GET, value = "getowned")
-    public GetOwnedMindMapsDtoResponse GetSharedMindMaps(@RequestHeader(value="Authorization") String header)
+    @RequestMapping(produces = "application/json", method = RequestMethod.GET, value = "getshared")
+    public GetSharedMindMapsDtoResponse GetSharedMindMaps(@RequestHeader(value="Authorization") String header)
     {
         String error = null;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
@@ -114,12 +109,12 @@ public class MindmapController implements CanLog {
         if (error == null && !userService.userExists(userId))
             error = "User does not exist";
         if (error != null)
-            return new GetOwnedMindMapsDtoResponse(null, error);
+            return new GetSharedMindMapsDtoResponse(null, error);
 
         final List<MindmapEntity> entities = mindmapService.findSharedMindMaps(userId);
-        return new GetOwnedMindMapsDtoResponse(
+        return new GetSharedMindMapsDtoResponse(
                 entities.stream()
-                        .map(entity -> new GetOwnedMindMapsDtoResponse.MindmapDtoResponse(entity.id,
+                        .map(entity -> new GetSharedMindMapsDtoResponse.MindmapDtoResponse(entity.id,
                                 entity.name,
                                 entity.ispublic))
                         .collect(Collectors.toList()),
