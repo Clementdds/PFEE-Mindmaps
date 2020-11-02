@@ -7,6 +7,8 @@ import com.pfee.mindmap.domain.service.MindmapService;
 import com.pfee.mindmap.domain.service.UserMapsService;
 import com.pfee.mindmap.domain.service.UserService;
 import com.pfee.mindmap.view.linkcontroller.GetAllLinksDtoResponse;
+import com.pfee.mindmap.view.linkcontroller.GetMindmapFromUrlDtoRequest;
+import com.pfee.mindmap.view.linkcontroller.GetMindmapFromUrlDtoResponse;
 import com.pfee.mindmap.view.linkcontroller.PostLinkDtoRequest;
 import com.pfee.mindmap.view.linkcontroller.PostLinkDtoResponse;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -101,5 +103,16 @@ public class LinkController implements CanLog {
         //request is private so must share to other users
         var addedUsers = userMapsService.addUsersForPrivateMap(request.emails, userId, mapEntity.id);
         return new PostLinkDtoResponse(linkEntity.url, null, addedUsers);
+    }
+
+    @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getMindmapFromUrl")
+    public GetMindmapFromUrlDtoResponse GetMindmapFromUrl(@RequestHeader(value="Authorization") String header,
+                                                          @RequestBody GetMindmapFromUrlDtoRequest request)
+    {
+        var entity = linksService.GetMindmapFromUrl(request.url);
+        if (entity == null)
+            return new GetMindmapFromUrlDtoResponse(null, null, "Couldn't retrieve the entity, are you sure that your url is good ?");
+
+        return new GetMindmapFromUrlDtoResponse(entity.nodeid, entity.map.fullmaptext, null);
     }
 }

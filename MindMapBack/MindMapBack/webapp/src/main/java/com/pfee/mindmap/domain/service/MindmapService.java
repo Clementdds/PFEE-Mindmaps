@@ -19,17 +19,14 @@ import java.util.stream.Collectors;
 public class MindmapService implements CanLog {
 
     private final MindmapRepository mindmapRepository;
-    private final LinksRepository linksRepository;
 
     private final MindmapModelToEntity mindmapModelToEntity;
     private final UserMapsRepository userMapsRepository;
 
     public MindmapService(final MindmapRepository mindmapRepository,
-                          final LinksRepository linksRepository,
                           final MindmapModelToEntity mindmapModelToEntity,
                           final UserMapsRepository userMapsRepository) {
         this.mindmapRepository = mindmapRepository;
-        this.linksRepository = linksRepository;
         this.mindmapModelToEntity = mindmapModelToEntity;
         this.userMapsRepository = userMapsRepository;
     }
@@ -44,11 +41,11 @@ public class MindmapService implements CanLog {
 
     public List<MindmapEntity> findOwnedMindMaps(Integer userId) {
         List<MindmapModel> maps = userMapsRepository.findAll()
-                .stream()
-                .filter(um -> um.getUser().getId().equals(userId))
-                .filter(um -> um.getUserRole() == 0)
-                .map(UserMapsModel::getMap)
-                .collect(Collectors.toList());
+                                                    .stream()
+                                                    .filter(um -> um.getUser().getId().equals(userId))
+                                                    .filter(um -> um.getUserRole() == 0)
+                                                    .map(UserMapsModel::getMap)
+                                                    .collect(Collectors.toList());
         return mindmapModelToEntity.convertList(maps);
     }
 
@@ -59,41 +56,19 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convert(resultModel);
     }
 
-    public MindmapEntity findMindmapById(Integer mindmapId, String url)
-    {
+    public MindmapEntity findMindmapById(Integer mindmapId) {
         //find by url
         MindmapModel mindmapModel = null;
-        if (mindmapId == null)
-        {
-            var links = linksRepository.findAll();
-            if (links == null)
-                return null;
-
-            for (var link: links) {
-                if (url.equals(link.getUrl())){
-                    mindmapModel = link.getMap();
-                    break;
-                }
-            }
-
-            if (mindmapModel == null)
-                return null;
-        }
-        //find by id
-        else {
-            var model = mindmapRepository.findById(mindmapId);
-            if (model.isEmpty())
-                return null;
-            mindmapModel = model.get();
-        }
+        var model = mindmapRepository.findById(mindmapId);
+        if (model.isEmpty())
+            return null;
+        mindmapModel = model.get();
 
         var mindmapEntity = mindmapModelToEntity.convert(mindmapModel);
         return mindmapEntity;
-
     }
 
-    public MindmapEntity ChangeMindmapVisibility(boolean isPublic, int id)
-    {
+    public MindmapEntity ChangeMindmapVisibility(boolean isPublic, int id) {
         var modelOpt = mindmapRepository.findById(id);
         if (modelOpt.isEmpty())
             return null;

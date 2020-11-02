@@ -114,11 +114,9 @@ Response :
 }
 ```
 
-###### Get mindmap from id or url
+###### Get mindmap from id
 
-/!\ You cannot put id AND url, there is ALWAYS one of them with the null value
-
-GET http://DOMAIN:9999/mindmaps/getMindmap
+GET http://DOMAIN:9999/mindmaps/getMindmapFromId
 
 Header :
 
@@ -127,8 +125,7 @@ Header :
 Body:
 ```
 {
-    "id" : Int du mindmap,
-    "url": Url du mindmap
+    "id" : Int, id du mindmap
 }
 ```
 
@@ -137,6 +134,30 @@ Response :
 {
     "mindmap" : "Json du mindmap"
     "error"   : "null"
+}
+```
+
+###### Get mindmap from url
+
+GET http://DOMAIN:9999/links/getMindmapFromUrl
+
+Header :
+
+`Authorization : Bearer xxxTOKENxxx`
+
+Body:
+```
+{
+    "url" : String, url du mindmap
+}
+```
+
+Response :
+```
+{
+    "nodeid"  : BigInt, nodeid
+    "mindmap" : String, Json du mindmap complet
+    "error"   : null
 }
 ```
 

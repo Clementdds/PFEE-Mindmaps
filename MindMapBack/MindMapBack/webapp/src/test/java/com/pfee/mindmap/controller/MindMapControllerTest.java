@@ -37,9 +37,6 @@ public class MindMapControllerTest {
     @Autowired
     UserMapsRepository userMapsRepository;
 
-    @Autowired
-    LinksRepository linksRepository;
-
     UserService userService;
     MindmapService mindmapService;
     UserMapsService userMapsService;
@@ -57,7 +54,6 @@ public class MindMapControllerTest {
         userMapsRepository.deleteAll();
         userService = new UserService(userRepository, new UserModelToEntity());
         mindmapService = new MindmapService(mindmapRepository,
-                                            linksRepository,
                                             new MindmapModelToEntity(),
                                             userMapsRepository);
         userMapsService = new UserMapsService(userMapsRepository,

@@ -14,7 +14,7 @@ import com.pfee.mindmap.persistence.repository.MindmapRepository;
 import com.pfee.mindmap.persistence.repository.UserMapsRepository;
 import com.pfee.mindmap.persistence.repository.UserRepository;
 import com.pfee.mindmap.view.MindmapController;
-import com.pfee.mindmap.view.mindmapscontroller.GetMindmapDtoRequest;
+import com.pfee.mindmap.view.mindmapscontroller.GetMindmapFromIdDtoRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,9 +37,6 @@ public class MindMapControllerWithContextTest {
     @Autowired
     UserMapsRepository userMapsRepository;
 
-    @Autowired
-    LinksRepository linksRepository;
-
     UserService userService;
     MindmapService mindmapService;
     UserMapsService userMapsService;
@@ -60,7 +57,6 @@ public class MindMapControllerWithContextTest {
         userMapsRepository.deleteAll();
         userService = new UserService(userRepository, new UserModelToEntity());
         mindmapService = new MindmapService(mindmapRepository,
-                                            linksRepository,
                                             new MindmapModelToEntity(),
                                             userMapsRepository);
         userMapsService = new UserMapsService(userMapsRepository,
@@ -94,8 +90,8 @@ public class MindMapControllerWithContextTest {
     @Test
     public void GetMindMapByIdSuccessTest() {
         String authHeader = "Bearer " + token;
-        var body = new GetMindmapDtoRequest((int) MM_ID, null);
-        var result = mindmapController.GetMindmap(authHeader, body);
+        var body = new GetMindmapFromIdDtoRequest((int) MM_ID);
+        var result = mindmapController.GetMindmapFromid(authHeader, body);
         Assert.assertNotNull(result);
         Assert.assertNull(result.error);
         Assert.assertEquals(MM_TEXT, result.mindmap);

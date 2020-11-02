@@ -54,4 +54,17 @@ public class LinksService implements CanLog {
         return linksModelToEntity.convert(model);
     }
 
+    public LinkEntity GetMindmapFromUrl(String url)
+    {
+        var models = IterableUtils.toList(linksRepository.findAll());
+        if (models.isEmpty())
+            return null;
+
+        var linkModel = models.stream().filter(link -> (link.getUrl()).equals(url)).findFirst();
+        if (linkModel.isEmpty())
+            return null;
+
+        return linksModelToEntity.convert(linkModel.get());
+    }
+
 }
