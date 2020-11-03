@@ -77,8 +77,7 @@ const FormNewMindmap = ({error, dispatch}) => {
         if (fileText == null) {
             dispatch({type: actionTypes.FORM_ERROR, payload: "No file has been provided"});
         } else {
-
-            if (ListEmailValidator(listEmails)) {
+            if (isPublic || ListEmailValidator(listEmails)) {
 
                 /*
                 *  Check file is xml
@@ -87,11 +86,12 @@ const FormNewMindmap = ({error, dispatch}) => {
                 let result = null;
                 try {
                     result = convert.xml2js(fileText.toString(), {ignoreComment: true, alwaysChildren: true});
+                    console.log(result);
                     mindmapsService.postCreateMindmaps({
                         file: JSON.stringify(result),
                         isPublic: isPublic,
                         name: name,
-                        emails: listEmails.trim().split(';')
+                        emails: isPublic ? [] : listEmails.trim().split(';')
                     });
                 } catch (e) {
                     dispatch({type: actionTypes.FORM_ERROR, payload: "File does not respect xml format"});

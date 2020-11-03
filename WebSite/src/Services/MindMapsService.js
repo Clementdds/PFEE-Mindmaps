@@ -6,7 +6,7 @@ import callHandler from "../Helpers/HandleResponse";
 import linkService from "./LinksService";
 
 const API_GET_MINDMAPS_OWNED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getowned";
-const API_GET_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getMindmap";
+const API_GET_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getMindmapFromId";
 const API_POST_MINDMAPS_CREATE_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/create";
 
 /*
@@ -50,10 +50,9 @@ const callGetMindmapsById = ({id}) => {
     const requestOptions = {
         method: 'GET',
         headers: requestHeader.AuthHeader(),
-        body: JSON.stringify({id: id})
     };
 
-    return fetch(API_GET_MINDMAPS_BY_ID_ENDPOINT, requestOptions)
+    return fetch(API_GET_MINDMAPS_BY_ID_ENDPOINT + "?mapId=" + id, requestOptions)
         .then(callHandler.handleResponse);
 };
 
@@ -64,13 +63,14 @@ const getMindmapsById = ({id}) => {
 
     callGetMindmapsById({id})
         .then((data) => {
-                if (data.mindmapsList) {
+                if (data.mindmap) {
                     // Dispatch to state
-                    store.dispatch({type: actionTypes.SET_TREE, payload: data});
+                    store.dispatch({type: actionTypes.VIEWER_SET_INPUT_FILE, payload: data.mindmap});
+                    store.dispatch({type: actionTypes.VIEWER_DELETE_NODE_ID});
                 }
             },
             (error) => {
-                store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: error})
+                store.dispatch({type: actionTypes.VIEWER_ERROR, payload: error})
             }
         );
 };

@@ -1,25 +1,21 @@
-import React, {Component} from "react";
+import React, {useEffect} from "react";
 import "../Assets/Css/App.css"
 import * as d3 from "d3";
 
-import {connect} from "react-redux";
+const Viewer = ({file, nodeid}) => {
 
-class Viewer extends Component {
+    useEffect(() =>  {
+        const jsFile = JSON.parse(file);
+        const data = createD3Data(jsFile.elements[0].elements[0]);
+        constructTree(data);
+    }, [file, nodeid]);
 
-    componentDidMount() {
-        const convert = require('xml-js');
-        const result = convert.xml2js(this.props.textFile, {ignoreComment: true, alwaysChildren: true});
-
-        const data = this.createD3Data(result.elements[0].elements[0]);
-        this.constructTree(data);
-    }
-
-    createD3Data = (xmlTextFile) => {
-        return this.recurseD3Data(xmlTextFile);
+    const createD3Data = (xmlTextFile) => {
+        return recurseD3Data(xmlTextFile);
     };
  
-    recurseD3Data = function recurse(root, newColor = "") {
-
+    const recurseD3Data = function recurse(root, newColor = "") {
+        console.log("Recurse");
         let currentData = {
             name: "",
             children: null,
@@ -77,7 +73,7 @@ class Viewer extends Component {
         return currentData;
     };
 
-    constructTree = (data) => {
+    const constructTree = (data) => {
 
         const margin = ({top: 10, right: 120, bottom: 10, left: 40});
         const width = window.innerWidth;
@@ -275,20 +271,11 @@ class Viewer extends Component {
         return svg.node();       
     };
     
-    render = () => {
-        return (
+    return (
             <div className="Viewer-div" id="viewer_div">
                 <svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
-        )
-    }
-}
-
-const mapStateToProps = state => {
-    return {
-        textFile: state.Viewer.textFile,
-        dispatch: state.Viewer.dispatch
-    };
+        );
 };
 
-export default connect(mapStateToProps)(Viewer);
+export default (Viewer);

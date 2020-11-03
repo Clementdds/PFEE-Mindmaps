@@ -39,7 +39,7 @@ const postAddPublicLink = ({idMindmap, nodeid, isPublic, emails}) => {
 };
 
 /*
- * Get Mindmaps by id
+ * Get Mindmaps by url
  */
 
 const callGetMindmapsByUrl = ({url}) => {
@@ -49,6 +49,7 @@ const callGetMindmapsByUrl = ({url}) => {
         body: JSON.stringify({url: url})
     };
 
+    console.log(requestOptions);
     return fetch(API_GET_LINKS_MINDMAPS_BY_URL_ENDPOINT, requestOptions)
         .then(callHandler.handleResponse);
 };
@@ -56,16 +57,15 @@ const callGetMindmapsByUrl = ({url}) => {
 const getMindmapsByUrl = ({url}) => {
     console.log("Get Mindmaps by url service");
 
-    store.dispatch({type: actionTypes.MINDMAPS_LOADING});
-
     callGetMindmapsByUrl({url})
         .then((data) => {
-                if (data) {
-                    console.log(data);
-                }
+                console.log(data);
+                store.dispatch({type: actionTypes.VIEWER_SET_INPUT_FILE, payload: data.fullmap});
+                store.dispatch({type: actionTypes.VIEWER_SET_NODE_ID, payload: data.nodeid});
             },
             (error) => {
-                store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: error})
+                console.log(error);
+                store.dispatch({type: actionTypes.VIEWER_ERROR, payload: error});
             }
         );
 };

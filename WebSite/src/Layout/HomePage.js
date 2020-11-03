@@ -15,16 +15,21 @@ const HomePage = ({mindmapsList, error, dispatch}) => {
         <React.Fragment>
             <button onClick={userService.logout}>Logout</button>
 
-            {mindmapsList.length ?
-                mindmapsList.map((x) => {
-                    return (
-                        <MindmapData Mindmap={x} key={x.id}/>
-                    );
-                }) :
+            <div>
+                Owned mindmaps
                 <div>
-                    No previous mindmaps
+                    {mindmapsList.length ?
+                        mindmapsList.map((x) => {
+                            return (
+                                <MindmapData Mindmap={x} key={x.id}/>
+                            );
+                        }) :
+                        <div>
+                            No previous mindmaps
+                        </div>
+                    }
                 </div>
-            }
+            </div>
 
             {error && <div>Error : {error}</div>}
 
