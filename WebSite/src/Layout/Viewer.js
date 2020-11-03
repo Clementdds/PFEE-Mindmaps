@@ -1,29 +1,21 @@
-import React, {Component, useState } from "react";
+import React, {useEffect} from "react";
 import "../Assets/Css/App.css"
 import * as d3 from "d3";
 
-import {connect} from "react-redux";
-import * as actionTypes from '../Actions/ActionsTypes';
+const Viewer = ({file, nodeid}) => {
 
-class Viewer extends Component {
+    useEffect(() =>  {
+        const jsFile = JSON.parse(file);
+        const data = createD3Data(jsFile.elements[0].elements[0]);
+        constructTree(data);
+    }, [file, nodeid]);
 
-    componentDidMount() {
-        const convert = require('xml-js');
-        const result = convert.xml2js(this.props.textFile, {ignoreComment: true, alwaysChildren: true});
-
-        const data = this.createD3Data(result.elements[0].elements[0]);
-        const tree = this.constructTree(data);
-
-        // On laisse le dispatch pour le moment
-        this.props.dispatch({type: actionTypes.SET_TREE, payload: tree});
-    }
-
-    createD3Data = (xmlTextFile) => {
-        return this.recurseD3Data(xmlTextFile);
+    const createD3Data = (xmlTextFile) => {
+        return recurseD3Data(xmlTextFile);
     };
- 
-    recurseD3Data = function recurse(root, newColor = "") {
 
+    const recurseD3Data = function recurse(root, newColor = "") {
+        console.log("Recurse");
         let currentData = {
             name: "",
             children: null,
@@ -38,7 +30,7 @@ class Viewer extends Component {
         }
 
         let tmpscore = "";
-        if(root.attributes.SCORE != null)
+        if(root.attributes && root.attributes.SCORE != null)
         {
             tmpscore =  "\n" + root.attributes.SCORE;
         }
@@ -66,7 +58,7 @@ class Viewer extends Component {
                     children.push(recurse(root.elements[i], newColor));
                 }
             }
-            if(newColor == "")
+            if(newColor === "")
             {
                 newColor ="#000000"
             }
@@ -81,7 +73,7 @@ class Viewer extends Component {
         return currentData;
     };
 
-    constructTree = (data) => {
+    const constructTree = (data) => {
 
         const margin = ({top: 10, right: 120, bottom: 10, left: 40});
         const width = window.innerWidth;
@@ -139,7 +131,7 @@ class Viewer extends Component {
             .on("zoom", function()
             {
                 d3.select("g").attr("transform", d3.event.transform)
-            }));;
+            }));
         
         const gLink = svg.append("g")
             .attr("fill", "none")
@@ -279,20 +271,11 @@ class Viewer extends Component {
         return svg.node();       
     };
     
-    render = () => {
-        return (
+    return (
             <div className="Viewer-div" id="viewer_div">
-                < svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
+                <svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
-        )
-    }
-}
-
-const mapStateToProps = state => {
-    return {
-        textFile: state.Viewer.textFile,
-        dispatch: state.Viewer.dispatch
-    };
+        );
 };
 
-export default connect(mapStateToProps)(Viewer);
+export default (Viewer);

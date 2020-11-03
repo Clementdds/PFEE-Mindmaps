@@ -10,6 +10,8 @@ import LoginPage from "./LoginPage";
 import SignUpPage from "./SignUpPage";
 import history from "../Helpers/History";
 import HomePage from "./HomePage";
+import PublicMindmap from "./PublicMindmap";
+import MindmapById from "./MindmapById";
 
 // Error Page
 const Error404Page = lazy(() => import('../Components/ErrorsPages/Error404'));
@@ -26,6 +28,7 @@ const App = () => {
                         <HomePage/>
                     </PrivateRoute>
 
+
                     {/* Login  */}
                     <Route exact path={"/login"}>
                         <LoginPage/>
@@ -35,6 +38,14 @@ const App = () => {
                     <Route exact path={"/sign"}>
                         <SignUpPage/>
                     </Route>
+
+                    {/* Mindmap by Id  */}
+                    <PrivateRoute>
+                        <Route path={"/mindmap/:id"} component={MindmapById}/>
+                    </PrivateRoute>
+
+                    {/* Mindmap by Url  */}
+                    <Route path={"/links/:url"} component={PublicMindmap}/>
 
                     {/* 404  */}
                     <Route>

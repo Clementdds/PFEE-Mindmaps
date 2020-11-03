@@ -18,18 +18,12 @@ const SignUpPage = ({error, dispatch}) => {
         userService.signUP({email: email, password: password})
     };
 
+    /*
+     *  Email
+     */
+
     const handleEmailChange = useCallback(
         (newEmail) => setEmail(newEmail),
-        []
-    );
-
-    const handlePasswordChange = useCallback(
-        (newPassword) => setPassword(newPassword),
-        []
-    );
-
-    const handleVerifyPasswordChange = useCallback(
-        (newVerifyPassword) => setVerifyPassword(newVerifyPassword),
         []
     );
 
@@ -37,9 +31,27 @@ const SignUpPage = ({error, dispatch}) => {
         handleEmailChange,
     ]);
 
+    /*
+     *  Password
+     */
+
+    const handlePasswordChange = useCallback(
+        (newPassword) => setPassword(newPassword),
+        []
+    );
+
     const handlePasswordOnchange = useCallback((e) => handlePasswordChange(e.target.value), [
         handlePasswordChange,
     ]);
+
+    /*
+     *  Verify password
+     */
+
+    const handleVerifyPasswordChange = useCallback(
+        (newVerifyPassword) => setVerifyPassword(newVerifyPassword),
+        []
+    );
 
     const handleVerifyPasswordOnchange = useCallback((e) => handleVerifyPasswordChange(e.target.value), [
         handleVerifyPasswordChange,
@@ -61,21 +73,18 @@ const SignUpPage = ({error, dispatch}) => {
                         <div>
                             <input aria-label="Email address" type="email" required
                                    placeholder="Email address"
-                                   value={email}
                                    onChange={handleEmailOnchange}
                             />
                         </div>
                         <div>
                             <input aria-label="Password" type="password" required
                                    placeholder="Password"
-                                   value={password}
                                    onChange={handlePasswordOnchange}
                             />
                         </div>
                         <div>
                             <input aria-label="Password" type="password" required
                                    placeholder="Verify Password"
-                                   value={verifyPassword}
                                    onChange={handleVerifyPasswordOnchange}
                             />
                         </div>

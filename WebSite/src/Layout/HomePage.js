@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import userService from "../Services/UserService";
-import GetInputFile from "../Components/Forms/FormNewMindmap";
+import FormNewMindmap from "../Components/Forms/FormNewMindmap";
 import {connect} from "react-redux";
 import mindmapsService from "../Services/MindMapsService";
 import MindmapData from "../Components/List/MindmapData";
@@ -8,27 +8,33 @@ import MindmapData from "../Components/List/MindmapData";
 const HomePage = ({mindmapsList, error, dispatch}) => {
 
     useEffect(() => {
-        mindmapsService.getListMindmaps();
+        mindmapsService.getOwnedMindmaps();
     }, [dispatch]);
 
     return (
         <React.Fragment>
             <button onClick={userService.logout}>Logout</button>
-
-            {mindmapsList.length ?
-                mindmapsList.map((x) => {
-                    return (
-                        <MindmapData Mindmap={x}/>
-                    );
-                }) :
+            <br/>
+            <div>
+                Owned mindmaps
+                <br/>
                 <div>
-                    No previous mindmaps
+                    {mindmapsList.length ?
+                        mindmapsList.map((x) => {
+                            return (
+                                <MindmapData Mindmap={x} key={x.id}/>
+                            );
+                        }) :
+                        <div>
+                            No previous mindmaps
+                        </div>
+                    }
                 </div>
-            }
+            </div>
 
             {error && <div>Error : {error}</div>}
 
-            <GetInputFile/>
+            <FormNewMindmap/>
         </React.Fragment>
     );
 };

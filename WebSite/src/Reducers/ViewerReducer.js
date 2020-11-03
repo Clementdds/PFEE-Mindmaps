@@ -1,50 +1,47 @@
 import * as actionTypes from '../Actions/ActionsTypes'
 
 const initialState = {
-    isUploaded: false,
-    textFile: "",
-    data: null,
-    tree: null,
+    file: null,
+    nodeId: null,
+    error: null,
 };
 
 const ViewerReducer = (state = initialState, action) => {
     switch (action.type) {
         // Input File
-        case actionTypes.SET_INPUT_FILE:
+        case actionTypes.VIEWER_SET_INPUT_FILE:
             return {
                 ...state,
-                isUploaded: true,
-                textFile: action.payload
+                file: action.payload
             };
-        case actionTypes.DELETE_INPUT_FILE:
+        case actionTypes.VIEWER_DELETE_INPUT_FILE:
             return {
                 ...state,
-                textFile: "",
-                isUploaded: false
+                file: null,
             };
 
-        // Data
-        case actionTypes.SET_DATA:
+        // nodeId
+        case actionTypes.VIEWER_SET_NODE_ID:
             return {
                 ...state,
-                data: action.payload
+                nodeId: action.payload
             };
-        case actionTypes.DELETE_DATA:
+        case actionTypes.VIEWER_DELETE_NODE_ID:
             return {
                 ...state,
-                data: null
+                nodeId: null
             };
 
-        // Tree
-        case actionTypes.SET_TREE:
+        // Error
+        case actionTypes.VIEWER_ERROR:
             return {
                 ...state,
-                tree: action.payload
+                error: action.payload
             };
-        case actionTypes.DELETE_TREE:
+        case actionTypes.VIEWER_RESET_ERROR:
             return {
                 ...state,
-                tree: null
+                error: null
             };
         default:
             return state;
