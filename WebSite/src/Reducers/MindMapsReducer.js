@@ -50,6 +50,11 @@ const MindmapsReducer = (state = initialState, action) => {
                 ...state,
                 postMindmapError: action.payload,
             };
+        case actionTypes.FORM_RESET_ERROR:
+            return {
+                ...state,
+                postMindmapError: null,
+            };
         default:
             return state;
     }

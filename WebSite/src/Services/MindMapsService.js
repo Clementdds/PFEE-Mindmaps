@@ -3,7 +3,6 @@ import requestHeader from "../Helpers/AuthHeaders";
 import * as actionTypes from '../Actions/ActionsTypes'
 import store from "../Store/ConfigureStore";
 import callHandler from "../Helpers/HandleResponse";
-import linkService from "./LinksService";
 
 const API_GET_MINDMAPS_OWNED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getowned";
 const API_GET_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getMindmapFromId";
@@ -31,7 +30,7 @@ const getOwnedMindmaps = () => {
     callGetOwnedMindmaps()
         .then(
             (data) => {
-                if (Array.isArray(data.mindmapsList) && data.mindmapsList.length) {
+                if (Array.isArray(data.mindmapsList)) {
                     // Dispatch to state
                     store.dispatch({type: actionTypes.MINDMAPS_SET_LIST, payload: data.mindmapsList});
                 }
@@ -95,12 +94,6 @@ const postCreateMindmaps = ({file, name, isPublic, emails}) => {
         .then((data) => {
                 if (data) {
                     console.log(data);
-                    linkService.postAddPublicLink({
-                        idMindmap: data.id,
-                        nodeid: null,
-                        isPublic: isPublic,
-                        emails: emails
-                    })
                 }
             },
             (error) => {

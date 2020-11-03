@@ -3,6 +3,8 @@ import {connect} from "react-redux";
 import * as actionTypes from '../../Actions/ActionsTypes'
 import mindmapsService from "../../Services/MindMapsService";
 import ListEmailValidator from "./ListEmailValidator";
+import history from "../../Helpers/History";
+import {Redirect} from "react-router";
 
 const FormNewMindmap = ({error, dispatch}) => {
 
@@ -73,7 +75,7 @@ const FormNewMindmap = ({error, dispatch}) => {
      */
 
     const handleSubmit = () => {
-
+        dispatch({type: actionTypes.FORM_RESET_ERROR});
         if (fileText == null) {
             dispatch({type: actionTypes.FORM_ERROR, payload: "No file has been provided"});
         } else {
@@ -90,7 +92,7 @@ const FormNewMindmap = ({error, dispatch}) => {
                         file: JSON.stringify(result),
                         isPublic: isPublic,
                         name: name,
-                        emails: isPublic ? [] : listEmails.trim().split(';')
+                        emails: isPublic ? [] : /*listEmails.trim().split(';')*/ []
                     });
                 } catch (e) {
                     dispatch({type: actionTypes.FORM_ERROR, payload: "File does not respect xml format"});
@@ -125,6 +127,7 @@ const FormNewMindmap = ({error, dispatch}) => {
                         />
                     </div>
 
+
                     {!isPublic &&
                     <div>
                         List of emails you wish to share with
@@ -133,6 +136,7 @@ const FormNewMindmap = ({error, dispatch}) => {
                                onChange={handleListEmailsOnchange}
                         />
                     </div>}
+
 
                     <div>
                         <input type="file"

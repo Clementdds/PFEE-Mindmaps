@@ -24,3 +24,4 @@ export const MINDMAPS_RESET_ERROR = "MINDMAPS_RESET_ERROR";
 
 // Post form
 export const FORM_ERROR = "FORM_ERROR";
+export const FORM_RESET_ERROR = "FORM_RESET_ERROR";
