@@ -13,7 +13,7 @@ const Viewer = ({file, nodeid}) => {
     const createD3Data = (xmlTextFile) => {
         return recurseD3Data(xmlTextFile);
     };
- 
+
     const recurseD3Data = function recurse(root, newColor = "") {
         console.log("Recurse");
         let currentData = {

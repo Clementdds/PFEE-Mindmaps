@@ -86,7 +86,6 @@ const FormNewMindmap = ({error, dispatch}) => {
                 let result = null;
                 try {
                     result = convert.xml2js(fileText.toString(), {ignoreComment: true, alwaysChildren: true});
-                    console.log(result);
                     mindmapsService.postCreateMindmaps({
                         file: JSON.stringify(result),
                         isPublic: isPublic,

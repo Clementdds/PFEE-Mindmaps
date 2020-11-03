@@ -63,11 +63,8 @@ const getMindmapsById = ({id}) => {
 
     callGetMindmapsById({id})
         .then((data) => {
-                if (data.mindmap) {
-                    // Dispatch to state
-                    store.dispatch({type: actionTypes.VIEWER_SET_INPUT_FILE, payload: data.mindmap});
-                    store.dispatch({type: actionTypes.VIEWER_DELETE_NODE_ID});
-                }
+                store.dispatch({type: actionTypes.VIEWER_SET_INPUT_FILE, payload: data.mindmap});
+                store.dispatch({type: actionTypes.VIEWER_DELETE_NODE_ID});
             },
             (error) => {
                 store.dispatch({type: actionTypes.VIEWER_ERROR, payload: error})

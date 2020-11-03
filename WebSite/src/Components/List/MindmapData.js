@@ -4,10 +4,9 @@ import {Link} from "react-router-dom";
 const MindmapData = ({Mindmap}) => {
     return (
         <div key={Mindmap.id}>
-            {Mindmap.id}
-            {Mindmap.name}
+            {Mindmap.name} -->
             <Link to={"/mindmap/" + Mindmap.id} >
-                Go to Mindmap
+                  Go to Mindmap
             </Link>
         </div>
     );

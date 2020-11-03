@@ -14,9 +14,10 @@ const HomePage = ({mindmapsList, error, dispatch}) => {
     return (
         <React.Fragment>
             <button onClick={userService.logout}>Logout</button>
-
+            <br/>
             <div>
                 Owned mindmaps
+                <br/>
                 <div>
                     {mindmapsList.length ?
                         mindmapsList.map((x) => {

@@ -28,14 +28,6 @@ const App = () => {
                         <HomePage/>
                     </PrivateRoute>
 
-                    {/* Mindmap by Id  */}
-                    <PrivateRoute>
-                        <Route path={"/mindmap/:id"} component={MindmapById}/>
-                    </PrivateRoute>
-
-
-                    {/* Mindmap by Url  */}
-                    <Route path={"/links/:url"} component={PublicMindmap}/>
 
                     {/* Login  */}
                     <Route exact path={"/login"}>
@@ -46,6 +38,14 @@ const App = () => {
                     <Route exact path={"/sign"}>
                         <SignUpPage/>
                     </Route>
+
+                    {/* Mindmap by Id  */}
+                    <PrivateRoute>
+                        <Route path={"/mindmap/:id"} component={MindmapById}/>
+                    </PrivateRoute>
+
+                    {/* Mindmap by Url  */}
+                    <Route path={"/links/:url"} component={PublicMindmap}/>
 
                     {/* 404  */}
                     <Route>
