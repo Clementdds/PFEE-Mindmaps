@@ -130,6 +130,7 @@ Return code :
  - 401 Token invalid or user not recognized
 
 ###### Get Shared mindmaps
+###### Get Shared mindmaps
 
 GET http://DOMAIN:9999/mindmaps/getshared
 
@@ -209,7 +210,7 @@ Return code :
 
 ###### Get mindmap from url
 
-GET http://DOMAIN:9999/links/getMindmapFromUrl
+GET http://DOMAIN:9999/links/getPrivateMindmapFromUrl
 
 Header :
 

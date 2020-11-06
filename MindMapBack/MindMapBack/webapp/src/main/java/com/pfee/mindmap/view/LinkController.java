@@ -1,14 +1,13 @@
 package com.pfee.mindmap.view;
 
 import com.pfee.mindmap.domain.entity.LinkEntity;
-import com.pfee.mindmap.domain.entity.UserMapsEntity;
 import com.pfee.mindmap.domain.service.LinksService;
 import com.pfee.mindmap.domain.service.MindmapService;
 import com.pfee.mindmap.domain.service.UserMapsService;
 import com.pfee.mindmap.domain.service.UserService;
 import com.pfee.mindmap.view.linkcontroller.GetAllLinksDtoResponse;
-import com.pfee.mindmap.view.linkcontroller.GetMindmapFromUrlDtoRequest;
-import com.pfee.mindmap.view.linkcontroller.GetMindmapFromUrlDtoResponse;
+import com.pfee.mindmap.view.linkcontroller.GetPublicMindmapFromUrlDtoRequest;
+import com.pfee.mindmap.view.linkcontroller.GetPublicMindmapFromUrlDtoResponse;
 import com.pfee.mindmap.view.linkcontroller.PostLinkDtoRequest;
 import com.pfee.mindmap.view.linkcontroller.PostLinkDtoResponse;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -105,9 +104,20 @@ public class LinkController implements CanLog {
         return new PostLinkDtoResponse(linkEntity.url, null, addedUsers);
     }
 
-    @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getMindmapFromUrl")
-    public GetMindmapFromUrlDtoResponse GetMindmapFromUrl(@RequestHeader(value="Authorization") String header,
-                                                          @RequestBody GetMindmapFromUrlDtoRequest request)
+
+    @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getPublicMindmapFromUrl")
+    public GetPublicMindmapFromUrlDtoResponse GetPrivateMindmapFromUrl(@RequestBody GetPublicMindmapFromUrlDtoRequest request)
+    {
+        var entity = linksService.GetMindmapFromPublicUrl(request.url);
+        if (entity == null)
+            return new GetPublicMindmapFromUrlDtoResponse(null, null, "Couldn't retrieve the entity, are you sure that your url is good ?");
+
+        return new GetPublicMindmapFromUrlDtoResponse(entity.nodeid, entity.map.fullmaptext, null);
+    }
+
+    @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getPrivateMindmapFromUrl")
+    public GetPublicMindmapFromUrlDtoResponse GetPublicMindmapFromUrl(@RequestHeader(value="Authorization") String header,
+                                                                      @RequestBody GetPublicMindmapFromUrlDtoRequest request)
     {
         String error = null;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
@@ -116,12 +126,12 @@ public class LinkController implements CanLog {
         if (error == null && !userService.userExists(userId))
             error = "User does not exist";
         if (error != null)
-            return new GetMindmapFromUrlDtoResponse(null , null, error);
+            return new GetPublicMindmapFromUrlDtoResponse(null , null, error);
 
-        var entity = linksService.GetMindmapFromUrl(request.url);
+        var entity = linksService.GetMindmapFromPrivateUrl(request.url, userId);
         if (entity == null)
-            return new GetMindmapFromUrlDtoResponse(null, null, "Couldn't retrieve the entity, are you sure that your url is good ?");
+            return new GetPublicMindmapFromUrlDtoResponse(null, null, "Couldn't retrieve the entity, are you sure that your url is good ?");
 
-        return new GetMindmapFromUrlDtoResponse(entity.nodeid, entity.map.fullmaptext, null);
+        return new GetPublicMindmapFromUrlDtoResponse(entity.nodeid, entity.map.fullmaptext, null);
     }
 }
