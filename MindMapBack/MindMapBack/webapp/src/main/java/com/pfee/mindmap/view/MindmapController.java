@@ -6,11 +6,13 @@ import com.pfee.mindmap.domain.entity.UserMapsEntity;
 import com.pfee.mindmap.domain.service.MindmapService;
 import com.pfee.mindmap.domain.service.UserMapsService;
 import com.pfee.mindmap.domain.service.UserService;
+import com.pfee.mindmap.exceptions.*;
 import com.pfee.mindmap.view.mindmapscontroller.*;
 import org.springframework.web.bind.annotation.*;
 import utils.CanLog;
 import utils.TokenManager;
 
+import java.sql.DatabaseMetaData;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,27 +52,35 @@ public class MindmapController implements CanLog {
         String error = null;
         Integer id = -1;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
-        if (userId == -1)
+        if (userId == -1) {
             error = "Invalid token";
-        if (error == null && !userService.userExists(userId))
+            throw new InvalidTokenException();
+        }
+        if (!userService.userExists(userId)) {
             error = "User does not exist";
+            throw new UserDoesNotExistException();
+        }
         MindmapEntity entity = new MindmapEntity(0, body.text, body.name, body.isPublic);
         MindmapEntity resultEntity = null;
-        if (error == null){
-            logger().trace("Start TX Mindmap save");
-            resultEntity = mindmapService.save(entity);
-            logger().trace("Finish TX Mindmap save");
-            id = resultEntity.id;
+        logger().trace("Start TX Mindmap save");
+        resultEntity = mindmapService.save(entity);
+        logger().trace("Finish TX Mindmap save");
+        if (resultEntity == null) {
+            error = "error when inserting mindmap in database";
+            throw new DatabaseInsertionException();
         }
-        if (error == null && resultEntity == null)
-            error = "error on DB insertion";
-        else if (resultEntity != null)
+        else
         {
+            id = resultEntity.id;
             UserEntity user = userService.findById(userId);
             UserMapsEntity userMap = new UserMapsEntity(0, user, resultEntity, 0);
             logger().trace("Start TX usermap save");
             UserMapsEntity resultUsermap = userMapsService.save(userMap);
             logger().trace("Start TX usermap save");
+            if (resultUsermap == null) {
+                error = "error when inserting user role in database";
+                throw new DatabaseInsertionException();
+            }
         }
 
         return new CreateMindMapDtoResponse(id, error);
@@ -81,12 +91,14 @@ public class MindmapController implements CanLog {
     {
         String error = null;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
-        if (userId == -1)
+        if (userId == -1) {
             error = "Invalid token";
-        if (error == null && !userService.userExists(userId))
+            throw new InvalidTokenException();
+        }
+        if (!userService.userExists(userId)) {
             error = "User does not exist";
-        if (error != null)
-            return new GetOwnedMindMapsDtoResponse(null, error);
+            throw new UserDoesNotExistException();
+        }
 
         final List<MindmapEntity> entities = mindmapService.findOwnedMindMaps(userId);
         return new GetOwnedMindMapsDtoResponse(
@@ -104,12 +116,14 @@ public class MindmapController implements CanLog {
     {
         String error = null;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
-        if (userId == -1)
+        if (userId == -1) {
             error = "Invalid token";
-        if (error == null && !userService.userExists(userId))
+            throw new InvalidTokenException();
+        }
+        if (!userService.userExists(userId)) {
             error = "User does not exist";
-        if (error != null)
-            return new GetSharedMindMapsDtoResponse(null, error);
+            throw new UserDoesNotExistException();
+        }
 
         final List<MindmapEntity> entities = mindmapService.findSharedMindMaps(userId);
         return new GetSharedMindMapsDtoResponse(
@@ -127,15 +141,24 @@ public class MindmapController implements CanLog {
                                                   @RequestBody ShareMindMapDtoRequest body) {
         String error = null;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
-        if (userId == -1)
+        if (userId == -1) {
             error = "Invalid token";
-        if (error == null && !userService.userExists(userId))
+            throw new InvalidTokenException();
+        }
+        if (!userService.userExists(userId)) {
             error = "User does not exist";
+            throw new UserDoesNotExistException();
+        }
         var currentMap = mindmapService.findMindmapById(body.mapId);
-        if (currentMap.ispublic)
+        if (currentMap == null)
+        {
+            error = "Mindmap not found for this id";
+            throw new ResourceNotFoundException();
+        }
+        if (currentMap.ispublic) {
             error = "You cannot share a public mindmap";
-        if (error != null)
-            return new ShareMindMapDtoResponse(error);
+            throw new PublicSharingException();
+        }
 
         int actionCount = 0;
         for (var email : body.emails)
@@ -150,8 +173,10 @@ public class MindmapController implements CanLog {
             actionCount++;
         }
 
-        if (actionCount == 0)
+        if (actionCount == 0) {
             error = "No one was added. The users may not exist or they may already have a role";
+            throw new NoShareActionException();
+        }
 
         return new ShareMindMapDtoResponse(error);
     }
@@ -163,15 +188,13 @@ public class MindmapController implements CanLog {
         String error = null;
         Integer id = -1;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
-        if (userId == -1)
+        if (userId == -1) {
             error = "Invalid token";
-        if (error == null && !userService.userExists(userId))
+            throw new InvalidTokenException();
+        }
+        if (!userService.userExists(userId)) {
             error = "User does not exist";
-
-        if (error != null)
-        {
-            logger().error("Error when trying to get mindmap from id: " + error);
-            return new GetMindmapFromIdDtoResponse(null , error);
+            throw new UserDoesNotExistException();
         }
 
         logger().trace("Start TX get mindmap from id");
