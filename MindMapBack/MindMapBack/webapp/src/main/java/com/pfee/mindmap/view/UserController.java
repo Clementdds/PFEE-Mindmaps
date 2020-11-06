@@ -2,6 +2,8 @@ package com.pfee.mindmap.view;
 
 import com.pfee.mindmap.domain.entity.UserEntity;
 import com.pfee.mindmap.domain.service.UserService;
+import com.pfee.mindmap.exceptions.InvalidTokenException;
+import com.pfee.mindmap.exceptions.UserDoesNotExistException;
 import com.pfee.mindmap.view.userscontroller.*;
 import org.springframework.web.bind.annotation.*;
 import utils.CanLog;
@@ -87,10 +89,14 @@ public class UserController implements CanLog {
     {
         String error = null;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
-        if (userId == -1)
+        if (userId == -1) {
             error = "Invalid token";
-        if (error == null && !userService.userExists(userId))
+            throw new InvalidTokenException();
+        }
+        if (!userService.userExists(userId)) {
             error = "User does not exist";
+            throw new UserDoesNotExistException();
+        }
         return new LogOutDtoResponse(error);
     }
 }
