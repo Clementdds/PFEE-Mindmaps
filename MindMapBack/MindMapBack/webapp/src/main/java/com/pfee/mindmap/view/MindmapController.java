@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import utils.CanLog;
+import utils.IterableUtils;
 import utils.TokenManager;
 
 import java.util.List;
@@ -65,9 +66,16 @@ public class MindmapController implements CanLog {
                 .collect(Collectors.toList()));
     }
 
-    @PostMapping(path = "create", consumes = "application/json", produces = "application/json")
+    @PostMapping(consumes = "application/json", produces = "application/json", path = "create")
     public CreateMindMapDtoResponse CreateMindMap(@RequestHeader(value="Authorization") String header,
                                                   @RequestBody CreateMindMapDtoRequest body) {
+
+        //Can't share to other user a public mindmap
+        if (body.isPublic && body.emails != null) {
+            //return new CreateMindMapDtoResponse(null, "You cannot share a public mindmap");
+            throw new PublicSharingException();
+        }
+
         String error = null;
         Integer id = -1;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
@@ -102,8 +110,37 @@ public class MindmapController implements CanLog {
             }
         }
 
+        if (body.emails == null)
+            return new CreateMindMapDtoResponse(id, error);
+
+        int actionCount = 0;
+        for (var email : body.emails)
+        {
+            UserEntity user = userService.findByUsername(email);
+            if (user == null)
+                continue; //FIXME maybe notify the caller that the user was not found
+            if (userMapsService.getUserRole(user.id, resultEntity.id) >= 0)
+                continue; //because this user already has a role with this map
+            UserMapsEntity um = new UserMapsEntity(0, user, resultEntity, 1);
+            userMapsService.save(um);
+            actionCount++;
+        }
+
+        if (actionCount == 0) {
+            error = "No one was added. The users may not exist or they may already have a role";
+            throw new NoShareActionException();
+        }
+
         return new CreateMindMapDtoResponse(id, error);
     }
+
+    /*//@PostMapping(consumes = "application/json", produces = "application/json", path = "share")
+    public ShareMindMapDtoResponse ShareMindMap() {
+
+
+
+        return new ShareMindMapDtoResponse(error);
+    }*/
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, value = "getowned")
     public GetOwnedMindMapsDtoResponse GetOwnedMindMaps(@RequestHeader(value="Authorization") String header)
@@ -153,51 +190,6 @@ public class MindmapController implements CanLog {
                         .collect(Collectors.toList()),
                 null
         );
-    }
-
-    @PostMapping(path = "share", consumes = "application/json", produces = "application/json")
-    public ShareMindMapDtoResponse ShareMindMap(@RequestHeader(value="Authorization") String header,
-                                                  @RequestBody ShareMindMapDtoRequest body) {
-        String error = null;
-        Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
-        if (userId == -1) {
-            error = "Invalid token";
-            throw new InvalidTokenException();
-        }
-        if (!userService.userExists(userId)) {
-            error = "User does not exist";
-            throw new UserDoesNotExistException();
-        }
-        var currentMap = mindmapService.findMindmapById(body.mapId);
-        if (currentMap == null)
-        {
-            error = "Mindmap not found for this id";
-            throw new ResourceNotFoundException();
-        }
-        if (currentMap.ispublic) {
-            error = "You cannot share a public mindmap";
-            throw new PublicSharingException();
-        }
-
-        int actionCount = 0;
-        for (var email : body.emails)
-        {
-            UserEntity user = userService.findByUsername(email);
-            if (user == null)
-                continue; //FIXME maybe notify the caller that the user was not found
-            if (userMapsService.getUserRole(user.id, body.mapId) >= 0)
-                continue; //because this user already has a role with this map
-            UserMapsEntity um = new UserMapsEntity(0, user, currentMap, 1);
-            userMapsService.save(um);
-            actionCount++;
-        }
-
-        if (actionCount == 0) {
-            error = "No one was added. The users may not exist or they may already have a role";
-            throw new NoShareActionException();
-        }
-
-        return new ShareMindMapDtoResponse(error);
     }
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getMindmapFromId")

@@ -60,7 +60,7 @@ public class LinkController implements CanLog {
                                  .collect(Collectors.toList()));
     }
 
-    @RequestMapping(produces = "application/json", method = RequestMethod.POST, path = "addPublicLink")
+    @RequestMapping(produces = "application/json", method = RequestMethod.POST, path = "postLink")
     public PostLinkDtoResponse PostLink(@RequestHeader(value="Authorization") String header,
                                                     @RequestBody PostLinkDtoRequest request)
     {
@@ -104,7 +104,6 @@ public class LinkController implements CanLog {
         var addedUsers = userMapsService.addUsersForPrivateMap(request.emails, userId, mapEntity.id);
         return new PostLinkDtoResponse(linkEntity.url, null, addedUsers);
     }
-
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getPublicMindmapFromUrl")
     public GetPublicMindmapFromUrlDtoResponse GetPrivateMindmapFromUrl(@RequestParam String url)

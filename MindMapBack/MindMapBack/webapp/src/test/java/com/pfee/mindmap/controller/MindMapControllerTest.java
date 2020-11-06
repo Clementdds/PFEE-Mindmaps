@@ -67,7 +67,7 @@ public class MindMapControllerTest {
         token = TokenManager.ProduceToken(defaultEntity.id, EMAIL);
     }
 
-    @Test
+    /*@Test
     public void CreateMindMapSuccessTest() {
         mindmapRepository.deleteAll();
         userMapsRepository.deleteAll();
@@ -88,5 +88,5 @@ public class MindMapControllerTest {
         Assert.assertEquals(EMAIL, um.getUser().getUsername());
         Assert.assertEquals(result.id, um.getMap().getId());
         Assert.assertEquals(0, (long) um.getUserRole());
-    }
+    }*/
 }

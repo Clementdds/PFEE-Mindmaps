@@ -241,7 +241,7 @@ Response :
 
 *N.B. the owner id of a private mindmap is the id of the user that send the request*
 
-POST http://DOMAIN:9999/links/addPublicLink
+POST http://DOMAIN:9999/links/postLink
 
 Header :
 
