@@ -75,6 +75,8 @@ Return code :
 
 ###### Upload a new mindmap
 
+/!\ You can't upload a **public** mindmap and share it. If you wanna share a mindmap, it should be in **private**
+
 POST http://DOMAIN:9999/mindmaps/create
 
 Header :
@@ -87,6 +89,7 @@ Body:
     "text" : "JSON_DOC",
     "name" : "example_mindmap"
     "isPublic" : true|false
+    "emails": [ "Email1", "Email2" ] | null
 }
 ```
 Response :
@@ -100,7 +103,9 @@ NB : id can later be used to access the uploaded mindmap.
 
 Return code :
  - 200 OK
+ - 400 You attempted to share a public mindmap
  - 401 Token invalid or user not recognized
+ - 404 Mindmap not found for this id
  - 502 Database insertion error
 
 ###### Get owned mindmaps
@@ -154,34 +159,6 @@ Response :
 Return code :
  - 200 OK
  - 401 Token invalid or user not recognized
-
-###### Share a mindmap with other users
-
-POST http://DOMAIN:9999/mindmaps/share
-
-Header :
-
-`Authorization : Bearer xxxTOKENxxx`
-
-Body:
-```
-{
-    "mapId" : Int, id du mindmap,
-    "emails": Array of Username -- should be emails
-}
-```
-Response :
-```
-{
-    "error" : "xxx"
-}
-```
-Return code :
- - 200 OK
- - 400 You attempted to share a public mindmap | The provided users were not eligible to sharing
- - 401 Token invalid or user not recognized
- - 404 Mindmap not found for this id
- - 502 Database insertion error
 
 ###### Get the mindmap's json body from its id
 
