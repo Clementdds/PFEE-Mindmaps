@@ -5,11 +5,12 @@ import store from "../Store/ConfigureStore";
 import callHandler from "../Helpers/HandleResponse";
 
 const API_GET_MINDMAPS_OWNED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getowned";
+const API_GET_MINDMAPS_SHARED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getshared";
 const API_GET_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getMindmapFromId";
 const API_POST_MINDMAPS_CREATE_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/create";
 
 /*
- * Get list Mindmaps based on the Header token
+ * Get owned Mindmaps based on the Header token
  */
 
 const callGetOwnedMindmaps = () => {
@@ -23,7 +24,7 @@ const callGetOwnedMindmaps = () => {
 };
 
 const getOwnedMindmaps = () => {
-    console.log("Get list Mindmaps service");
+    console.log("Get owned Mindmaps service");
 
     store.dispatch({type: actionTypes.MINDMAPS_LOADING});
 
@@ -32,7 +33,40 @@ const getOwnedMindmaps = () => {
             (data) => {
                 if (Array.isArray(data.mindmapsList)) {
                     // Dispatch to state
-                    store.dispatch({type: actionTypes.MINDMAPS_SET_LIST, payload: data.mindmapsList});
+                    store.dispatch({type: actionTypes.MINDMAPS_OWNED_SET_LIST, payload: data.mindmapsList});
+                }
+            },
+            (error) => {
+                store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: error})
+            }
+        );
+};
+
+/*
+ * Get shared Mindmaps based on the Header token
+ */
+
+const callGetSharedMindmaps = () => {
+    const requestOptions = {
+        method: 'GET',
+        headers: requestHeader.AuthHeader(),
+    };
+
+    return fetch(API_GET_MINDMAPS_SHARED_ENDPOINT, requestOptions)
+        .then(callHandler.handleResponse);
+};
+
+const getSharedMindmaps = () => {
+    console.log("Get shared Mindmaps service");
+
+    store.dispatch({type: actionTypes.MINDMAPS_LOADING});
+
+    callGetSharedMindmaps()
+        .then(
+            (data) => {
+                if (Array.isArray(data.mindmapsList)) {
+                    // Dispatch to state
+                    store.dispatch({type: actionTypes.MINDMAPS_SHARED_SET_LIST, payload: data.mindmapsList});
                 }
             },
             (error) => {
@@ -103,6 +137,7 @@ const postCreateMindmaps = ({file, name, isPublic, emails}) => {
 
 const mindmapsService = {
     getOwnedMindmaps,
+    getSharedMindmaps,
     getMindmapsById,
     postCreateMindmaps,
 };

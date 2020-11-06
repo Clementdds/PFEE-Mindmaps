@@ -6,29 +6,49 @@ import mindmapsService from "../Services/MindMapsService";
 import MindmapData from "../Components/List/MindmapData";
 import * as actionTypes from '../Actions/ActionsTypes'
 
-const HomePage = ({mindmapsList, error, dispatch}) => {
+const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
 
     useEffect(() => {
         mindmapsService.getOwnedMindmaps();
+        mindmapsService.getSharedMindmaps();
         dispatch({type: actionTypes.VIEWER_CLEAR_STATE});
     }, [dispatch]);
 
     return (
         <React.Fragment>
             <button onClick={userService.logout}>Logout</button>
-            <br/>
+
             <div>
                 Owned mindmaps
                 <br/>
                 <div>
-                    {mindmapsList.length ?
-                        mindmapsList.map((x) => {
+                    {ownedMindmapsList.length ?
+                        ownedMindmapsList.map((x) => {
                             return (
                                 <MindmapData Mindmap={x} key={x.id}/>
                             );
                         }) :
                         <div>
-                            No previous mindmaps
+                            No owned mindmaps
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <br/>
+
+            <div>
+                Shared mindmaps
+                <br/>
+                <div>
+                    {sharedMindmapsList.length ?
+                        sharedMindmapsList.map((x) => {
+                            return (
+                                <MindmapData Mindmap={x} key={x.id}/>
+                            );
+                        }) :
+                        <div>
+                            No shared mindmaps
                         </div>
                     }
                 </div>
@@ -43,7 +63,8 @@ const HomePage = ({mindmapsList, error, dispatch}) => {
 
 const MapStateToProps = state => {
     return {
-        mindmapsList: state.Mindmaps.mindmapsList,
+        ownedMindmapsList: state.Mindmaps.ownedMindmapsList,
+        sharedMindmapsList: state.Mindmaps.sharedMindmapsList,
         error: state.Mindmaps.error,
     };
 };
