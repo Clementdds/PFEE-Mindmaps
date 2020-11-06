@@ -43,6 +43,11 @@ const ViewerReducer = (state = initialState, action) => {
                 ...state,
                 error: null
             };
+
+        // Clear state
+        case actionTypes.VIEWER_CLEAR_STATE:
+        case actionTypes.CLEAR_ALL_STATE:
+            return initialState;
         default:
             return state;
     }

@@ -9,6 +9,7 @@ const initialState = {
 
 const MindmapsReducer = (state = initialState, action) => {
     switch (action.type) {
+        // Loading
         case actionTypes.MINDMAPS_LOADING:
             return {
                 ...state,
@@ -23,6 +24,8 @@ const MindmapsReducer = (state = initialState, action) => {
                 error: null,
                 postMindmapError: null,
             };
+
+        // List mindmaps
         case actionTypes.MINDMAPS_SET_LIST:
             return {
                 ...state,
@@ -31,6 +34,8 @@ const MindmapsReducer = (state = initialState, action) => {
                 error: null,
                 postMindmapError: null,
             };
+
+        // Mindmap error
         case actionTypes.MINDMAPS_ERROR:
             return {
                 ...state,
@@ -45,6 +50,8 @@ const MindmapsReducer = (state = initialState, action) => {
                 error: null,
                 postMindmapError: null,
             };
+
+        // Create mindmap form
         case actionTypes.FORM_ERROR:
             return {
                 ...state,
@@ -55,6 +62,11 @@ const MindmapsReducer = (state = initialState, action) => {
                 ...state,
                 postMindmapError: null,
             };
+
+        // Clear state
+        case actionTypes.MINDMAPS_RESET_LIST:
+        case actionTypes.MINDMAPS_CLEAR_STATE:
+            return initialState;
         default:
             return state;
     }

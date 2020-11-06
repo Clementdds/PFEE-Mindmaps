@@ -9,6 +9,7 @@ const initialState = {
 
 const UserReducer = (state = initialState, action) => {
     switch (action.type) {
+        // Logging in
         case actionTypes.USER_LOGGING_IN:
             return {
                 ...state,
@@ -19,6 +20,8 @@ const UserReducer = (state = initialState, action) => {
                 ...state,
                 isLoggingIn: false
             };
+
+        // Sign up
         case actionTypes.USER_SIGN_UP:
             return {
                 ...state,
@@ -27,6 +30,8 @@ const UserReducer = (state = initialState, action) => {
                 token: action.payload.token,
                 error: null,
             };
+
+        // Sign in
         case actionTypes.USER_SIGN_IN:
             return {
                 ...state,
@@ -35,14 +40,8 @@ const UserReducer = (state = initialState, action) => {
                 token: action.payload.token,
                 error: null,
             };
-        case actionTypes.USER_SIGN_OUT:
-            return {
-                ...state,
-                isSignedIn: false,
-                isLoggingIn: false,
-                token: null,
-                error: null,
-            };
+
+        // User error
         case actionTypes.USER_ERROR:
             return {
                 ...state,
@@ -54,6 +53,17 @@ const UserReducer = (state = initialState, action) => {
                 ...state,
                 isLoggingIn: false,
                 error: null
+            };
+
+        // Logout + clear state
+        case actionTypes.CLEAR_ALL_STATE:
+        case actionTypes.USER_SIGN_OUT:
+            return {
+                ...state,
+                isSignedIn: false,
+                isLoggingIn: false,
+                token: null,
+                error: null,
             };
         default:
             return state;

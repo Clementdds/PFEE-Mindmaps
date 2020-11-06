@@ -112,6 +112,7 @@ const logout = () => {
 
             // Dispatch to state
             store.dispatch({type: actionTypes.USER_SIGN_OUT});
+            store.dispatch({type: actionTypes.CLEAR_ALL_STATE});
         })
 };
 
