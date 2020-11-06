@@ -4,11 +4,13 @@ import FormNewMindmap from "../Components/Forms/FormNewMindmap";
 import {connect} from "react-redux";
 import mindmapsService from "../Services/MindMapsService";
 import MindmapData from "../Components/List/MindmapData";
+import * as actionTypes from '../Actions/ActionsTypes'
 
 const HomePage = ({mindmapsList, error, dispatch}) => {
 
     useEffect(() => {
         mindmapsService.getOwnedMindmaps();
+        dispatch({type: actionTypes.VIEWER_CLEAR_STATE});
     }, [dispatch]);
 
     return (
