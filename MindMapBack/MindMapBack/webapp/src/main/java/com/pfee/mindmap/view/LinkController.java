@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import utils.CanLog;
 import utils.TokenManager;
@@ -106,9 +107,9 @@ public class LinkController implements CanLog {
 
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getPublicMindmapFromUrl")
-    public GetPublicMindmapFromUrlDtoResponse GetPrivateMindmapFromUrl(@RequestBody GetPublicMindmapFromUrlDtoRequest request)
+    public GetPublicMindmapFromUrlDtoResponse GetPrivateMindmapFromUrl(@RequestParam String url)
     {
-        var entity = linksService.GetMindmapFromPublicUrl(request.url);
+        var entity = linksService.GetMindmapFromPublicUrl(url);
         if (entity == null)
             return new GetPublicMindmapFromUrlDtoResponse(null, null, "Couldn't retrieve the entity, are you sure that your url is good ?");
 
@@ -117,7 +118,7 @@ public class LinkController implements CanLog {
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getPrivateMindmapFromUrl")
     public GetPublicMindmapFromUrlDtoResponse GetPublicMindmapFromUrl(@RequestHeader(value="Authorization") String header,
-                                                                      @RequestBody GetPublicMindmapFromUrlDtoRequest request)
+                                                                      @RequestParam String url)
     {
         String error = null;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
@@ -128,7 +129,7 @@ public class LinkController implements CanLog {
         if (error != null)
             return new GetPublicMindmapFromUrlDtoResponse(null , null, error);
 
-        var entity = linksService.GetMindmapFromPrivateUrl(request.url, userId);
+        var entity = linksService.GetMindmapFromPrivateUrl(url, userId);
         if (entity == null)
             return new GetPublicMindmapFromUrlDtoResponse(null, null, "Couldn't retrieve the entity, are you sure that your url is good ?");
 

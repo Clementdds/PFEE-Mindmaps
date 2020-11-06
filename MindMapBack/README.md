@@ -130,7 +130,6 @@ Return code :
  - 401 Token invalid or user not recognized
 
 ###### Get Shared mindmaps
-###### Get Shared mindmaps
 
 GET http://DOMAIN:9999/mindmaps/getshared
 
@@ -210,18 +209,24 @@ Return code :
 
 ###### Get mindmap from url
 
-GET http://DOMAIN:9999/links/getPrivateMindmapFromUrl
+GET http://DOMAIN:9999/links/getPublicMindmapFromUrl?url=X
+
+Response :
+```
+{
+    "nodeid"  : BigInt, nodeid
+    "mindmap" : String, Json du mindmap complet
+    "error"   : null
+}
+```
+
+###### Get mindmap from url WHEN THE USER IS LOGGED
+
+GET http://DOMAIN:9999/links/getPrivateMindmapFromUrl?url=X
 
 Header :
 
 `Authorization : Bearer xxxTOKENxxx`
-
-Body:
-```
-{
-    "url" : String, url du mindmap
-}
-```
 
 Response :
 ```
