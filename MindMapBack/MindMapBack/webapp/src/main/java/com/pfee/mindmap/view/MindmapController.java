@@ -204,7 +204,7 @@ public class MindmapController implements CanLog {
         if (mindmapEntity == null)
         {
             logger().error("Get mindmap from id fail, no entity found");
-            return new GetMindmapFromIdDtoResponse(null , "Couldn't find the mindmap in database, are you sure that your id is good ?");
+            throw new ResourceNotFoundException();
         }
 
         return new GetMindmapFromIdDtoResponse(mindmapEntity.fullmaptext, null);
