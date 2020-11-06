@@ -25,7 +25,10 @@ Response :
     "error" : "xxx"
 }
 ```
-NB : If there was no error, the error field will be null. If there was one, the token field will be null.
+Return code :
+ - 200 OK
+ - 403 User already exists
+ - 502 Error on database insertion
 
 ###### Login
 
@@ -45,7 +48,9 @@ Response :
     "error" : "xxx"
 }
 ```
-NB : same as signup
+Return code :
+ - 200 OK
+ - 401 User/Password pair does not exist
 
 ###### Logout
 
@@ -62,7 +67,9 @@ Response :
     "error" : "xxx"
 }
 ```
-NB : error is null if logout succeeds.
+Return code :
+ - 200 OK
+ - 401 Token invalid or user not recognized
 
 ### MINDMAPS
 
@@ -91,6 +98,11 @@ Response :
 ```
 NB : id can later be used to access the uploaded mindmap.
 
+Return code :
+ - 200 OK
+ - 401 Token invalid or user not recognized
+ - 502 Database insertion error
+
 ###### Get owned mindmaps
 
 GET http://DOMAIN:9999/mindmaps/getowned
@@ -113,6 +125,9 @@ Response :
     "error": null
 }
 ```
+Return code :
+ - 200 OK
+ - 401 Token invalid or user not recognized
 
 ###### Get Shared mindmaps
 
@@ -136,6 +151,9 @@ Response :
     "error": null
 }
 ```
+Return code :
+ - 200 OK
+ - 401 Token invalid or user not recognized
 
 ###### Share a mindmap with other users
 
@@ -158,6 +176,12 @@ Response :
     "error" : "xxx"
 }
 ```
+Return code :
+ - 200 OK
+ - 400 You attempted to share a public mindmap | The provided users were not eligible to sharing
+ - 401 Token invalid or user not recognized
+ - 404 Mindmap not found for this id
+ - 502 Database insertion error
 
 ###### Get the mindmap's json body from its id
 
@@ -176,6 +200,10 @@ Response :
     "error"   : "null"
 }
 ```
+Return code :
+ - 200 OK
+ - 401 Token invalid or user not recognized
+ - 404 Mindmap not found for this id
 
 ### LINKS
 
