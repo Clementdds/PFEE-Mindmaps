@@ -10,17 +10,13 @@ const API_SIGN_UP_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/users/signup";
 const API_SIGN_OUT_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/users/logout";
 
 /*
- * Function called to set logging in to true and reset error since (new error / no error) is supposed to be set
+ * Function called to set logging in to true/false and reset error since (new error / no error) is supposed to be set
  */
 
 const userIsLoggingIn = () => {
     store.dispatch({type: actionTypes.USER_LOGGING_IN});
     store.dispatch({type: actionTypes.USER_RESET_ERROR});
 };
-
-/*
- * Function called to tell app the user is done logging in
- */
 
 const userStopLoggingIn = () => {
     store.dispatch({type: actionTypes.USER_RESET_LOGGING_IN});

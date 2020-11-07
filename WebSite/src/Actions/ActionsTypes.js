@@ -10,11 +10,12 @@ export const VIEWER_CLEAR_STATE = "VIEWER_CLEAR_STATE";
 // User
 export const USER_SIGN_UP = "USER_SIGN_UP";
 export const USER_SIGN_IN = "USER_SIGN_IN";
-export const USER_SIGN_OUT = "USER_SIGN_OUT"; // == clear State
+export const USER_SIGN_OUT = "USER_SIGN_OUT";
 export const USER_ERROR = "USER_ERROR";
 export const USER_RESET_ERROR = "USER_RESET_ERROR";
 export const USER_LOGGING_IN = "USER_LOGGING_IN";
 export const USER_RESET_LOGGING_IN = "USER_RESET_LOGGING_IN";
+export const USER_CLEAR_STATE = "USER_CLEAR_STATE";
 
 // Mindmaps
 export const MINDMAPS_OWNED_SET_LIST= "MINDMAPS_OWNED_SET_LIST";
@@ -28,8 +29,13 @@ export const MINDMAPS_RESET_ERROR = "MINDMAPS_RESET_ERROR";
 export const MINDMAPS_CLEAR_STATE = "MINDMAPS_CLEAR_STATE";
 
 // Post form
+export const FORM_RESULT = "FORM_RESULT";
+export const FORM_RESET_RESULT = "FORM_RESET_RESULT";
 export const FORM_ERROR = "FORM_ERROR";
 export const FORM_RESET_ERROR = "FORM_RESET_ERROR";
+export const FORM_LOADING = "FORM_LOADING";
+export const FORM_RESET_LOADING = "FORM_RESET_LOADING";
+export const FORM_CLEAR_STATE = "FORM_CLEAR_STATE";
 
 // All
 export const CLEAR_ALL_STATE = "CLEAR_ALL_STATE";

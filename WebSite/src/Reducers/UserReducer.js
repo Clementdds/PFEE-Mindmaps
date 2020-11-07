@@ -59,6 +59,7 @@ const UserReducer = (state = initialState, action) => {
 
         // Clear state
         case actionTypes.CLEAR_ALL_STATE:
+        case actionTypes.USER_CLEAR_STATE:
             return {
                 ...state,
                 isSignedIn: false,

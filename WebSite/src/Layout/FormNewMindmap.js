@@ -1,8 +1,10 @@
 import React, {useCallback, useState} from 'react';
 import {connect} from "react-redux";
 import * as actionTypes from '../Actions/ActionsTypes'
-import mindmapsService from "../Services/MindMapsService";
 import ListEmailValidator from "../Components/Forms/ListEmailValidator";
+import formService from "../Services/FormService";
+
+
 const FormNewMindmap = ({error, dispatch}) => {
 
     const [name, setName] = useState('');
@@ -85,12 +87,15 @@ const FormNewMindmap = ({error, dispatch}) => {
                 let result = null;
                 try {
                     result = convert.xml2js(fileText.toString(), {ignoreComment: true, alwaysChildren: true});
-                    mindmapsService.postCreateMindmaps({
+
+                    // Actual call to backend
+                    formService.postCreateMindmaps({
                         file: JSON.stringify(result),
                         isPublic: isPublic,
                         name: name,
                         emails: (isPublic || listEmails === '') ? null : listEmails.trim().split(';')
                     });
+
                 } catch (e) {
                     dispatch({type: actionTypes.FORM_ERROR, payload: "File does not respect xml format"});
                 }
@@ -165,7 +170,7 @@ const FormNewMindmap = ({error, dispatch}) => {
 
 const mapStateToProps = state => {
     return {
-        error: state.Mindmaps.postMindmapError,
+        error: state.Form.error,
     };
 };
 
