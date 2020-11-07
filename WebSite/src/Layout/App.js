@@ -40,9 +40,7 @@ const App = () => {
                     </Route>
 
                     {/* Mindmap by Id  */}
-                    <PrivateRoute>
-                        <Route path={"/mindmap/:id"} component={MindmapById}/>
-                    </PrivateRoute>
+                    <PrivateRoute path={"/mindmap/:id"} component={MindmapById}/>
 
                     {/* Mindmap by Url  */}
                     <Route path={"/links/:url"} component={PublicMindmap}/>
