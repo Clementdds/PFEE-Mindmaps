@@ -1,7 +1,7 @@
 import React, {Suspense, lazy} from 'react';
 
 // React-Dom
-import {Router, Switch, Route} from 'react-router-dom';
+import {Switch, Route, BrowserRouter} from 'react-router-dom';
 
 // Components
 import Header from "./Header";
@@ -12,6 +12,7 @@ import history from "../Helpers/History";
 import HomePage from "./HomePage";
 import PublicMindmap from "./PublicMindmap";
 import MindmapById from "./MindmapById";
+import PrivateRouteWithParams from "../Components/Routes/PrivateRouteWithParams";
 
 // Error Page
 const Error404Page = lazy(() => import('../Components/ErrorsPages/Error404'));
@@ -19,7 +20,7 @@ const Error404Page = lazy(() => import('../Components/ErrorsPages/Error404'));
 const App = () => {
 
     return (
-        <Router history={history}>
+        <BrowserRouter history={history}>
             <Suspense fallback={<div>loading...</div>}>
                 <Header/>
                 <Switch>
@@ -40,9 +41,7 @@ const App = () => {
                     </Route>
 
                     {/* Mindmap by Id  */}
-                    <PrivateRoute>
-                        <Route path={"/mindmap/:id"} component={MindmapById}/>
-                    </PrivateRoute>
+                    <PrivateRouteWithParams path={"/mindmap/:id"} component={MindmapById}/>
 
                     {/* Mindmap by Url  */}
                     <Route path={"/links/:url"} component={PublicMindmap}/>
@@ -53,7 +52,7 @@ const App = () => {
                     </Route>
                 </Switch>
             </Suspense>
-        </Router>
+        </BrowserRouter>
     );
 };
 

@@ -10,6 +10,19 @@ const API_SIGN_UP_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/users/signup";
 const API_SIGN_OUT_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/users/logout";
 
 /*
+ * Function called to set logging in to true/false and reset error since (new error / no error) is supposed to be set
+ */
+
+const userIsLoggingIn = () => {
+    store.dispatch({type: actionTypes.USER_LOGGING_IN});
+    store.dispatch({type: actionTypes.USER_RESET_ERROR});
+};
+
+const userStopLoggingIn = () => {
+    store.dispatch({type: actionTypes.USER_RESET_LOGGING_IN});
+};
+
+/*
  * Login
  */
 
@@ -28,7 +41,7 @@ const login = ({email, password}) => {
     console.log("Login service");
     console.log(email, password);
 
-    store.dispatch({type: actionTypes.USER_LOGGING_IN});
+    userIsLoggingIn();
 
     callLogin({email, password})
         .then(
@@ -46,7 +59,8 @@ const login = ({email, password}) => {
             (error) => {
                 store.dispatch({type: actionTypes.USER_ERROR, payload: error})
             }
-        );
+        )
+        .finally(userStopLoggingIn);
 };
 
 /*
@@ -68,7 +82,7 @@ const signUP = ({email, password}) => {
     console.log("Sign up service");
     console.log(email, password);
 
-    store.dispatch({type: actionTypes.USER_LOGGING_IN});
+    userIsLoggingIn();
 
     callSignUP({email, password})
         .then((data) => {
@@ -84,7 +98,8 @@ const signUP = ({email, password}) => {
             (error) => {
                 store.dispatch({type: actionTypes.USER_ERROR, payload: error})
             }
-        );
+        )
+        .finally(userStopLoggingIn);
 };
 
 /*
@@ -96,7 +111,6 @@ const callLogout = () => {
         method: 'GET',
         headers: requestHeader.AuthHeader()
     };
-    console.log(requestOptions);
 
     return fetch(API_SIGN_OUT_ENDPOINT, requestOptions)
         .then(callHandler.handleSignResponse);
@@ -112,6 +126,7 @@ const logout = () => {
 
             // Dispatch to state
             store.dispatch({type: actionTypes.USER_SIGN_OUT});
+            store.dispatch({type: actionTypes.CLEAR_ALL_STATE});
         })
 };
 

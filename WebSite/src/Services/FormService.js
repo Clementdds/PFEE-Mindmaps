@@ -1,0 +1,62 @@
+import {API_AUTHENTICATION_ENDPOINT_HTTP} from "../config";
+import requestHeader from "../Helpers/AuthHeaders";
+import * as actionTypes from '../Actions/ActionsTypes'
+import store from "../Store/ConfigureStore";
+import callHandler from "../Helpers/HandleResponse";
+
+const API_POST_MINDMAPS_CREATE_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/create";
+
+/*
+ * Function called to set loading to true/false and reset error since (new error / no error) is supposed to be set
+ */
+
+
+const formStartLoading = () => {
+    store.dispatch({type: actionTypes.FORM_LOADING});
+    store.dispatch({type: actionTypes.FORM_RESET_RESULT});
+    store.dispatch({type: actionTypes.FORM_RESET_ERROR});
+};
+
+const formStopLoading = () => {
+    store.dispatch({type: actionTypes.FORM_RESET_LOADING});
+};
+
+/*
+ * Post Mindmaps
+ */
+
+const callPostCreateMindmaps = ({file, name, isPublic, emails}) => {
+    const requestOptions = {
+        method: 'POST',
+        headers: requestHeader.AuthPostHeader(),
+        body: JSON.stringify({text: file, name: name, isPublic: isPublic, emails: emails})
+    };
+
+    return fetch(API_POST_MINDMAPS_CREATE_ENDPOINT, requestOptions)
+        .then(callHandler.handleResponse);
+};
+
+const postCreateMindmaps = ({file, name, isPublic, emails}) => {
+    console.log("Create Mindmaps");
+
+    formStartLoading();
+
+    callPostCreateMindmaps({file, name, isPublic, emails})
+        .then((data) => {
+                if (data) {
+                    const result = "Mindmap successfully created with id " + data.id;
+                    store.dispatch({type: actionTypes.FORM_RESULT, payload: result});
+                }
+            },
+            (error) => {
+                store.dispatch({type: actionTypes.FORM_ERROR, payload: error})
+            }
+        )
+        .finally(formStopLoading);
+};
+
+const formService = {
+    postCreateMindmaps,
+};
+
+export default formService;
