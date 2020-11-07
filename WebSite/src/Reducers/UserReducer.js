@@ -26,9 +26,7 @@ const UserReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isSignedIn: true,
-                isLoggingIn: false,
                 token: action.payload.token,
-                error: null,
             };
 
         // Sign in
@@ -36,28 +34,31 @@ const UserReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isSignedIn: true,
-                isLoggingIn: false,
                 token: action.payload.token,
-                error: null,
             };
 
         // User error
         case actionTypes.USER_ERROR:
             return {
                 ...state,
-                isLoggingIn: false,
                 error: action.payload,
             };
         case actionTypes.USER_RESET_ERROR:
             return {
                 ...state,
-                isLoggingIn: false,
                 error: null
             };
 
-        // Logout + clear state
-        case actionTypes.CLEAR_ALL_STATE:
+        // Logout
         case actionTypes.USER_SIGN_OUT:
+            return {
+                ...state,
+                isSignedIn: false,
+                token: null,
+            };
+
+        // Clear state
+        case actionTypes.CLEAR_ALL_STATE:
             return {
                 ...state,
                 isSignedIn: false,
