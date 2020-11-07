@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import userService from "../Services/UserService";
-import FormNewMindmap from "../Components/Forms/FormNewMindmap";
+import FormNewMindmap from "./FormNewMindmap";
 import {connect} from "react-redux";
 import mindmapsService from "../Services/MindMapsService";
 import MindmapData from "../Components/List/MindmapData";

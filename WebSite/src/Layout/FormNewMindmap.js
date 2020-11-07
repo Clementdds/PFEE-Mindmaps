@@ -1,8 +1,8 @@
 import React, {useCallback, useState} from 'react';
 import {connect} from "react-redux";
-import * as actionTypes from '../../Actions/ActionsTypes'
-import mindmapsService from "../../Services/MindMapsService";
-import ListEmailValidator from "./ListEmailValidator";
+import * as actionTypes from '../Actions/ActionsTypes'
+import mindmapsService from "../Services/MindMapsService";
+import ListEmailValidator from "../Components/Forms/ListEmailValidator";
 const FormNewMindmap = ({error, dispatch}) => {
 
     const [name, setName] = useState('');
