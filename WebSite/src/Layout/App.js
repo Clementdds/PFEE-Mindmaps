@@ -1,7 +1,7 @@
 import React, {Suspense, lazy} from 'react';
 
 // React-Dom
-import {Switch, Route, BrowserRouter} from 'react-router-dom';
+import {Switch, Route, Router} from 'react-router-dom';
 
 // Components
 import Header from "./Header";
@@ -20,7 +20,7 @@ const Error404Page = lazy(() => import('../Components/ErrorsPages/Error404'));
 const App = () => {
 
     return (
-        <BrowserRouter history={history}>
+        <Router history={history}>
             <Suspense fallback={<div>loading...</div>}>
                 <Header/>
                 <Switch>
@@ -52,7 +52,7 @@ const App = () => {
                     </Route>
                 </Switch>
             </Suspense>
-        </BrowserRouter>
+        </Router>
     );
 };
 
