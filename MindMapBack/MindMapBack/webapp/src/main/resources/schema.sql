@@ -1,11 +1,11 @@
-DROP TABLE users CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE IF NOT EXISTS users(
   id serial PRIMARY KEY,
   username VARCHAR(255) UNIQUE,
   password VARCHAR(255)
 );
 
-DROP TABLE mindmaps CASCADE;
+DROP TABLE IF EXISTS mindmaps CASCADE;
 CREATE TABLE IF NOT EXISTS mindmaps(
   id serial PRIMARY KEY,
   fullmaptext TEXT,
@@ -20,7 +20,8 @@ CREATE TABLE usermaps(
   mapid INTEGER,
   userrole INTEGER,
   FOREIGN KEY (userid) REFERENCES users(id),
-  FOREIGN KEY (mapid) REFERENCES mindmaps(id)
+  FOREIGN KEY (mapid) REFERENCES mindmaps(id),
+  UNIQUE (userid, mapid)
 );
 
 DROP TABLE IF EXISTS links;

@@ -1,12 +1,13 @@
 package com.pfee.mindmap.view;
 
 import com.pfee.mindmap.domain.entity.LinkEntity;
-import com.pfee.mindmap.domain.entity.UserMapsEntity;
 import com.pfee.mindmap.domain.service.LinksService;
 import com.pfee.mindmap.domain.service.MindmapService;
 import com.pfee.mindmap.domain.service.UserMapsService;
 import com.pfee.mindmap.domain.service.UserService;
 import com.pfee.mindmap.view.linkcontroller.GetAllLinksDtoResponse;
+import com.pfee.mindmap.view.linkcontroller.GetPublicMindmapFromUrlDtoRequest;
+import com.pfee.mindmap.view.linkcontroller.GetPublicMindmapFromUrlDtoResponse;
 import com.pfee.mindmap.view.linkcontroller.PostLinkDtoRequest;
 import com.pfee.mindmap.view.linkcontroller.PostLinkDtoResponse;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import utils.CanLog;
 import utils.TokenManager;
@@ -58,7 +60,7 @@ public class LinkController implements CanLog {
                                  .collect(Collectors.toList()));
     }
 
-    @RequestMapping(produces = "application/json", method = RequestMethod.POST, path = "addPublicLink")
+    @RequestMapping(produces = "application/json", method = RequestMethod.POST, path = "postLink")
     public PostLinkDtoResponse PostLink(@RequestHeader(value="Authorization") String header,
                                                     @RequestBody PostLinkDtoRequest request)
     {
@@ -101,5 +103,35 @@ public class LinkController implements CanLog {
         //request is private so must share to other users
         var addedUsers = userMapsService.addUsersForPrivateMap(request.emails, userId, mapEntity.id);
         return new PostLinkDtoResponse(linkEntity.url, null, addedUsers);
+    }
+
+    @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getPublicMindmapFromUrl")
+    public GetPublicMindmapFromUrlDtoResponse GetPrivateMindmapFromUrl(@RequestParam String url)
+    {
+        var entity = linksService.GetMindmapFromPublicUrl(url);
+        if (entity == null)
+            return new GetPublicMindmapFromUrlDtoResponse(null, null, "Couldn't retrieve the entity, are you sure that your url is good ?");
+
+        return new GetPublicMindmapFromUrlDtoResponse(entity.nodeid, entity.map.fullmaptext, null);
+    }
+
+    @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getPrivateMindmapFromUrl")
+    public GetPublicMindmapFromUrlDtoResponse GetPublicMindmapFromUrl(@RequestHeader(value="Authorization") String header,
+                                                                      @RequestParam String url)
+    {
+        String error = null;
+        Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
+        if (userId == -1)
+            error = "Invalid token";
+        if (error == null && !userService.userExists(userId))
+            error = "User does not exist";
+        if (error != null)
+            return new GetPublicMindmapFromUrlDtoResponse(null , null, error);
+
+        var entity = linksService.GetMindmapFromPrivateUrl(url, userId);
+        if (entity == null)
+            return new GetPublicMindmapFromUrlDtoResponse(null, null, "Couldn't retrieve the entity, are you sure that your url is good ?");
+
+        return new GetPublicMindmapFromUrlDtoResponse(entity.nodeid, entity.map.fullmaptext, null);
     }
 }

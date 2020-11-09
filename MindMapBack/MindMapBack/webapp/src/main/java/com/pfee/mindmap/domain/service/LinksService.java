@@ -5,8 +5,8 @@ import com.pfee.mindmap.domain.entity.MindmapEntity;
 import com.pfee.mindmap.modeltoentity.LinksModelToEntity;
 import com.pfee.mindmap.modeltoentity.MindmapModelToEntity;
 import com.pfee.mindmap.persistence.model.LinksModel;
-import com.pfee.mindmap.persistence.model.MindmapModel;
 import com.pfee.mindmap.persistence.repository.LinksRepository;
+import com.pfee.mindmap.persistence.repository.UserMapsRepository;
 import org.springframework.stereotype.Service;
 import utils.CanLog;
 import utils.IterableUtils;
@@ -20,15 +20,18 @@ import java.util.stream.Collectors;
 public class LinksService implements CanLog {
 
     private final LinksRepository linksRepository;
+    private final UserMapsRepository userMapsRepository;
 
     private final LinksModelToEntity linksModelToEntity;
     private final MindmapModelToEntity mindmapModelToEntity;
 
 
     public LinksService(final LinksRepository linksRepository,
+                        final UserMapsRepository userMapsRepository,
                         final LinksModelToEntity linksModelToEntity,
                         final MindmapModelToEntity mindmapModelToEntity) {
         this.linksRepository = linksRepository;
+        this.userMapsRepository = userMapsRepository;
         this.linksModelToEntity = linksModelToEntity;
         this.mindmapModelToEntity = mindmapModelToEntity;
     }
@@ -52,6 +55,55 @@ public class LinksService implements CanLog {
         model = linksRepository.save(model);
 
         return linksModelToEntity.convert(model);
+    }
+
+    public LinkEntity GetMindmapFromUrl(String url)
+    {
+        var models = IterableUtils.toList(linksRepository.findAll());
+        if (models.isEmpty())
+            return null;
+
+        var linkModel = models.stream().filter(link -> (link.getUrl()).equals(url)).findFirst();
+        if (linkModel.isEmpty())
+            return null;
+
+        return linksModelToEntity.convert(linkModel.get());
+    }
+
+    public LinkEntity GetMindmapFromPrivateUrl(String url, int userid)
+    {
+        var linkEntity = GetMindmapFromUrl(url);
+        if (linkEntity == null)
+            return null;
+
+        if (linkEntity.map.ispublic)
+            return linkEntity;
+
+        var usermaps = userMapsRepository.findAll();
+
+        var usermapsByUserId = usermaps.stream().filter(usermap -> usermap.getUser().getId() == userid).collect(Collectors.toList());
+
+        if (usermapsByUserId.isEmpty())
+            return null;
+
+        //We don't check role here because the user is either "shared" or "owner"
+        var usermapsByUserIdAndMapId = usermapsByUserId.stream().filter(usermap -> usermap.getMap().getId().equals(linkEntity.id)).collect(Collectors.toList());
+        if (usermapsByUserIdAndMapId.isEmpty())
+            return null;
+
+        return linkEntity;
+    }
+
+    public LinkEntity GetMindmapFromPublicUrl(String url)
+    {
+        var linkEntity = GetMindmapFromUrl(url);
+        if (linkEntity == null)
+            return null;
+
+        if (linkEntity.map.ispublic)
+            return linkEntity;
+
+        return null;
     }
 
 }

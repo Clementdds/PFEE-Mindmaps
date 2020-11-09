@@ -43,6 +43,13 @@ public class UserService implements CanLog {
         return entity.map(userModelToEntity::convert).orElse(null);
     }
 
+    public UserEntity findByUsername(String userName) {
+        var model = userRepository.findByUsername(userName);
+        if (model == null)
+            return null;
+        return userModelToEntity.convert(model);
+    }
+
     public boolean userExists(Integer userId)
     {
         if (userId < 0)

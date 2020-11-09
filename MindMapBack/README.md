@@ -25,7 +25,10 @@ Response :
     "error" : "xxx"
 }
 ```
-NB : If there was no error, the error field will be null. If there was one, the token field will be null.
+Return code :
+ - 200 OK
+ - 403 User already exists
+ - 502 Error on database insertion
 
 ###### Login
 
@@ -45,7 +48,9 @@ Response :
     "error" : "xxx"
 }
 ```
-NB : same as signup
+Return code :
+ - 200 OK
+ - 401 User/Password pair does not exist
 
 ###### Logout
 
@@ -62,11 +67,15 @@ Response :
     "error" : "xxx"
 }
 ```
-NB : error is null if logout succeeds.
+Return code :
+ - 200 OK
+ - 401 Token invalid or user not recognized
 
 ### MINDMAPS
 
 ###### Upload a new mindmap
+
+/!\ You can't upload a **public** mindmap and share it. If you wanna share a mindmap, it should be in **private**
 
 POST http://DOMAIN:9999/mindmaps/create
 
@@ -80,6 +89,7 @@ Body:
     "text" : "JSON_DOC",
     "name" : "example_mindmap"
     "isPublic" : true|false
+    "emails": [ "Email1", "Email2" ] | null
 }
 ```
 Response :
@@ -90,6 +100,13 @@ Response :
 }
 ```
 NB : id can later be used to access the uploaded mindmap.
+
+Return code :
+ - 200 OK
+ - 400 You attempted to share a public mindmap
+ - 401 Token invalid or user not recognized
+ - 404 Mindmap not found for this id
+ - 502 Database insertion error
 
 ###### Get owned mindmaps
 
@@ -113,21 +130,45 @@ Response :
     "error": null
 }
 ```
+Return code :
+ - 200 OK
+ - 401 Token invalid or user not recognized
 
-###### Get mindmap from id
+###### Get Shared mindmaps
 
-GET http://DOMAIN:9999/mindmaps/getMindmap
+GET http://DOMAIN:9999/mindmaps/getshared
 
 Header :
 
 `Authorization : Bearer xxxTOKENxxx`
 
-Body:
+Response :
 ```
 {
-    "id" : Int du mindmap,
+    "mindmapsList": [
+        {
+            "id": X,
+            "name": "XXX",
+            "isPublic": false
+        },
+        ...
+    ],
+    "error": null
 }
 ```
+Return code :
+ - 200 OK
+ - 401 Token invalid or user not recognized
+
+###### Get the mindmap's json body from its id
+
+GET http://DOMAIN:9999/mindmaps/getMindmapFromId?mapId=X
+
+Header :
+
+
+`Authorization : Bearer xxxTOKENxxx`
+
 
 Response :
 ```
@@ -136,14 +177,48 @@ Response :
     "error"   : "null"
 }
 ```
+Return code :
+ - 200 OK
+ - 401 Token invalid or user not recognized
+ - 404 Mindmap not found for this id
 
 ### LINKS
+
+###### Get mindmap from url
+
+GET http://DOMAIN:9999/links/getPublicMindmapFromUrl?url=X
+
+Response :
+```
+{
+    "nodeid"  : BigInt, nodeid
+    "mindmap" : String, Json du mindmap complet
+    "error"   : null
+}
+```
+
+###### Get mindmap from url WHEN THE USER IS LOGGED
+
+GET http://DOMAIN:9999/links/getPrivateMindmapFromUrl?url=X
+
+Header :
+
+`Authorization : Bearer xxxTOKENxxx`
+
+Response :
+```
+{
+    "nodeid"  : BigInt, nodeid
+    "mindmap" : String, Json du mindmap complet
+    "error"   : null
+}
+```
 
 ###### Add a mindmap link in public
 
 *N.B. the owner id of a private mindmap is the id of the user that send the request*
 
-POST http://DOMAIN:9999/links/addPublicLink
+POST http://DOMAIN:9999/links/postLink
 
 Header :
 
