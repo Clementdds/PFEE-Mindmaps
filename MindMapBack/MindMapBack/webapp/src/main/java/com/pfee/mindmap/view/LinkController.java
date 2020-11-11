@@ -50,20 +50,19 @@ public class LinkController implements CanLog {
         logger().trace("Finish TX links find all");
         return new GetAllLinksDtoResponse(
                 linkEntityList.stream()
-                                 .map(linkEntity -> new GetAllLinksDtoResponse.LinksDtoResponse(linkEntity.id,
-                                                                                                linkEntity.nodeid,
-                                                                                                new GetAllLinksDtoResponse.MindmapDtoResponse(
-                                                                                                        linkEntity.map.id,
-                                                                                                        linkEntity.map.fullmaptext
-                                                                                                ),
-                                                                                                linkEntity.url))
-                                 .collect(Collectors.toList()));
+                              .map(linkEntity -> new GetAllLinksDtoResponse.LinksDtoResponse(linkEntity.id,
+                                                                                             linkEntity.nodeid,
+                                                                                             new GetAllLinksDtoResponse.MindmapDtoResponse(
+                                                                                                     linkEntity.map.id,
+                                                                                                     linkEntity.map.fullmaptext
+                                                                                             ),
+                                                                                             linkEntity.url))
+                              .collect(Collectors.toList()));
     }
 
     @RequestMapping(produces = "application/json", method = RequestMethod.POST, path = "postLink")
-    public PostLinkDtoResponse PostLink(@RequestHeader(value="Authorization") String header,
-                                                    @RequestBody PostLinkDtoRequest request)
-    {
+    public PostLinkDtoResponse PostLink(@RequestHeader(value = "Authorization") String header,
+                                        @RequestBody PostLinkDtoRequest request) {
         String error = null;
         Integer id = -1;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
@@ -72,18 +71,16 @@ public class LinkController implements CanLog {
         if (error == null && !userService.userExists(userId))
             error = "User does not exist";
 
-        if (error != null)
-        {
+        if (error != null) {
             logger().error("Error when trying to get mindmap from id: " + error);
-            return new PostLinkDtoResponse(null , error, null);
+            return new PostLinkDtoResponse(null, error, null);
         }
-
 
         logger().trace("Start TX change mindmap visibility");
         var mapEntity = mindmapService.ChangeMindmapVisibility(request.isPublic, request.idMindmap);
         logger().trace("End TX change mindmap visibility");
 
-        if (mapEntity == null){
+        if (mapEntity == null) {
             logger().error("Error while trying to change mindmap visibility");
             return new PostLinkDtoResponse(null, "Couldn't change mapEntity visibility", null);
         }
@@ -92,7 +89,7 @@ public class LinkController implements CanLog {
         var linkEntity = linksService.CreateLinkToMindmap(mapEntity, request.nodeid);
         logger().trace("End TX add link");
 
-        if (linkEntity == null){
+        if (linkEntity == null) {
             logger().error("Error while trying to add link");
             return new PostLinkDtoResponse(null, "Couldn't add link", null);
         }
@@ -106,19 +103,20 @@ public class LinkController implements CanLog {
     }
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getPublicMindmapFromUrl")
-    public GetPublicMindmapFromUrlDtoResponse GetPrivateMindmapFromUrl(@RequestParam String url)
-    {
+    public GetPublicMindmapFromUrlDtoResponse GetPrivateMindmapFromUrl(@RequestParam String url) {
         var entity = linksService.GetMindmapFromPublicUrl(url);
         if (entity == null)
-            return new GetPublicMindmapFromUrlDtoResponse(null, null, "Couldn't retrieve the entity, are you sure that your url is good ?");
+            return new GetPublicMindmapFromUrlDtoResponse(null,
+                                                          null,
+                                                          "Couldn't retrieve the entity, are you sure that your url " +
+                                                                  "is good ?");
 
         return new GetPublicMindmapFromUrlDtoResponse(entity.nodeid, entity.map.fullmaptext, null);
     }
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getPrivateMindmapFromUrl")
-    public GetPublicMindmapFromUrlDtoResponse GetPublicMindmapFromUrl(@RequestHeader(value="Authorization") String header,
-                                                                      @RequestParam String url)
-    {
+    public GetPublicMindmapFromUrlDtoResponse GetPublicMindmapFromUrl(@RequestHeader(value = "Authorization") String header,
+                                                                      @RequestParam String url) {
         String error = null;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
         if (userId == -1)
@@ -126,11 +124,13 @@ public class LinkController implements CanLog {
         if (error == null && !userService.userExists(userId))
             error = "User does not exist";
         if (error != null)
-            return new GetPublicMindmapFromUrlDtoResponse(null , null, error);
+            return new GetPublicMindmapFromUrlDtoResponse(null, null, error);
 
         var entity = linksService.GetMindmapFromPrivateUrl(url, userId);
         if (entity == null)
-            return new GetPublicMindmapFromUrlDtoResponse(null, null, "Couldn't retrieve the entity, are you sure that your url is good ?");
+            return new GetPublicMindmapFromUrlDtoResponse(null,
+                                                          null,
+                                                          "Couldn't retrieve the entity, are you sure that your url is good ?");
 
         return new GetPublicMindmapFromUrlDtoResponse(entity.nodeid, entity.map.fullmaptext, null);
     }

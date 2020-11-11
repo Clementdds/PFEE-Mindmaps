@@ -7,6 +7,9 @@ import com.pfee.mindmap.modeltoentity.MindmapModelToEntity;
 import com.pfee.mindmap.persistence.model.LinksModel;
 import com.pfee.mindmap.persistence.repository.LinksRepository;
 import com.pfee.mindmap.persistence.repository.UserMapsRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import utils.CanLog;
 import utils.IterableUtils;
@@ -44,6 +47,7 @@ public class LinksService implements CanLog {
         return linksModelToEntity.convertList(linkList);
     }
 
+    @CacheEvict(value = "addresses", allEntries=true)
     public LinkEntity CreateLinkToMindmap(MindmapEntity map, BigInteger nodeid)
     {
         var allLinks = IterableUtils.toList(linksRepository.findAll());
@@ -57,6 +61,7 @@ public class LinksService implements CanLog {
         return linksModelToEntity.convert(model);
     }
 
+    @Cacheable("addresses")
     public LinkEntity GetMindmapFromUrl(String url)
     {
         var models = IterableUtils.toList(linksRepository.findAll());
@@ -70,6 +75,7 @@ public class LinksService implements CanLog {
         return linksModelToEntity.convert(linkModel.get());
     }
 
+    @Cacheable("addresses")
     public LinkEntity GetMindmapFromPrivateUrl(String url, int userid)
     {
         var linkEntity = GetMindmapFromUrl(url);
@@ -94,6 +100,7 @@ public class LinksService implements CanLog {
         return linkEntity;
     }
 
+    @Cacheable("addresses")
     public LinkEntity GetMindmapFromPublicUrl(String url)
     {
         var linkEntity = GetMindmapFromUrl(url);

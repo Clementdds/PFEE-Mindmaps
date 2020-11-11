@@ -18,8 +18,6 @@ import com.pfee.mindmap.view.mindmapscontroller.GetAllMindmapsDtoResponse;
 import com.pfee.mindmap.view.mindmapscontroller.GetMindmapFromIdDtoResponse;
 import com.pfee.mindmap.view.mindmapscontroller.GetOwnedMindMapsDtoResponse;
 import com.pfee.mindmap.view.mindmapscontroller.GetSharedMindMapsDtoResponse;
-import com.pfee.mindmap.view.mindmapscontroller.ShareMindMapDtoRequest;
-import com.pfee.mindmap.view.mindmapscontroller.ShareMindMapDtoResponse;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import utils.CanLog;
-import utils.IterableUtils;
 import utils.TokenManager;
 
 import java.util.List;
@@ -133,14 +130,6 @@ public class MindmapController implements CanLog {
 
         return new CreateMindMapDtoResponse(id, error);
     }
-
-    /*//@PostMapping(consumes = "application/json", produces = "application/json", path = "share")
-    public ShareMindMapDtoResponse ShareMindMap() {
-
-
-
-        return new ShareMindMapDtoResponse(error);
-    }*/
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, value = "getowned")
     public GetOwnedMindMapsDtoResponse GetOwnedMindMaps(@RequestHeader(value="Authorization") String header)

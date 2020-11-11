@@ -6,6 +6,8 @@ import com.pfee.mindmap.persistence.model.UserMapsModel;
 import com.pfee.mindmap.persistence.repository.MindmapRepository;
 import com.pfee.mindmap.persistence.repository.UserMapsRepository;
 import com.pfee.mindmap.persistence.repository.UserRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utils.CanLog;
@@ -43,6 +45,7 @@ public class UserMapsService implements CanLog {
         return userMapsModelToEntity.convertList(userMapsList);
     }
 
+    @CacheEvict(value = "addresses", allEntries=true)
     @Transactional
     public UserMapsEntity save(final UserMapsEntity entity) {
         final UserMapsModel model = userMapsModelToEntity.revertConvert(entity);
@@ -50,6 +53,7 @@ public class UserMapsService implements CanLog {
         return userMapsModelToEntity.convert(resultModel);
     }
 
+    @Cacheable("addresses")
     public Integer getUserRole(Integer userId, Integer mapId)
     {
         var entry = userMapsRepository.findAll()
@@ -61,6 +65,7 @@ public class UserMapsService implements CanLog {
         return entry.get(0).getUserRole();
     }
 
+    @CacheEvict(value = "addresses", allEntries=true)
     public List<String> addUsersForPrivateMap(String[] emails, Integer ownerId, Integer mapId)
     {
         //Add the owner

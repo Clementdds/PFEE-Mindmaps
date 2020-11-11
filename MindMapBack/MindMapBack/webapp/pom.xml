@@ -45,7 +45,19 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
+        <!-- Cache -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
 
+<!-- If using EhCache or Caffeine
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>5.1.8.RELEASE</version>
+        </dependency>
+        -->
 
         <!-- Spring stuff -->
         <dependency>
