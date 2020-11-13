@@ -59,10 +59,10 @@ const SignUpPage = ({error, dispatch}) => {
 
     return (
         <div>
-              <div class="form-group row formulaire " >
+              <div class="form-group row  " >
                 <div class="col"/>
-                <div class="col">
-                    <center>
+                <div class="col  formulaire">
+                    <center class="marginTop2p">
                         <h2>
                             Créer votre compte
                         </h2>
@@ -77,13 +77,13 @@ const SignUpPage = ({error, dispatch}) => {
                         </div>
                         <div class="col">
                             <input aria-label="Email address" type="email" required
-                                   placeholder="Email address"
+                                   placeholder="Adresse Email"
                                    onChange={handleEmailOnchange}
                                    class="form-control"
                             />
                         </div>
                     </label>
-                    <label class="row">
+                    <label class="row ">
                         <div class="col-3">
                             <center>
                                 <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-lock-fill text-icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -94,7 +94,7 @@ const SignUpPage = ({error, dispatch}) => {
                         </div>
                         <div class="col">
                             <input aria-label="Password" type="password" required
-                                   placeholder="Password"
+                                   placeholder="Mot de passe"
                                    onChange={handlePasswordOnchange}
                                    class="form-control"
                             />
@@ -111,15 +111,15 @@ const SignUpPage = ({error, dispatch}) => {
                         </div>
                         <div class="col">
                             <input aria-label="Password" type="password" required
-                                   placeholder="Verify Password"
+                                   placeholder="Confimer Mot de passe"
                                    onChange={handleVerifyPasswordOnchange}
                                    class="form-control"
                             />
                         </div>
                     </label>
-                    <div class="row">
+                    <div class="row marginBottom">
                         <div class="col-3"/>
-                        <div class="col-4 text-left">
+                        <div class="col text-left">
                             <Link to={"/login"}>
                                 Se connecter avec un compte existant
                                 </Link>

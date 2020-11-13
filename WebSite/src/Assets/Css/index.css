@@ -30,6 +30,11 @@ header {
 
 .formulaire{
   margin-top: 10%;
+  background-color: #b2dfdb;
+}
+
+.marginBottom{
+  margin-bottom: 10%;
 }
 
 .marginTop2p{

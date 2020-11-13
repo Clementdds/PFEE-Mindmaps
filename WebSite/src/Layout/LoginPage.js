@@ -49,10 +49,10 @@ const LoginPage = ({isSignedIn, error, dispatch}) => {
             {
                 isSignedIn && <Redirect to="/"/>
             }
-            <div class="form-group row formulaire " >
+            <div class="form-group row" >
                 <div class="col"/>
-                <div class="col">
-                    <center>
+                <div class="col formulaire">
+                    <center class="marginTop2p">
                         <h2>
                             Connexion
                         </h2>
@@ -67,7 +67,7 @@ const LoginPage = ({isSignedIn, error, dispatch}) => {
                         </div>
                         <div class="col">
                             <input aria-label="Email address" type="email" required
-                                   placeholder="Email address"
+                                   placeholder="Adresse Email"
                                    onChange={handleEmailOnchange}
                                    class="form-control"
                             />
@@ -84,21 +84,20 @@ const LoginPage = ({isSignedIn, error, dispatch}) => {
                         </div>
                         <div class="col">
                             <input aria-label="Password" type="password" required
-                                   placeholder="Password"
+                                   placeholder="Mot de passe"
                                    onChange={handlePasswordOnchange}
                                    class="form-control"
                             />
                         </div>
                     </label>
-                    <div class="row">
+                    <div class="row marginBottom">
                         <div class="col-3"/>
-                        <div class="col-4 marginTop2p">
+                        <div class="col text-left marginTop2p">
                             <Link to={"/sign"}>
                                 Créer un compte
                             </Link>
                         </div>
-                        <div class="col"/>
-                        <div class="col-3">
+                        <div class="col text-right">
                             <button type="submit" class="btn btn-primary"
                                 disabled={email === '' || password === ''}
                                 onClick={handleAuth}
