@@ -27,9 +27,7 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
                                     <MindmapData Mindmap={x} key={x.id} shared={false}/>
                                 );
                             }) :
-                            <div>
-                            No owned mindmaps
-                        </div>
+                            <div/>
                         }
                     </div>
                     <div>
@@ -39,9 +37,7 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
                                 <MindmapData Mindmap={x} key={x.id} shared={true}/>
                             );
                         }) :
-                        <div>
-                            No shared mindmaps
-                        </div>
+                        <div/>
                     }
                     </div>
                 </div>
