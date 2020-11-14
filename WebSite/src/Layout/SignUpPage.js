@@ -62,7 +62,7 @@ const SignUpPage = ({error, dispatch}) => {
               <div class="form-group row" >
                 <div class="col"/>
                 <div class="col  formulaire">
-                    <center class="marginTop2p">
+                    <center class="marginTop2p text-icon">
                         <h2>
                             Créer votre compte
                         </h2>

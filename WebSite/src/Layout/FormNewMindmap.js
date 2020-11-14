@@ -111,7 +111,7 @@ const FormNewMindmap = ({error, dispatch}) => {
             <div class="col"/>
             <div class="col formulaire">
             <div class="marginTop2p marginBottom">
-                <h2><center>
+                <h2><center class="text-icon">
                     Nouvelle MindMap
                 </center></h2>
             </div>
@@ -120,7 +120,7 @@ const FormNewMindmap = ({error, dispatch}) => {
                 <div>
                     <div class="row">
                         <div class="col-3 text-right">
-                            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-file-earmark-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-file-earmark-fill text-icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0H4zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3z"/>
                             </svg>
                         </div>
@@ -134,7 +134,7 @@ const FormNewMindmap = ({error, dispatch}) => {
                     </div>
                     <div class="row marginTop2p">
                         <div class="col-3 text-right">
-                            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-upload" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-upload text-icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                                 <path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
                             </svg>
@@ -177,7 +177,7 @@ const FormNewMindmap = ({error, dispatch}) => {
                             </div>
                         <div class="row">
                         <div class="col-3 text-right">
-                            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-share-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-share-fill text-icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
                             </svg>
                         </div>
