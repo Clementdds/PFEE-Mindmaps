@@ -1,5 +1,4 @@
 import React, {useEffect} from "react";
-import userService from "../Services/UserService";
 import FormNewMindmap from "./FormNewMindmap";
 import {connect} from "react-redux";
 import mindmapsService from "../Services/MindMapsService";
@@ -16,13 +15,12 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
 
     return (
         <React.Fragment>
-            <div class="form-group row marginTop2p" >
-                <div class="col"/>
-                <div class="col">
+            <div className="form-group row marginTop2p" >
+                <div className="col"/>
+                <div className="col">
                     <div>
                         {ownedMindmapsList.length ?
                             ownedMindmapsList.map((x) => {
-                                console.log(x)
                                 return (
                                     <MindmapData Mindmap={x} key={x.id} shared={false}/>
                                 );
@@ -41,7 +39,7 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
                     }
                     </div>
                 </div>
-                <div class="col"/>
+                <div className="col"/>
             </div>
             {error && <div>Error : {error}</div>}
 
