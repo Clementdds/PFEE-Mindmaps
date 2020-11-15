@@ -1,6 +1,4 @@
 import React, {useEffect} from "react";
-import userService from "../Services/UserService";
-import FormNewMindmap from "./FormNewMindmap";
 import {connect} from "react-redux";
 import mindmapsService from "../Services/MindMapsService";
 import MindmapData from "../Components/List/MindmapData";
@@ -16,47 +14,35 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
 
     return (
         <React.Fragment>
-            <button onClick={userService.logout}>Logout</button>
-
-            <div>
-                Owned mindmaps
-                <br/>
-                <div>
-                    {ownedMindmapsList.length ?
-                        ownedMindmapsList.map((x) => {
-                            return (
-                                <MindmapData Mindmap={x} key={x.id}/>
-                            );
-                        }) :
-                        <div>
-                            No owned mindmaps
-                        </div>
-                    }
-                </div>
-            </div>
-
-            <br/>
-
-            <div>
-                Shared mindmaps
-                <br/>
-                <div>
+            <div className="form-group row marginTop2p" >
+                <div className="col"/>
+                <div className="col">
+                    <div>
+                        {ownedMindmapsList.length ?
+                            ownedMindmapsList.map((x) => {
+                                return (
+                                    <MindmapData Mindmap={x} key={x.id} shared={false}/>
+                                );
+                            }) :
+                            <div/>
+                        }
+                    </div>
+                    <div>
                     {sharedMindmapsList.length ?
                         sharedMindmapsList.map((x) => {
                             return (
-                                <MindmapData Mindmap={x} key={x.id}/>
+                                <MindmapData Mindmap={x} key={x.id} shared={true}/>
                             );
                         }) :
-                        <div>
-                            No shared mindmaps
-                        </div>
+                        <div/>
                     }
+                    </div>
                 </div>
+                <div className="col"/>
             </div>
 
             {error && <div>Error : {error}</div>}
 
-            <FormNewMindmap/>
         </React.Fragment>
     );
 };

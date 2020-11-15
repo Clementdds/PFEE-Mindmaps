@@ -11,3 +11,45 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+header {
+  padding: 5px;
+  background: #009688;
+  color: white;
+  
+}
+
+.Title {  
+  text-align: left;
+  font-size: 30px;
+}
+
+.text-icon{
+  color: #009688;
+}
+
+.formulaire{
+  margin-top: 10%;
+  background-color: #b2dfdb;
+}
+
+.marginBottom{
+  margin-bottom: 10%;
+}
+
+.marginTop2p{
+  margin-top: 2%;
+}
+
+.redEyes{
+  color: red;
+}
+
+.greenEyes{
+  color:green;
+}
+
+.mindMapName{
+  font-size: 1.2em;
+}
+

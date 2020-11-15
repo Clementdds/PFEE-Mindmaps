@@ -5,14 +5,14 @@ import {Switch, Route, BrowserRouter as Router} from 'react-router-dom';
 
 // Components
 import Header from "./Header";
-import PrivateRoute from "../Components/Routes/PrivateRoute";
+import PrivateRoute from "../Components/Private/PrivateRoute";
 import LoginPage from "./LoginPage";
 import SignUpPage from "./SignUpPage";
-import history from "../Helpers/History";
 import HomePage from "./HomePage";
 import PublicMindmap from "./PublicMindmap";
 import MindmapById from "./MindmapById";
-import PrivateRouteWithParams from "../Components/Routes/PrivateRouteWithParams";
+import PrivateRouteWithParams from "../Components/Private/PrivateRouteWithParams";
+import FormNewMindmap from "./FormNewMindmap";
 
 // Error Page
 const Error404Page = lazy(() => import('../Components/ErrorsPages/Error404'));
@@ -20,7 +20,7 @@ const Error404Page = lazy(() => import('../Components/ErrorsPages/Error404'));
 const App = () => {
 
     return (
-        <Router history={history}>
+        <Router>
             <Suspense fallback={<div>loading...</div>}>
                 <Header/>
                 <Switch>
@@ -29,6 +29,10 @@ const App = () => {
                         <HomePage/>
                     </PrivateRoute>
 
+                    {/* Home  */}
+                    <PrivateRoute exact path={"/form"}>
+                        <FormNewMindmap/>
+                    </PrivateRoute>
 
                     {/* Login  */}
                     <Route exact path={"/login"}>
