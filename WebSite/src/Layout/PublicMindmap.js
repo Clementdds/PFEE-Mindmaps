@@ -17,7 +17,7 @@ const PublicMindmap = ({url, file, nodeId, error}) => {
                 </div>
                 :
                 <div>
-                    non
+                    Could not display the mindmap
                 </div>
             }
         </React.Fragment>
@@ -26,7 +26,6 @@ const PublicMindmap = ({url, file, nodeId, error}) => {
 
 const mapStateToProps = (state, ownProps) => {
     let url = ownProps.match.params.url;
-    console.log(url);
     return {
         url: url,
         file: state.Viewer.file,

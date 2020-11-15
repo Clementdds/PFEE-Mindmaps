@@ -1,5 +1,4 @@
 import React, {useEffect} from "react";
-import FormNewMindmap from "./FormNewMindmap";
 import {connect} from "react-redux";
 import mindmapsService from "../Services/MindMapsService";
 import MindmapData from "../Components/List/MindmapData";
@@ -41,9 +40,9 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
                 </div>
                 <div className="col"/>
             </div>
+
             {error && <div>Error : {error}</div>}
 
-            <FormNewMindmap/>
         </React.Fragment>
     );
 };

@@ -1,14 +1,33 @@
 import React from "react";
 import userService from "../Services/UserService";
+import {Link} from "react-router-dom";
+import '../Assets/Scss/Header.scss'
+import PrivateComponent from "../Components/Private/PrivateComponent";
+
 const Header = () => {
     return (
-      <header>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"></link>
-        <nav class="navbar ">
-          <h1  class="Title" >MindMap Viewer</h1>
-          <button class="btn btn-outline-light btn-sm" onClick={userService.logout}>Déconnexion</button>
-        </nav>
-      </header>
+        <header>
+            <nav className="navbar ">
+
+                <Link to={"/"}>
+                    <h1 className="Title">
+                        MindMap Viewer
+                    </h1>
+                </Link>
+
+                <PrivateComponent>
+                    <Link to={"/form"}>
+                        <h1 className="Title">
+                            Ajouter un mindmap
+                        </h1>
+                    </Link>
+                </PrivateComponent>
+
+                <button className="btn btn-outline-light btn-sm" onClick={userService.logout}>
+                    Déconnexion
+                </button>
+            </nav>
+        </header>
     );
 };
 

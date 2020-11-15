@@ -2,7 +2,6 @@ import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import Viewer from "./Viewer";
 import mindmapsService from "../Services/MindMapsService";
-import {Link} from "react-router-dom";
 import * as d3 from "d3";
 
 const MindmapById = ({id, file, nodeId, error}) => {
@@ -15,15 +14,10 @@ const MindmapById = ({id, file, nodeId, error}) => {
     return (
         <React.Fragment>
             {file != null ?
-                <div>
-                    <Link to={'/'}>
-                        Go back
-                    </Link>
-                    <Viewer file={file} nodeid={nodeId}/>
-                </div>
+                <Viewer file={file} nodeid={nodeId}/>
                 :
                 <div>
-                    non
+                    Could not display the mindmap
                 </div>
             }
         </React.Fragment>
