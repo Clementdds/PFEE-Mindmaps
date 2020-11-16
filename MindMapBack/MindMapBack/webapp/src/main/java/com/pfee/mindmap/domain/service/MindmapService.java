@@ -73,6 +73,11 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convert(resultModel);
     }
 
+    public void deleteById(final Integer mapId)
+    {
+        mindmapRepository.deleteById(mapId);
+    }
+
     @Cacheable("addresses")
     public MindmapEntity findMindmapById(Integer mindmapId) {
         //find by url

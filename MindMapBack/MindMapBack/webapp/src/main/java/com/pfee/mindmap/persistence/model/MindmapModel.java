@@ -1,13 +1,9 @@
 package com.pfee.mindmap.persistence.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -26,7 +22,8 @@ public class MindmapModel {
     @Column(name = "ispublic", nullable = false)
     private boolean ispublic;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "mapid")
     private Set<UserMapsModel> usermaps;
 

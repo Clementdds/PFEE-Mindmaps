@@ -53,6 +53,13 @@ public class UserMapsService implements CanLog {
         return userMapsModelToEntity.convert(resultModel);
     }
 
+    @Transactional
+    public void deleteByMapid(final Integer mapId) {
+        if (mindmapRepository.findById(mapId).isPresent())
+            mindmapRepository.deleteById(mapId);
+        userMapsRepository.deleteByMapId(mapId);
+    }
+
     @Cacheable("addresses")
     public Integer getUserRole(Integer userId, Integer mapId)
     {
