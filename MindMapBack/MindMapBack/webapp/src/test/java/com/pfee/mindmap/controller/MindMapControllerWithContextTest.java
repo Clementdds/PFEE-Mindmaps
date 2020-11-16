@@ -95,4 +95,12 @@ public class MindMapControllerWithContextTest {
         Assert.assertNull(result.error);
         Assert.assertEquals(MM_TEXT, result.mindmap);
     }
+
+    @Test
+    public void DeleteMindMapSuccessTest() {
+        String authHeader = "Bearer " + token;
+        mindmapController.deleteMindMap((int) MM_ID, authHeader);
+        Assert.assertEquals(0, mindmapRepository.findAll().size());
+        Assert.assertEquals(0, userMapsRepository.findAll().size());
+    }
 }
