@@ -131,6 +131,8 @@ const callDeleteMindmapsById = ({id}) => {
         headers: requestHeader.AuthHeader(),
     };
 
+    console.log(requestOptions);
+
     return fetch(API_DELETE_MINDMAPS_BY_ID_ENDPOINT + id, requestOptions)
         .then(callHandler.handleResponse);
 };

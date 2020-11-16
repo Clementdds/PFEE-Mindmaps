@@ -41,8 +41,6 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
                 <div className="col"/>
             </div>
 
-            {error && <div>Error : {error}</div>}
-
         </React.Fragment>
     );
 };
