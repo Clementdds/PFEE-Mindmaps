@@ -4,9 +4,11 @@ import com.pfee.mindmap.domain.entity.MindmapEntity;
 import com.pfee.mindmap.modeltoentity.MindmapModelToEntity;
 import com.pfee.mindmap.persistence.model.MindmapModel;
 import com.pfee.mindmap.persistence.model.UserMapsModel;
-import com.pfee.mindmap.persistence.repository.LinksRepository;
 import com.pfee.mindmap.persistence.repository.MindmapRepository;
 import com.pfee.mindmap.persistence.repository.UserMapsRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utils.CanLog;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class MindmapService implements CanLog {
+
+    public static boolean hasChanged = false;
 
     private final MindmapRepository mindmapRepository;
 
@@ -39,6 +43,7 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convertList(mindmapList);
     }
 
+    @Cacheable("addresses")
     public List<MindmapEntity> findOwnedMindMaps(Integer userId) {
         List<MindmapModel> maps = userMapsRepository.findAll()
                                                     .stream()
@@ -49,6 +54,7 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convertList(maps);
     }
 
+    @Cacheable("addresses")
     public List<MindmapEntity> findSharedMindMaps(Integer userId) {
         List<MindmapModel> maps = userMapsRepository.findAll()
                 .stream()
@@ -59,6 +65,7 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convertList(maps);
     }
 
+    @CacheEvict(value = "addresses", allEntries=true)
     @Transactional
     public MindmapEntity save(final MindmapEntity entity) {
         final MindmapModel model = mindmapModelToEntity.revertConvert(entity);
@@ -66,6 +73,12 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convert(resultModel);
     }
 
+    public void deleteById(final Integer mapId)
+    {
+        mindmapRepository.deleteById(mapId);
+    }
+
+    @Cacheable("addresses")
     public MindmapEntity findMindmapById(Integer mindmapId) {
         //find by url
         MindmapModel mindmapModel = null;
@@ -78,6 +91,7 @@ public class MindmapService implements CanLog {
         return mindmapEntity;
     }
 
+    @CacheEvict(value = "addresses", allEntries=true)
     public MindmapEntity ChangeMindmapVisibility(boolean isPublic, int id) {
         var modelOpt = mindmapRepository.findById(id);
         if (modelOpt.isEmpty())

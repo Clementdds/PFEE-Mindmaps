@@ -108,6 +108,20 @@ Return code :
  - 404 Mindmap not found for this id
  - 502 Database insertion error
 
+###### Delete a mindmap
+
+DELETE http://DOMAIN:9999/mindmaps/{mapId}
+
+Header :
+
+`Authorization : Bearer xxxTOKENxxx`
+
+Return code :
+ - 200 OK
+ - 401 Token invalid or user not recognized
+ - 403 You are not allowed to delete this mindmap
+ - 404 Mindmap not found for this id
+
 ###### Get owned mindmaps
 
 GET http://DOMAIN:9999/mindmaps/getowned

@@ -6,20 +6,13 @@ import com.pfee.mindmap.domain.entity.UserMapsEntity;
 import com.pfee.mindmap.domain.service.MindmapService;
 import com.pfee.mindmap.domain.service.UserMapsService;
 import com.pfee.mindmap.domain.service.UserService;
-import com.pfee.mindmap.exceptions.DatabaseInsertionException;
-import com.pfee.mindmap.exceptions.InvalidTokenException;
-import com.pfee.mindmap.exceptions.NoShareActionException;
-import com.pfee.mindmap.exceptions.PublicSharingException;
-import com.pfee.mindmap.exceptions.ResourceNotFoundException;
-import com.pfee.mindmap.exceptions.UserDoesNotExistException;
+import com.pfee.mindmap.exceptions.*;
 import com.pfee.mindmap.view.mindmapscontroller.CreateMindMapDtoRequest;
 import com.pfee.mindmap.view.mindmapscontroller.CreateMindMapDtoResponse;
 import com.pfee.mindmap.view.mindmapscontroller.GetAllMindmapsDtoResponse;
 import com.pfee.mindmap.view.mindmapscontroller.GetMindmapFromIdDtoResponse;
 import com.pfee.mindmap.view.mindmapscontroller.GetOwnedMindMapsDtoResponse;
 import com.pfee.mindmap.view.mindmapscontroller.GetSharedMindMapsDtoResponse;
-import com.pfee.mindmap.view.mindmapscontroller.ShareMindMapDtoRequest;
-import com.pfee.mindmap.view.mindmapscontroller.ShareMindMapDtoResponse;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,10 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import utils.CanLog;
-import utils.IterableUtils;
 import utils.TokenManager;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,14 +128,6 @@ public class MindmapController implements CanLog {
         return new CreateMindMapDtoResponse(id, error);
     }
 
-    /*//@PostMapping(consumes = "application/json", produces = "application/json", path = "share")
-    public ShareMindMapDtoResponse ShareMindMap() {
-
-
-
-        return new ShareMindMapDtoResponse(error);
-    }*/
-
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, value = "getowned")
     public GetOwnedMindMapsDtoResponse GetOwnedMindMaps(@RequestHeader(value="Authorization") String header)
     {
@@ -219,5 +205,28 @@ public class MindmapController implements CanLog {
         }
 
         return new GetMindmapFromIdDtoResponse(mindmapEntity.fullmaptext, null);
+    }
+
+    @RequestMapping(produces = "application/json", method = RequestMethod.DELETE, path = "/{mapId}")
+    public void deleteMindMap(@PathVariable Integer mapId,
+                              @RequestHeader(value="Authorization") String header) {
+        Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
+        if (userId == -1) {
+            throw new InvalidTokenException();
+        }
+        if (!userService.userExists(userId)) {
+            throw new UserDoesNotExistException();
+        }
+
+        Integer role = userMapsService.getUserRole(userId, mapId);
+        if (role == -1)
+            throw new ResourceNotFoundException();
+
+        if (role > 0)
+            throw new UserActionNotAllowed();
+
+        mindmapService.deleteById(mapId);
+
+        userMapsService.deleteByMapid(mapId);
     }
 }
