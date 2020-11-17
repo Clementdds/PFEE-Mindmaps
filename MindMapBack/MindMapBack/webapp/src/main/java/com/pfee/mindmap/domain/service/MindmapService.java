@@ -43,7 +43,7 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convertList(mindmapList);
     }
 
-    @Cacheable("addresses")
+    @Cacheable(value = "mindmaps", key = "'findOwnedMindMaps'+#userId")
     public List<MindmapEntity> findOwnedMindMaps(Integer userId) {
         List<MindmapModel> maps = userMapsRepository.findAll()
                                                     .stream()
@@ -54,7 +54,7 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convertList(maps);
     }
 
-    @Cacheable("addresses")
+    @Cacheable(value = "mindmaps", key = "'findSharedMindMaps'+#userId")
     public List<MindmapEntity> findSharedMindMaps(Integer userId) {
         List<MindmapModel> maps = userMapsRepository.findAll()
                 .stream()
@@ -65,7 +65,7 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convertList(maps);
     }
 
-    @CacheEvict(value = "addresses", allEntries=true)
+    @CacheEvict(value = "mindmaps", allEntries=true)
     @Transactional
     public MindmapEntity save(final MindmapEntity entity) {
         final MindmapModel model = mindmapModelToEntity.revertConvert(entity);
@@ -73,12 +73,12 @@ public class MindmapService implements CanLog {
         return mindmapModelToEntity.convert(resultModel);
     }
 
+    @CacheEvict(value = "mindmaps", allEntries=true)
     public void deleteById(final Integer mapId)
     {
         mindmapRepository.deleteById(mapId);
     }
 
-    @Cacheable("addresses")
     public MindmapEntity findMindmapById(Integer mindmapId) {
         //find by url
         MindmapModel mindmapModel = null;
@@ -91,7 +91,7 @@ public class MindmapService implements CanLog {
         return mindmapEntity;
     }
 
-    @CacheEvict(value = "addresses", allEntries=true)
+    @CacheEvict(value = "mindmaps", allEntries=true)
     public MindmapEntity ChangeMindmapVisibility(boolean isPublic, int id) {
         var modelOpt = mindmapRepository.findById(id);
         if (modelOpt.isEmpty())

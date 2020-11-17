@@ -13,6 +13,6 @@ public class CachingConfig {
     @Bean
     public CacheManager cacheManager() {
         //addresses est le nom du cache
-        return new ConcurrentMapCacheManager("addresses");
+        return new ConcurrentMapCacheManager("mindmaps");
     }
 }
