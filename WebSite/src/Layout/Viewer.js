@@ -15,7 +15,6 @@ const Viewer = ({file, nodeid}) => {
     };
 
     const recurseD3Data = function recurse(root, newColor = "") {
-        console.log("Recurse");
         let currentData = {
             name: "",
             children: null,
@@ -34,16 +33,27 @@ const Viewer = ({file, nodeid}) => {
         {
             tmpscore =  "\n" + root.attributes.SCORE;
         }
+       
+        let value = parseInt(root.attributes.MODIFIED);
+        if(value === undefined)
+        {
+            value = parseInt(root.attributes.CREATED);
+        }
+        value = new Date(value);
         if (root.elements.length === 0) {
 
-            let value = parseInt(root.attributes.CREATED);
+          
+           // let createDate = parseInt(root.attributes.CREATED);
+            let count = CountBreakLine(root.attributes.TEXT);
 
             currentData = {
                 name: root.attributes.TEXT,
                 value: value,
                 color: newColor,
-                score: tmpscore
+                score: tmpscore,
+                countBreak: count
             };
+         
 
         } else {
             
@@ -62,17 +72,41 @@ const Viewer = ({file, nodeid}) => {
             {
                 newColor ="#000000"
             }
+            let count = CountBreakLine(root.attributes.TEXT);
             currentData = {
                 name: root.attributes.TEXT,
+                value: value,
                 children: children,
                 color: newColor,
-                score: tmpscore
+                score: tmpscore,
+                countBreak: count
             }
         }
 
         return currentData;
     };
 
+    function CountBreakLine(text)
+    {
+       
+        if(text === undefined)
+            return 1;  
+        let i = 0;
+        let count = 0;
+
+    
+        while(i < text.length)
+        {
+            if(text[i] === '\n')
+            {
+                count++;
+            }
+            i++;
+        }
+      
+        return count;
+
+    };
     const constructTree = (data) => {
 
         const margin = ({top: 10, right: 120, bottom: 10, left: 40});
@@ -96,19 +130,19 @@ const Viewer = ({file, nodeid}) => {
                 }
                 return tmp;
               }
-
+           
             let sep = 0;
             if(a.children != null)
             {
-               sep =  TotalNbChild(a);
+               sep =  TotalNbChild(a);          
             }
             if(b.children != null)
             {
-                let tmpSep = TotalNbChild(b);
+                let tmpSep = TotalNbChild(b)+ b.children[0].data.countBreak;
                 if(tmpSep> sep)
                     sep = tmpSep
             }
-            return (a.parent === b.parent ? (1 + sep/1.5) : 1 );
+            return (a.parent === b.parent ? (1 + sep/1.5) : 1 + sep );
         });
 
         const root = d3.hierarchy(data);
@@ -190,10 +224,24 @@ const Viewer = ({file, nodeid}) => {
             
             nodeEnter.append("text")
                 .attr("dy", "0.31em")
-                .attr("x", d => d._children ? -6 : 6)
-                .attr("y", d => d._children ? -7 : 0)
-                .attr("text-anchor", d => d._children ? "end" : "start")
-                .text(d => d.data.name )
+              //  .text(d => d.data.name)
+              .attr("x", d => d._children ? 10 : 10)
+              .attr("y",  0)
+              .each(function (d)
+                {
+                    var arr = d.data.name.split('\n');
+                    for (let i = 0; i < arr.length; i++) {
+                        d3.select(this).append("tspan")
+                            .text(arr[i])
+                            .attr("dy", i ? "1.2em" : 0)
+                            .attr("x", 5)
+                            .attr("text-anchor", "start")
+                            .attr("class", "tspan" + i);
+                    }
+                })
+                //.attr("x", d => d._children ? -6 : 6)
+                //.attr("y", d => d._children ? -7 : 0)
+                //.attr("text-anchor", d => d._children ? "start" : "end")
                 .style("fill", "#000")
                 .on("click", d => {
                     if (d.data.name.includes("http"))
@@ -210,7 +258,7 @@ const Viewer = ({file, nodeid}) => {
             .attr("dy", "0.31em")
             .attr("x", d => d._children ? -10 : 10)
             .attr("y",  10)
-            .attr("text-anchor", d => d._children ? "end" : "start")
+          //  .attr("text-anchor", d => d._children ? "end" : "start")
             .text(d =>  d.data.score)
             .style("fill", "#000" )
             .on("click", d => {

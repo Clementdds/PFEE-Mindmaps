@@ -11,10 +11,6 @@ const MindmapData = ({Mindmap, shared}) => {
 
     return (
         <React.Fragment>
-
-
-           
-
         <div className="row">
             <div className="col">
             <Link to={"/mindmap/" + Mindmap.id}>
