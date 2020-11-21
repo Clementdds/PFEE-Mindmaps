@@ -4,6 +4,9 @@ import * as d3 from "d3";
 
 const Viewer = ({file, nodeid}) => {
 
+    let minDate = 0;
+    let maxDate = 0;
+    let actualDate = 0;
     useEffect(() =>  {
         const jsFile = JSON.parse(file);
         const data = createD3Data(jsFile.elements[0].elements[0]);
@@ -39,7 +42,17 @@ const Viewer = ({file, nodeid}) => {
         {
             value = parseInt(root.attributes.CREATED);
         }
-        value = new Date(value);
+        if(value < minDate || minDate === 0)
+        {
+            minDate = value;
+            actualDate = value;
+        }
+        if(value > maxDate)
+        {
+            maxDate = value;
+        }
+        
+        //value = new Date(value);
         if (root.elements.length === 0) {
 
           
@@ -53,8 +66,6 @@ const Viewer = ({file, nodeid}) => {
                 score: tmpscore,
                 countBreak: count
             };
-         
-
         } else {
             
             if(root.elements[0].attributes.COLOR != null)
@@ -92,9 +103,7 @@ const Viewer = ({file, nodeid}) => {
         if(text === undefined)
             return 1;  
         let i = 0;
-        let count = 0;
-
-    
+        let count = 0;   
         while(i < text.length)
         {
             if(text[i] === '\n')
@@ -103,7 +112,6 @@ const Viewer = ({file, nodeid}) => {
             }
             i++;
         }
-      
         return count;
 
     };
@@ -131,10 +139,10 @@ const Viewer = ({file, nodeid}) => {
                 return tmp;
               }
            
-            let sep = 0;
+            let sep = b.data.countBreak;
             if(a.children != null)
             {
-               sep =  TotalNbChild(a);          
+               sep = sep +  TotalNbChild(a);          
             }
             if(b.children != null)
             {
@@ -155,6 +163,20 @@ const Viewer = ({file, nodeid}) => {
             if (d.depth) d.children = null;
         });
 
+        let slider = d3.select("input")
+        .attr("type", "range")
+        .attr("value", minDate)
+        .attr("min", minDate)
+        .attr("max", maxDate)
+        .attr("step",1)
+        .on('input', val => {
+            let takeDate= parseInt(document.getElementById('myRangeTime').value);
+            let mili = new Date(takeDate);
+            let time = mili.toLocaleString();
+            d3.select('p#value-time').text(time);
+            actualDate = document.getElementById('myRangeTime').value;
+          })
+    
         const svg = d3.select("svg")
             .attr("viewBox", [-margin.left, -margin.top, width, dx])
             .style("font", "10px sans-serif")
@@ -166,7 +188,7 @@ const Viewer = ({file, nodeid}) => {
             {
                 d3.select("g").attr("transform", d3.event.transform)
             }));
-        
+
         const gLink = svg.append("g")
             .attr("fill", "none")
             .attr("stroke", "#000")
@@ -201,6 +223,7 @@ const Viewer = ({file, nodeid}) => {
                 .attr("viewBox", [-margin.left, left.x - margin.top, window.innerWidth, window.innerHeight])
                 .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
 
+                
             // Update the nodes…
             const node = gNode.selectAll("g")
                 .data(nodes, d => d.id);
@@ -218,7 +241,16 @@ const Viewer = ({file, nodeid}) => {
                 .attr("stroke-width", 5)
                 .style("fill", d => d._children ?  d.data.color : "none")
                 .on("click", d => {
-                    d.children = d.children ? null : d._children 
+                    if(maxDate  != 0)
+                    {
+                        if(d.value <= actualDate)
+                        {
+                            d.children = d.children ? null : d._children
+                        }
+                    }else{
+                        d.children = d.children ? null : d._children
+                    } 
+                   
                     update(d);
                 });
             
@@ -316,11 +348,23 @@ const Viewer = ({file, nodeid}) => {
         }
 
         update(root);
-        return svg.node();       
+        if(maxDate != 0)
+        {
+            d3.select('p#value-time').text(new Date(actualDate).toLocaleString());
+        }
+        else{
+            document.getElementById("value-time").remove();
+            document.getElementById("myRangeTime").remove();
+        }
+        
+        return svg.node();     
+   
     };
-    
+
     return (
             <div className="Viewer-div" id="viewer_div">
+                <p id="value-time"/>
+                <input type="range" class="slider" id="myRangeTime"/>
                 <svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
         );
