@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import "../Assets/Css/App.css"
 import * as d3 from "d3";
+import { style } from "d3";
 
 const Viewer = ({file, nodeid}) => {
 
@@ -232,7 +233,21 @@ const Viewer = ({file, nodeid}) => {
             const nodeEnter = node.enter().append("g")
                 .attr("transform", d => `translate(${source.y0},${source.x0})`)
                 .attr("fill-opacity", 1)
-                .attr("stroke-opacity", 1);
+                .attr("stroke-opacity", 1)
+                .attr("id", d => d.value);
+             
+            
+            nodeEnter.append("svg:image")
+                .attr('x', -10)
+                .attr('y', 0)
+                .attr('width', 10)
+                .attr('height', 10)
+               .attr("xlink:href", "../Ressources/Share.png")
+               .on("click", d => {
+
+               })
+
+               
 
             nodeEnter.append("circle")
                 .attr("cx", d => d._children ? 0 : 1)
@@ -250,7 +265,7 @@ const Viewer = ({file, nodeid}) => {
                     }else{
                         d.children = d.children ? null : d._children
                     } 
-                   
+                 
                     update(d);
                 });
             
@@ -302,6 +317,8 @@ const Viewer = ({file, nodeid}) => {
             .attr("stroke-linejoin", "round")
             .attr("stroke-width", 3)
             .attr("stroke", "white");
+
+          
 
             // Transition nodes to their new position.
             const nodeUpdate = node.merge(nodeEnter).transition(transition)
@@ -360,10 +377,10 @@ const Viewer = ({file, nodeid}) => {
         return svg.node();     
    
     };
-
+console.log(Image);
     return (
-            <div className="Viewer-div" id="viewer_div">
-                <p id="value-time"/>
+            <div className="Viewer-div" id="viewer_div">              
+                <p id="value-time"/>              
                 <input type="range" class="slider" id="myRangeTime"/>
                 <svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
