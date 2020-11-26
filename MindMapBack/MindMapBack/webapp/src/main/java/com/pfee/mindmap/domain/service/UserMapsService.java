@@ -45,7 +45,7 @@ public class UserMapsService implements CanLog {
         return userMapsModelToEntity.convertList(userMapsList);
     }
 
-    @CacheEvict(value = "addresses", allEntries=true)
+    @CacheEvict(value = "mindmaps", allEntries=true)
     @Transactional
     public UserMapsEntity save(final UserMapsEntity entity) {
         final UserMapsModel model = userMapsModelToEntity.revertConvert(entity);
@@ -53,6 +53,7 @@ public class UserMapsService implements CanLog {
         return userMapsModelToEntity.convert(resultModel);
     }
 
+    @CacheEvict(value = "mindmaps", allEntries=true)
     @Transactional
     public void deleteByMapid(final Integer mapId) {
         if (mindmapRepository.findById(mapId).isPresent())
@@ -60,7 +61,7 @@ public class UserMapsService implements CanLog {
         userMapsRepository.deleteByMapId(mapId);
     }
 
-    @Cacheable("addresses")
+    @Cacheable(value = "mindmaps", key = "'getUserRole'+#userId+#mapId")
     public Integer getUserRole(Integer userId, Integer mapId)
     {
         var entry = userMapsRepository.findAll()
@@ -72,7 +73,7 @@ public class UserMapsService implements CanLog {
         return entry.get(0).getUserRole();
     }
 
-    @CacheEvict(value = "addresses", allEntries=true)
+    @CacheEvict(value = "mindmaps", allEntries=true)
     public List<String> addUsersForPrivateMap(String[] emails, Integer ownerId, Integer mapId)
     {
         //Add the owner
