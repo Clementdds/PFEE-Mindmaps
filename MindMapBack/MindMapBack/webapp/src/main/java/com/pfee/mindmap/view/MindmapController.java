@@ -204,7 +204,7 @@ public class MindmapController implements CanLog {
             throw new ResourceNotFoundException();
         }
 
-        return new GetMindmapFromIdDtoResponse(mindmapEntity.fullmaptext, null);
+        return new GetMindmapFromIdDtoResponse(mindmapEntity.name, mindmapEntity.fullmaptext, null);
     }
 
     @RequestMapping(produces = "application/json", method = RequestMethod.DELETE, path = "/{mapId}")
