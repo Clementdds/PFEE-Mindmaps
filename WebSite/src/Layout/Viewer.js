@@ -5,9 +5,12 @@ import { style } from "d3";
 
 const Viewer = ({file, nodeid}) => {
 
+    let DisplayScore = false;
     let minDate = 0;
     let maxDate = 0;
     let actualDate = 0;
+
+    let listOfNodeId= [];
     useEffect(() =>  {
         const jsFile = JSON.parse(file);
         const data = createD3Data(jsFile.elements[0].elements[0]);
@@ -18,13 +21,16 @@ const Viewer = ({file, nodeid}) => {
         return recurseD3Data(xmlTextFile);
     };
 
-    const recurseD3Data = function recurse(root, newColor = "") {
+    const recurseD3Data = function recurse(root, newColor = "", id=0) {
         let currentData = {
             name: "",
             children: null,
             value: 0,
             color:newColor,
-            score:" "
+            score:"",
+            id:id,
+            countBreak: 1,
+
         };
 
         if (root.attributes !== undefined && root.attributes !== null) {
@@ -65,7 +71,8 @@ const Viewer = ({file, nodeid}) => {
                 value: value,
                 color: newColor,
                 score: tmpscore,
-                countBreak: count
+                countBreak: count,
+                id:id
             };
         } else {
             
@@ -77,7 +84,8 @@ const Viewer = ({file, nodeid}) => {
             let children = [];
             for (let i = 0; i < root.elements.length; i++) {
                 if (root.elements[i].name === "node") {
-                    children.push(recurse(root.elements[i], newColor));
+                    id = id + 1
+                    children.push(recurse(root.elements[i], newColor, id));
                 }
             }
             if(newColor === "")
@@ -91,7 +99,9 @@ const Viewer = ({file, nodeid}) => {
                 children: children,
                 color: newColor,
                 score: tmpscore,
-                countBreak: count
+                countBreak: count,
+                id:id
+                
             }
         }
 
@@ -116,6 +126,109 @@ const Viewer = ({file, nodeid}) => {
         return count;
 
     };
+
+    function GreyNode()
+    {
+        let allNode = d3.select("svg").select("g").select("g").selectAll("g");
+        let i = 0;
+        let tableau = allNode._groups[0];
+        while(i <  tableau.length)
+        {
+            if(tableau[i].__data__.data.value > actualDate)
+            {
+                let circleId =  "circle" + tableau[i].id
+                document.getElementById(circleId).style.fill = "grey"
+                
+             //   let textId = "TextValue"+tableau[i].id;
+               // console.log("TextValue"+tableau[i].id)
+              //  document.getElementById(textId).style.fill = "grey"
+                /*
+                let nbBreak = tableau[i].__data__.data.countBreak;
+                let j = 0;
+                while(j < nbBreak)
+                {
+                    let tspanId ="tspan"+tableau[i].id + j;
+                    console.log(tspanId +  document.getElementById(tspanId));
+                    document.getElementById(tspanId).style.fill = "grey"
+                    j++;
+                }*/
+            }
+            else{
+                let circleId =  "circle" + tableau[i].id
+                document.getElementById(circleId).style.fill =  tableau[i].__data__.data.color
+
+                let nbBreak = tableau[i].__data__.data.countBreak;
+                let j = 0;
+                while(j < nbBreak)
+                {
+                    let tspanId ="tspan"+tableau[i].id + j;
+                    document.getElementById(tspanId).style.fill = "#000"
+                    j++;
+                }
+            }
+           
+          i++;
+          
+        }
+    }
+    
+    function UpdateColorNode()
+    {
+        let allNode = d3.select("svg").select("g").select("g").selectAll("g");
+     
+        let tableau = allNode._groups[0];
+       // console.log(document.getElementById('path1'));
+       
+        console.log(DisplayScore);
+        let i = 0;
+        while(i < tableau.length)
+        {
+            if(tableau[i].id === '0')
+            {
+                i++;
+                continue;
+            }
+              
+            let pathId =  "path" + tableau[i].id
+            console.log(tableau[i].__data__.data.color);
+          
+            if(DisplayScore === true)
+            {
+                if(tableau[i].__data__.data.score === "")
+                {
+                    document.getElementById(pathId).style.stroke= 'grey';
+                }else{
+                    let scoreNumber = parseInt(tableau[i].__data__.data.score)
+                    if(scoreNumber>= 0 && scoreNumber <=4)
+                    {
+                        document.getElementById(pathId).style.stroke= 'darkred';
+                    }
+                    else if(scoreNumber>= 5 && scoreNumber <=8)
+                    {
+                        document.getElementById(pathId).style.stroke= 'red';
+                    }
+                    else if(scoreNumber>= 9 && scoreNumber <=12)
+                    {
+                        document.getElementById(pathId).style.stroke= 'gold';
+                    }
+                    else if(scoreNumber>= 13 && scoreNumber <=16)
+                    {
+                        document.getElementById(pathId).style.stroke= 'green';
+                    }
+                    else{
+                        document.getElementById(pathId).style.stroke= 'darkgreen';
+                    }
+                }
+            }
+            else{
+                document.getElementById(pathId).style.stroke= tableau[i].__data__.data.color;
+            }
+            i++;
+        }
+    //    d3.select("g#id").selectAll("path")
+    }
+    
+    let allLink = [];
     const constructTree = (data) => {
 
         const margin = ({top: 10, right: 120, bottom: 10, left: 40});
@@ -164,7 +277,7 @@ const Viewer = ({file, nodeid}) => {
             if (d.depth) d.children = null;
         });
 
-        let slider = d3.select("input")
+        let slider = d3.select("#myRangeTime")
         .attr("type", "range")
         .attr("value", minDate)
         .attr("min", minDate)
@@ -176,8 +289,22 @@ const Viewer = ({file, nodeid}) => {
             let time = mili.toLocaleString();
             d3.select('p#value-time').text(time);
             actualDate = document.getElementById('myRangeTime').value;
+            GreyNode();
           })
-    
+          
+        
+        
+        let displayScore =  d3.select('#displayScore').
+            on("click", function(){
+                
+                DisplayScore = !DisplayScore
+                UpdateColorNode();
+                
+             /*   
+                update(root);*/
+                console.log("display is " + d3.select(this).property("checked"))
+            });
+
         const svg = d3.select("svg")
             .attr("viewBox", [-margin.left, -margin.top, width, dx])
             .style("font", "10px sans-serif")
@@ -234,25 +361,28 @@ const Viewer = ({file, nodeid}) => {
                 .attr("transform", d => `translate(${source.y0},${source.x0})`)
                 .attr("fill-opacity", 1)
                 .attr("stroke-opacity", 1)
-                .attr("id", d => d.value);
+                .attr("id", d => d.id);
              
             
-            nodeEnter.append("svg:image")
+           const shareButton = nodeEnter.append("svg:image")
                 .attr('x', -10)
                 .attr('y', 0)
                 .attr('width', 10)
                 .attr('height', 10)
                .attr("xlink:href", "../Ressources/Share.png")
                .on("click", d => {
-
+                    //SHARED FUNCTION
                })
 
-               
 
+          
             nodeEnter.append("circle")
+                .attr("id", d => "circle" + d.id)
                 .attr("cx", d => d._children ? 0 : 1)
                 .attr("r", d => d._children ? 2.5 : 1)
-                .attr("stroke", d => d._children? "none" : d.data.color)
+                .attr("stroke", d =>{
+                        return d._children? "none" : d.data.color
+                    })
                 .attr("stroke-width", 5)
                 .style("fill", d => d._children ?  d.data.color : "none")
                 .on("click", d => {
@@ -270,6 +400,7 @@ const Viewer = ({file, nodeid}) => {
                 });
             
             nodeEnter.append("text")
+                .attr("id", d => "TextValue")
                 .attr("dy", "0.31em")
               //  .text(d => d.data.name)
               .attr("x", d => d._children ? 10 : 10)
@@ -277,19 +408,21 @@ const Viewer = ({file, nodeid}) => {
               .each(function (d)
                 {
                     var arr = d.data.name.split('\n');
+                    d.data.countBreak = arr.length
                     for (let i = 0; i < arr.length; i++) {
                         d3.select(this).append("tspan")
+                            .attr("id", "tspan"+d.id + i)
                             .text(arr[i])
                             .attr("dy", i ? "1.2em" : 0)
                             .attr("x", 5)
-                            .attr("text-anchor", "start")
-                            .attr("class", "tspan" + i);
+                            .attr("text-anchor", "start");
+                          
                     }
                 })
                 //.attr("x", d => d._children ? -6 : 6)
                 //.attr("y", d => d._children ? -7 : 0)
                 //.attr("text-anchor", d => d._children ? "start" : "end")
-                .style("fill", "#000")
+                .style("fill", "black")
                 .on("click", d => {
                     if (d.data.name.includes("http"))
                         window.open(d.data.name, '_blank');
@@ -338,13 +471,49 @@ const Viewer = ({file, nodeid}) => {
 
 
             // Enter any new links at the parent's previous position.
+            
             const linkEnter = link.enter().append("path")
+                .attr("id", d=>"path" + d.target.id )
                 .attr("d", d => {
                     const o = {x: source.x0, y: source.y0};
                     return diagonal({source: o, target: o});
                 })               
                 .attr("stroke", function(d){ 
-                    return (d.target.data.color)});
+
+                    if(DisplayScore === true)
+                    {
+                        if(d.target.data.score === "")
+                        {
+                            return 'grey';
+                        }
+                        else
+                        {
+                            let scoreNumber = parseInt(d.target.data.score)
+                            if(scoreNumber>= 0 && scoreNumber <=4)
+                            {
+                                return 'darkred';
+                            }
+                            else if(scoreNumber>= 5 && scoreNumber <=8)
+                            {
+                                return'red';
+                            }
+                            else if(scoreNumber>= 9 && scoreNumber <=12)
+                            {
+                                return 'gold';
+                            }
+                            else if(scoreNumber>= 13 && scoreNumber <=16)
+                            {
+                                return'green';
+                            }
+                            else{
+                                return 'darkgreen';
+                            }
+                        }
+                    }
+                    else{
+                        return (d.target.data.color)
+                    }
+                });     
 
             // Transition links to their new position.
             link.merge(linkEnter).transition(transition)
@@ -373,15 +542,14 @@ const Viewer = ({file, nodeid}) => {
             document.getElementById("value-time").remove();
             document.getElementById("myRangeTime").remove();
         }
-        
         return svg.node();     
    
     };
-console.log(Image);
     return (
             <div className="Viewer-div" id="viewer_div">              
                 <p id="value-time"/>              
-                <input type="range" class="slider" id="myRangeTime"/>
+                <input type="range" className="slider" id="myRangeTime"/>
+                <input type="checkbox" id="displayScore"/>
                 <svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
         );

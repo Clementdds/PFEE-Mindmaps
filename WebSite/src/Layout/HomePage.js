@@ -20,7 +20,6 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
                     <div>
                         {ownedMindmapsList.length ?
                             ownedMindmapsList.map((x) => {
-                                console.log(x);
                                 return (
                                     <MindmapData Mindmap={x} key={x.id} shared={false}/>
                                 );
@@ -31,7 +30,6 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
                     <div>
                     {sharedMindmapsList.length ?
                         sharedMindmapsList.map((x) => {
-                            console.log(x);
                             return (
                                 <MindmapData Mindmap={x} key={x.id} shared={true}/>
                             );
