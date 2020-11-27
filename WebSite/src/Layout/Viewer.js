@@ -134,38 +134,32 @@ const Viewer = ({file, nodeid}) => {
         let tableau = allNode._groups[0];
         while(i <  tableau.length)
         {
+            if(tableau[i].id === '0')
+            {
+                i++;
+                continue;
+            }
+
+            let circleId =  "circle" + tableau[i].id
+            let pathId =  "path" + tableau[i].id
+            let tmpColor = '';
             if(tableau[i].__data__.data.value > actualDate)
             {
-                let circleId =  "circle" + tableau[i].id
-                document.getElementById(circleId).style.fill = "grey"
-                
-             //   let textId = "TextValue"+tableau[i].id;
-               // console.log("TextValue"+tableau[i].id)
-              //  document.getElementById(textId).style.fill = "grey"
-                /*
-                let nbBreak = tableau[i].__data__.data.countBreak;
-                let j = 0;
-                while(j < nbBreak)
-                {
-                    let tspanId ="tspan"+tableau[i].id + j;
-                    console.log(tspanId +  document.getElementById(tspanId));
-                    document.getElementById(tspanId).style.fill = "grey"
-                    j++;
-                }*/
+                tmpColor = "grey"
             }
             else{
-                let circleId =  "circle" + tableau[i].id
-                document.getElementById(circleId).style.fill =  tableau[i].__data__.data.color
-
-                let nbBreak = tableau[i].__data__.data.countBreak;
-                let j = 0;
-                while(j < nbBreak)
-                {
-                    let tspanId ="tspan"+tableau[i].id + j;
-                    document.getElementById(tspanId).style.fill = "#000"
-                    j++;
-                }
+                tmpColor =  tableau[i].__data__.data.color
             }
+
+            if(tableau[i].__data__.data.children)
+            {
+                document.getElementById(circleId).style.fill = tmpColor
+            }
+            else
+            {
+                document.getElementById(circleId).style.stroke = tmpColor
+            }
+            document.getElementById(pathId).style.stroke =  tmpColor
           i++;
         }
     }
@@ -546,6 +540,8 @@ const Viewer = ({file, nodeid}) => {
         update(root);
         if(maxDate != 0)
         {
+            d3.select("#myRangeTime").attr("value", maxDate)
+            actualDate = maxDate;
             d3.select('p#value-time').text(new Date(actualDate).toLocaleString());
         }
         else{
