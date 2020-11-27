@@ -166,20 +166,42 @@ const Viewer = ({file, nodeid}) => {
                     j++;
                 }
             }
-           
           i++;
-          
         }
     }
     
-    function UpdateColorNode()
+    function ReturnColorScore(score)
+    {
+        if(score === "")
+        {
+            return 'grey'
+        }
+        let scoreNumber = parseInt(score)
+        if(scoreNumber>= 0 && scoreNumber <=4)
+        {
+            return  'darkred';
+        }
+        else if(scoreNumber>= 5 && scoreNumber <=8)
+        {
+            return  'red';
+        }
+        else if(scoreNumber>= 9 && scoreNumber <=12)
+        {
+            return  'gold';
+        }
+        else if(scoreNumber>= 13 && scoreNumber <=16)
+        {
+            return  'green';
+        }
+        else{
+            return  'darkgreen';
+        }
+    }
+
+    function UpdateScore()
     {
         let allNode = d3.select("svg").select("g").select("g").selectAll("g");
-     
         let tableau = allNode._groups[0];
-       // console.log(document.getElementById('path1'));
-       
-        console.log(DisplayScore);
         let i = 0;
         while(i < tableau.length)
         {
@@ -188,44 +210,30 @@ const Viewer = ({file, nodeid}) => {
                 i++;
                 continue;
             }
-              
-            let pathId =  "path" + tableau[i].id
-            console.log(tableau[i].__data__.data.color);
-          
+
+            let tmpColor = '';
             if(DisplayScore === true)
             {
-                if(tableau[i].__data__.data.score === "")
-                {
-                    document.getElementById(pathId).style.stroke= 'grey';
-                }else{
-                    let scoreNumber = parseInt(tableau[i].__data__.data.score)
-                    if(scoreNumber>= 0 && scoreNumber <=4)
-                    {
-                        document.getElementById(pathId).style.stroke= 'darkred';
-                    }
-                    else if(scoreNumber>= 5 && scoreNumber <=8)
-                    {
-                        document.getElementById(pathId).style.stroke= 'red';
-                    }
-                    else if(scoreNumber>= 9 && scoreNumber <=12)
-                    {
-                        document.getElementById(pathId).style.stroke= 'gold';
-                    }
-                    else if(scoreNumber>= 13 && scoreNumber <=16)
-                    {
-                        document.getElementById(pathId).style.stroke= 'green';
-                    }
-                    else{
-                        document.getElementById(pathId).style.stroke= 'darkgreen';
-                    }
-                }
+                tmpColor = ReturnColorScore(tableau[i].__data__.data.score)
             }
             else{
-                document.getElementById(pathId).style.stroke= tableau[i].__data__.data.color;
+                tmpColor = tableau[i].__data__.data.color;
             }
+
+            let pathId =  "path" + tableau[i].id
+            let circleId =  "circle" + tableau[i].id
+
+            if(tableau[i].__data__.data.children)
+            {
+                document.getElementById(circleId).style.fill = tmpColor
+            }
+            else
+            {
+                document.getElementById(circleId).style.stroke = tmpColor
+            }
+            document.getElementById(pathId).style.stroke = tmpColor;
             i++;
         }
-    //    d3.select("g#id").selectAll("path")
     }
     
     let allLink = [];
@@ -289,7 +297,8 @@ const Viewer = ({file, nodeid}) => {
             let time = mili.toLocaleString();
             d3.select('p#value-time').text(time);
             actualDate = document.getElementById('myRangeTime').value;
-            GreyNode();
+            if(DisplayScore != true)
+                GreyNode();
           })
           
         
@@ -298,7 +307,7 @@ const Viewer = ({file, nodeid}) => {
             on("click", function(){
                 
                 DisplayScore = !DisplayScore
-                UpdateColorNode();
+                UpdateScore();
                 
              /*   
                 update(root);*/
@@ -381,12 +390,39 @@ const Viewer = ({file, nodeid}) => {
                 .attr("cx", d => d._children ? 0 : 1)
                 .attr("r", d => d._children ? 2.5 : 1)
                 .attr("stroke", d =>{
-                        return d._children? "none" : d.data.color
+                    if(d._children)
+                    {
+                        return "none"
+                    }
+                    else{
+                        if(DisplayScore === true)
+                        {
+                            return ReturnColorScore(d.data.score)
+                        }
+                        else{
+                            return (d.data.color)
+                        }
+                    }
                     })
                 .attr("stroke-width", 5)
-                .style("fill", d => d._children ?  d.data.color : "none")
+                .style("fill", d => {
+                 
+                    if(d._children)
+                    {
+                        if(DisplayScore === true)
+                        {
+                            return ReturnColorScore(d.data.score)
+                        }
+                        else{
+                            return d.data.color
+                        }
+                    }
+                    else{
+                        return  "none" 
+                    }
+                })
                 .on("click", d => {
-                    if(maxDate  != 0)
+                    if(maxDate  != 0 && DisplayScore === false )
                     {
                         if(d.value <= actualDate)
                         {
@@ -482,33 +518,7 @@ const Viewer = ({file, nodeid}) => {
 
                     if(DisplayScore === true)
                     {
-                        if(d.target.data.score === "")
-                        {
-                            return 'grey';
-                        }
-                        else
-                        {
-                            let scoreNumber = parseInt(d.target.data.score)
-                            if(scoreNumber>= 0 && scoreNumber <=4)
-                            {
-                                return 'darkred';
-                            }
-                            else if(scoreNumber>= 5 && scoreNumber <=8)
-                            {
-                                return'red';
-                            }
-                            else if(scoreNumber>= 9 && scoreNumber <=12)
-                            {
-                                return 'gold';
-                            }
-                            else if(scoreNumber>= 13 && scoreNumber <=16)
-                            {
-                                return'green';
-                            }
-                            else{
-                                return 'darkgreen';
-                            }
-                        }
+                        return ReturnColorScore(d.target.data.score)
                     }
                     else{
                         return (d.target.data.color)
