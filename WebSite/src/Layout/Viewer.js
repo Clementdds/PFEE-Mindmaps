@@ -150,7 +150,6 @@ const Viewer = ({file, nodeid}) => {
             else{
                 tmpColor =  tableau[i].__data__.data.color
             }
-
             if(tableau[i].__data__.data.children)
             {
                 document.getElementById(circleId).style.fill = tmpColor
@@ -302,10 +301,6 @@ const Viewer = ({file, nodeid}) => {
                 
                 DisplayScore = !DisplayScore
                 UpdateScore();
-                
-             /*   
-                update(root);*/
-                console.log("display is " + d3.select(this).property("checked"))
             });
 
         const svg = d3.select("svg")
@@ -469,7 +464,7 @@ const Viewer = ({file, nodeid}) => {
             .attr("x", d => d._children ? -10 : 10)
             .attr("y",  10)
           //  .attr("text-anchor", d => d._children ? "end" : "start")
-            .text(d =>  d.data.score)
+            //.text(d =>  d.data.score)
             .style("fill", "#000" )
             .on("click", d => {
                 if (d.data.name.includes("http"))
