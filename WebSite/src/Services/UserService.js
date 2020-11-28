@@ -34,7 +34,7 @@ const callLogin = ({email, password}) => {
     };
 
     return fetch(API_SIGN_IN_ENDPOINT, requestOptions)
-        .then(callHandler.handleSignResponse);
+        .then(callHandler.handleResponse);
 };
 
 const login = ({email, password}) => {
@@ -75,7 +75,7 @@ const callSignUP = ({email, password}) => {
     };
 
     return fetch(API_SIGN_UP_ENDPOINT, requestOptions)
-        .then(callHandler.handleSignResponse);
+        .then(callHandler.handleResponse);
 };
 
 const signUP = ({email, password}) => {
@@ -113,7 +113,7 @@ const callLogout = () => {
     };
 
     return fetch(API_SIGN_OUT_ENDPOINT, requestOptions)
-        .then(callHandler.handleSignResponse);
+        .then(callHandler.handleResponse);
 };
 
 const logout = () => {

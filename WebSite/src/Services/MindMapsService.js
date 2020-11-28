@@ -189,7 +189,10 @@ const deleteMindmapsById = ({id}) => {
                 store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: error})
             }
         )
-        .finally(mindmapStopLoading);
+        .finally(() => {
+            mindmapStopLoading();
+            window.location.reload(false);
+        });
 };
 
 const mindmapsService = {
