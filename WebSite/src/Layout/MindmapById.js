@@ -26,7 +26,6 @@ const MindmapById = ({id, file, nodeId, error}) => {
 
 const mapStateToProps = (state, ownProps) => {
     let id = ownProps.match.params.id;
-    console.log(id);
     return {
         id: id,
         file: state.Viewer.file,

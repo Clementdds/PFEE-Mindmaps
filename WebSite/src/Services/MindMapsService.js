@@ -7,6 +7,7 @@ import callHandler from "../Helpers/HandleResponse";
 const API_GET_MINDMAPS_OWNED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getowned";
 const API_GET_MINDMAPS_SHARED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getshared";
 const API_GET_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getMindmapFromId";
+const API_DELETE_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/";
 
 /*
  * Function called to set loading to true/false and reset error since (new error / no error) is supposed to be set
@@ -120,10 +121,43 @@ const getMindmapsById = ({id}) => {
         .finally(mindmapStopLoading);
 };
 
+/*
+ * Delete Mindmaps by id
+ */
+
+const callDeleteMindmapsById = ({id}) => {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: requestHeader.AuthHeader(),
+    };
+
+    console.log(requestOptions);
+
+    return fetch(API_DELETE_MINDMAPS_BY_ID_ENDPOINT + id, requestOptions)
+        .then(callHandler.handleResponse);
+};
+
+const deleteMindmapsById = ({id}) => {
+    console.log("Delete Mindmaps by id service");
+
+    mindmapStartLoading();
+
+    callDeleteMindmapsById({id})
+        .then((data) => {
+                console.log(data)
+            },
+            (error) => {
+                store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: error})
+            }
+        )
+        .finally(mindmapStopLoading);
+};
+
 const mindmapsService = {
     getOwnedMindmaps,
     getSharedMindmaps,
     getMindmapsById,
+    deleteMindmapsById,
 };
 
 export default mindmapsService;
