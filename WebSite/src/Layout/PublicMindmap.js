@@ -17,7 +17,7 @@ const PublicMindmap = ({url, file, nodeId, name, error}) => {
                 </div>
                 :
                 <div>
-                    Could not display the mindmap
+                    {error}
                 </div>
             }
         </React.Fragment>

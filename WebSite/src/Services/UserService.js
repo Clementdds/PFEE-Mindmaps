@@ -56,8 +56,8 @@ const login = ({email, password}) => {
                     history.push('/');
                 }
             },
-            (error) => {
-                store.dispatch({type: actionTypes.USER_ERROR, payload: error})
+            () => {
+                store.dispatch({type: actionTypes.USER_ERROR, payload: "Could not login. Incorrect Email or password"})
             }
         )
         .finally(userStopLoggingIn);
@@ -95,8 +95,8 @@ const signUP = ({email, password}) => {
                     history.push('/');
                 }
             },
-            (error) => {
-                store.dispatch({type: actionTypes.USER_ERROR, payload: error})
+            () => {
+                store.dispatch({type: actionTypes.USER_ERROR, payload: "Cloud not signUp."})
             }
         )
         .finally(userStopLoggingIn);
