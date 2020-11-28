@@ -4,7 +4,7 @@ import Viewer from "./Viewer";
 import mindmapsService from "../Services/MindMapsService";
 import * as d3 from "d3";
 
-const MindmapById = ({id, file, nodeId, error}) => {
+const MindmapById = ({id, file, nodeId, name, error}) => {
 
     useEffect(() => {
         d3.select("g").remove();
@@ -14,7 +14,7 @@ const MindmapById = ({id, file, nodeId, error}) => {
     return (
         <React.Fragment>
             {file != null ?
-                <Viewer file={file} nodeid={nodeId}/>
+                <Viewer file={file} nodeid={nodeId} name={name}/>
                 :
                 <div>
                     Could not display the mindmap
@@ -30,6 +30,7 @@ const mapStateToProps = (state, ownProps) => {
         id: id,
         file: state.Viewer.file,
         nodeId: state.Viewer.nodeId,
+        name: state.Viewer.name,
         error: state.Viewer.error,
     }
 };

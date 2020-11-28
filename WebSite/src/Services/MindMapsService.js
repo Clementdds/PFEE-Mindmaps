@@ -8,6 +8,7 @@ const API_GET_MINDMAPS_OWNED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/min
 const API_GET_MINDMAPS_SHARED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getshared";
 const API_GET_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getMindmapFromId";
 const API_DELETE_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/";
+const API_GET_LINKS_MINDMAPS_BY_URL_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/links/getMindmapFromUrl";
 
 /*
  * Function called to set loading to true/false and reset error since (new error / no error) is supposed to be set
@@ -113,9 +114,47 @@ const getMindmapsById = ({id}) => {
     callGetMindmapsById({id})
         .then((data) => {
                 store.dispatch({type: actionTypes.VIEWER_SET_INPUT_FILE, payload: data.mindmap});
+                store.dispatch({type: actionTypes.VIEWER_SET_NAME, payload: data.name});
             },
             (error) => {
                 store.dispatch({type: actionTypes.VIEWER_ERROR, payload: error})
+            }
+        )
+        .finally(mindmapStopLoading);
+};
+
+/*
+ * Get Mindmaps by url
+ */
+
+const callGetMindmapsByUrl = ({url}) => {
+    const requestOptions = {
+        method: 'GET',
+        headers: requestHeader.AuthHeader(),
+        body: JSON.stringify({url: url})
+    };
+
+    console.log(requestOptions);
+    return fetch(API_GET_LINKS_MINDMAPS_BY_URL_ENDPOINT, requestOptions)
+        .then(callHandler.handleResponse);
+};
+
+const getMindmapsByUrl = ({url}) => {
+    console.log("Get Mindmaps by url service");
+
+    mindmapStartLoading();
+    store.dispatch({type: actionTypes.VIEWER_CLEAR_STATE});
+
+    callGetMindmapsByUrl({url})
+        .then((data) => {
+                console.log(data);
+                store.dispatch({type: actionTypes.VIEWER_SET_INPUT_FILE, payload: data.fullmap});
+                store.dispatch({type: actionTypes.VIEWER_SET_NAME, payload: data.name});
+                store.dispatch({type: actionTypes.VIEWER_SET_NODE_ID, payload: data.nodeid});
+            },
+            (error) => {
+                console.log(error);
+                store.dispatch({type: actionTypes.VIEWER_ERROR, payload: error});
             }
         )
         .finally(mindmapStopLoading);
@@ -157,6 +196,7 @@ const mindmapsService = {
     getOwnedMindmaps,
     getSharedMindmaps,
     getMindmapsById,
+    getMindmapsByUrl,
     deleteMindmapsById,
 };
 

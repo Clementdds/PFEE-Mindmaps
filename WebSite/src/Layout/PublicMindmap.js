@@ -1,19 +1,19 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
-import linkService from "../Services/LinksService";
 import Viewer from "./Viewer";
+import mindmapsService from "../Services/MindMapsService";
 
-const PublicMindmap = ({url, file, nodeId, error}) => {
+const PublicMindmap = ({url, file, nodeId, name, error}) => {
 
     useEffect(() => {
-        linkService.getMindmapsByUrl({url: url});
+        mindmapsService.getMindmapsByUrl({url: url});
     }, [url]);
 
     return (
         <React.Fragment>
             {file != null ?
                 <div>
-                    <Viewer file={file} nodeid={nodeId}/>
+                    <Viewer file={file} nodeid={nodeId} name={name}/>
                 </div>
                 :
                 <div>
@@ -30,6 +30,7 @@ const mapStateToProps = (state, ownProps) => {
         url: url,
         file: state.Viewer.file,
         nodeId: state.Viewer.nodeId,
+        name: state.Viewer.name,
         error: state.Viewer.error,
     }
 };
