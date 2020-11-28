@@ -58,6 +58,7 @@ const MindmapData = ({Mindmap, shared}) => {
             </Link>
             </div>
             <div className="col-2">
+                {!shared ?
                     <div className="text-right">
                         <button onClick={handleDeleteClick} className="btn btn-light">
                             <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -65,6 +66,9 @@ const MindmapData = ({Mindmap, shared}) => {
                             </svg>
                         </button>
                     </div>
+                    :
+                    <div/>
+                }
                 </div>
             </div>
         </React.Fragment>
