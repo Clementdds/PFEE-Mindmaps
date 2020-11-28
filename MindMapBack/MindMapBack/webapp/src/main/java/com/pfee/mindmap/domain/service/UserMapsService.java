@@ -61,6 +61,12 @@ public class UserMapsService implements CanLog {
         userMapsRepository.deleteByMapId(mapId);
     }
 
+    @CacheEvict(value = "mindmaps", allEntries=true)
+    @Transactional
+    public void deleteEveryNullMapId() {
+        userMapsRepository.deleteByMapId(null);
+    }
+
     @Cacheable(value = "mindmaps", key = "'getUserRole'+#userId+#mapId")
     public Integer getUserRole(Integer userId, Integer mapId)
     {

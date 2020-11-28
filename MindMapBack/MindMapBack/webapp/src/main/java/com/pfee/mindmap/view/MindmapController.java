@@ -227,6 +227,6 @@ public class MindmapController implements CanLog {
 
         mindmapService.deleteById(mapId);
 
-        userMapsService.deleteByMapid(mapId);
+        userMapsService.deleteEveryNullMapId();
     }
 }
