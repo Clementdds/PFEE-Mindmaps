@@ -3,6 +3,7 @@ import * as actionTypes from '../Actions/ActionsTypes'
 const initialState = {
     file: null,
     nodeId: null,
+    name: null,
     error: null,
 };
 
@@ -20,7 +21,7 @@ const ViewerReducer = (state = initialState, action) => {
                 file: null,
             };
 
-        // nodeId
+        // NodeId
         case actionTypes.VIEWER_SET_NODE_ID:
             return {
                 ...state,
@@ -30,6 +31,18 @@ const ViewerReducer = (state = initialState, action) => {
             return {
                 ...state,
                 nodeId: null
+            };
+
+        // Name
+        case actionTypes.VIEWER_SET_NAME:
+            return {
+                ...state,
+                name: action.payload
+            };
+        case actionTypes.VIEWER_DELETE_NAME:
+            return {
+                ...state,
+                name: null
             };
 
         // Error
