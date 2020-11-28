@@ -48,8 +48,8 @@ const postCreateMindmaps = ({file, name, isPublic, emails}) => {
                     store.dispatch({type: actionTypes.FORM_RESULT, payload: result});
                 }
             },
-            (error) => {
-                store.dispatch({type: actionTypes.FORM_ERROR, payload: error})
+            () => {
+                store.dispatch({type: actionTypes.FORM_ERROR, payload: "Could not create mindmap."})
             }
         )
         .finally(formStopLoading);

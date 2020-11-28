@@ -17,7 +17,7 @@ const MindmapById = ({id, file, nodeId, name, error}) => {
                 <Viewer file={file} nodeid={nodeId} name={name}/>
                 :
                 <div>
-                    Could not display the mindmap
+                    {error}
                 </div>
             }
         </React.Fragment>

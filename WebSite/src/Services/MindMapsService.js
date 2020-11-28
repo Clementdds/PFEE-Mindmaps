@@ -50,8 +50,8 @@ const getOwnedMindmaps = () => {
                     store.dispatch({type: actionTypes.MINDMAPS_OWNED_SET_LIST, payload: data.mindmapsList});
                 }
             },
-            (error) => {
-                store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: error})
+            () => {
+                store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: "Could not get owned mindmaps."})
             }
         )
         .finally(mindmapStopLoading);
@@ -84,8 +84,8 @@ const getSharedMindmaps = () => {
                     store.dispatch({type: actionTypes.MINDMAPS_SHARED_SET_LIST, payload: data.mindmapsList});
                 }
             },
-            (error) => {
-                store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: error})
+            () => {
+                store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: "Could not get shared mindmaps."})
             }
         )
         .finally(mindmapStopLoading);
@@ -116,8 +116,8 @@ const getMindmapsById = ({id}) => {
                 store.dispatch({type: actionTypes.VIEWER_SET_INPUT_FILE, payload: data.mindmap});
                 store.dispatch({type: actionTypes.VIEWER_SET_NAME, payload: data.name});
             },
-            (error) => {
-                store.dispatch({type: actionTypes.VIEWER_ERROR, payload: error})
+            () => {
+                store.dispatch({type: actionTypes.VIEWER_ERROR, payload: "Mindmap does not exist or you do not have the right to access it."})
             }
         )
         .finally(mindmapStopLoading);
@@ -152,9 +152,8 @@ const getMindmapsByUrl = ({url}) => {
                 store.dispatch({type: actionTypes.VIEWER_SET_NAME, payload: data.name});
                 store.dispatch({type: actionTypes.VIEWER_SET_NODE_ID, payload: data.nodeid});
             },
-            (error) => {
-                console.log(error);
-                store.dispatch({type: actionTypes.VIEWER_ERROR, payload: error});
+            () => {
+                store.dispatch({type: actionTypes.VIEWER_ERROR, payload: "Mindmap does not exist or you do not have the right to access it."});
             }
         )
         .finally(mindmapStopLoading);
@@ -185,8 +184,8 @@ const deleteMindmapsById = ({id}) => {
         .then((data) => {
                 console.log(data)
             },
-            (error) => {
-                store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: error})
+            () => {
+                store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: "Could not delete mindmap."})
             }
         )
         .finally(() => {
