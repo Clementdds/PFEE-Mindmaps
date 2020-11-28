@@ -1,9 +1,11 @@
 import * as actionTypes from '../Actions/ActionsTypes'
+import jwt_decode from "jwt-decode";
 
 const initialState = {
     isSignedIn: !!localStorage.getItem('AuthToken'),
-    isLoggingIn: false,
     token: localStorage.getItem('AuthToken') || null,
+    email: localStorage.getItem('AuthToken') ? jwt_decode(localStorage.getItem('AuthToken')).email : null,
+    isLoggingIn: false,
     error: null,
 };
 
@@ -27,6 +29,7 @@ const UserReducer = (state = initialState, action) => {
                 ...state,
                 isSignedIn: true,
                 token: action.payload.token,
+                email: jwt_decode(action.payload.token).email,
             };
 
         // Sign in
@@ -35,6 +38,7 @@ const UserReducer = (state = initialState, action) => {
                 ...state,
                 isSignedIn: true,
                 token: action.payload.token,
+                email: jwt_decode(action.payload.token).email,
             };
 
         // User error
