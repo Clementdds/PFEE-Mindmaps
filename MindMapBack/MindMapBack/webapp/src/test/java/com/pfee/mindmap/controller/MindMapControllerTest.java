@@ -7,13 +7,16 @@ import com.pfee.mindmap.domain.service.UserService;
 import com.pfee.mindmap.modeltoentity.MindmapModelToEntity;
 import com.pfee.mindmap.modeltoentity.UserMapsModelToEntity;
 import com.pfee.mindmap.modeltoentity.UserModelToEntity;
+import com.pfee.mindmap.persistence.model.LinksModel;
 import com.pfee.mindmap.persistence.model.MindmapModel;
 import com.pfee.mindmap.persistence.model.UserMapsModel;
+import com.pfee.mindmap.persistence.model.UserModel;
 import com.pfee.mindmap.persistence.repository.LinksRepository;
 import com.pfee.mindmap.persistence.repository.MindmapRepository;
 import com.pfee.mindmap.persistence.repository.UserMapsRepository;
 import com.pfee.mindmap.persistence.repository.UserRepository;
 import com.pfee.mindmap.view.MindmapController;
+import com.pfee.mindmap.view.linkcontroller.GetPrivateMindmapFromUrlDtoRequest;
 import com.pfee.mindmap.view.mindmapscontroller.CreateMindMapDtoRequest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,18 +55,22 @@ public class MindMapControllerTest {
         userRepository.deleteAll();
         mindmapRepository.deleteAll();
         userMapsRepository.deleteAll();
+
         userService = new UserService(userRepository, new UserModelToEntity());
+
         mindmapService = new MindmapService(mindmapRepository,
                                             new MindmapModelToEntity(),
                                             userMapsRepository);
+
         userMapsService = new UserMapsService(userMapsRepository,
                                               userRepository,
                                               mindmapRepository,
                                               new UserMapsModelToEntity(new UserModelToEntity(),
                                                                         new MindmapModelToEntity()));
+
         mindmapController = new MindmapController(mindmapService, userMapsService, userService);
 
-        UserEntity defaultEntity = userService.save(new UserEntity(0, EMAIL, PWD));
+        UserEntity defaultEntity = userService.save(new UserEntity(1, EMAIL, PWD));
         token = TokenManager.ProduceToken(defaultEntity.id, EMAIL);
     }
 
