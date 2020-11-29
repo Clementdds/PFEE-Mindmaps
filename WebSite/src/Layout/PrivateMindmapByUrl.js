@@ -3,10 +3,10 @@ import {connect} from "react-redux";
 import Viewer from "./Viewer";
 import mindmapsService from "../Services/MindMapsService";
 
-const PublicMindmap = ({url, file, nodeId, name, error}) => {
+const PrivateMindmapByUrl = ({url, file, nodeId, name, error}) => {
 
     useEffect(() => {
-        mindmapsService.getMindmapsByUrl({url: url});
+        mindmapsService.getMindmapsByUrl({url: url, Public: false});
     }, [url]);
 
     return (
@@ -35,4 +35,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-export default connect(mapStateToProps)(PublicMindmap);
+export default connect(mapStateToProps)(PrivateMindmapByUrl);

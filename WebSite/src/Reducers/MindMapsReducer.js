@@ -4,6 +4,7 @@ const initialState = {
     isLoading: false,
     ownedMindmapsList: [],
     sharedMindmapsList: [],
+    url: null,
     error: null,
 };
 

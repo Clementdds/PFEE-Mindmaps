@@ -1,7 +1,7 @@
 import React, {Suspense, lazy} from 'react';
 
 // React-Dom
-import {Switch, Route, BrowserRouter as Router} from 'react-router-dom';
+import {Switch, Route, BrowserRouter} from 'react-router-dom';
 
 // Components
 import Header from "./Header";
@@ -9,7 +9,8 @@ import PrivateRoute from "../Components/Private/PrivateRoute";
 import LoginPage from "./LoginPage";
 import SignUpPage from "./SignUpPage";
 import HomePage from "./HomePage";
-import PublicMindmap from "./PublicMindmap";
+import PublicMindmapByUrl from "./PublicMindmapByUrl";
+import PrivateMindmapByUrl from "./PrivateMindmapByUrl";
 import MindmapById from "./MindmapById";
 import PrivateRouteWithParams from "../Components/Private/PrivateRouteWithParams";
 import FormNewMindmap from "./FormNewMindmap";
@@ -20,7 +21,7 @@ const Error404Page = lazy(() => import('../Components/ErrorsPages/Error404'));
 const App = () => {
 
     return (
-        <Router>
+        <BrowserRouter>
             <Suspense fallback={<div>loading...</div>}>
                 <Header/>
                 <Switch>
@@ -47,8 +48,11 @@ const App = () => {
                     {/* Mindmap by Id  */}
                     <PrivateRouteWithParams path={"/mindmap/:id"} component={MindmapById}/>
 
-                    {/* Mindmap by Url  */}
-                    <Route path={"/links/:url"} component={PublicMindmap}/>
+                    {/* Private Mindmap by Url  */}
+                    <PrivateRouteWithParams path={"/links/private/:url"} component={PrivateMindmapByUrl}/>
+
+                    {/* Public Mindmap by Url  */}
+                    <Route path={"/links/public/:url"} component={PublicMindmapByUrl}/>
 
                     {/* 404  */}
                     <Route>
@@ -56,7 +60,7 @@ const App = () => {
                     </Route>
                 </Switch>
             </Suspense>
-        </Router>
+        </BrowserRouter>
     );
 };
 

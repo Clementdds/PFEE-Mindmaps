@@ -8,7 +8,8 @@ const API_GET_MINDMAPS_OWNED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/min
 const API_GET_MINDMAPS_SHARED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getshared";
 const API_GET_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getMindmapFromId";
 const API_DELETE_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/";
-const API_GET_LINKS_MINDMAPS_BY_URL_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/links/getMindmapFromUrl";
+const API_GET_PUBLIC_MINDMAPS_BY_URL_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/links/getPublicMindmapFromUrl";
+const API_GET_PRIVATE_MINDMAPS_BY_URL_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/links/getPrivateMindmapFromUrl";
 
 /*
  * Function called to set loading to true/false and reset error since (new error / no error) is supposed to be set
@@ -127,25 +128,25 @@ const getMindmapsById = ({id}) => {
  * Get Mindmaps by url
  */
 
-const callGetMindmapsByUrl = ({url}) => {
+const callGetMindmapsByUrl = ({url, Public}) => {
     const requestOptions = {
         method: 'GET',
         headers: requestHeader.AuthHeader(),
-        body: JSON.stringify({url: url})
     };
 
-    console.log(requestOptions);
-    return fetch(API_GET_LINKS_MINDMAPS_BY_URL_ENDPOINT, requestOptions)
+    const urlAPI = Public ? API_GET_PUBLIC_MINDMAPS_BY_URL_ENDPOINT : API_GET_PRIVATE_MINDMAPS_BY_URL_ENDPOINT;
+
+    return fetch(urlAPI + "?url=" + url, requestOptions)
         .then(callHandler.handleResponse);
 };
 
-const getMindmapsByUrl = ({url}) => {
+const getMindmapsByUrl = ({url, Public}) => {
     console.log("Get Mindmaps by url service");
 
     mindmapStartLoading();
     store.dispatch({type: actionTypes.VIEWER_CLEAR_STATE});
 
-    callGetMindmapsByUrl({url})
+    callGetMindmapsByUrl({url, Public})
         .then((data) => {
                 console.log(data);
                 store.dispatch({type: actionTypes.VIEWER_SET_INPUT_FILE, payload: data.fullmap});
@@ -158,6 +159,7 @@ const getMindmapsByUrl = ({url}) => {
         )
         .finally(mindmapStopLoading);
 };
+
 
 /*
  * Delete Mindmaps by id

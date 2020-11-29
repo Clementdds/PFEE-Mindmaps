@@ -37,6 +37,7 @@ module.exports = merge(common.legacyConfig,
     {
         output: {
             filename: './js/[name].[hash].js',
+            publicPath: settings.devServerConfig.public() + '/',
         },
         mode: 'development',
         devtool: 'inline-source-map',
