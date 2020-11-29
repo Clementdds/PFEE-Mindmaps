@@ -108,10 +108,11 @@ public class LinkController implements CanLog {
         if (entity == null)
             return new GetPublicMindmapFromUrlDtoResponse(null,
                                                           null,
+                                                          null,
                                                           "Couldn't retrieve the entity, are you sure that your url " +
                                                                   "is good ?");
 
-        return new GetPublicMindmapFromUrlDtoResponse(entity.nodeid, entity.map.fullmaptext, null);
+        return new GetPublicMindmapFromUrlDtoResponse(entity.nodeid, entity.map.name, entity.map.fullmaptext, null);
     }
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getPrivateMindmapFromUrl")
@@ -126,14 +127,14 @@ public class LinkController implements CanLog {
         if (error == null && !userService.userExists(userId))
             error = "User does not exist";
         if (error != null)
-            return new GetPrivateMindmapFromUrlDtoResponse(null, null, error);
+            return new GetPrivateMindmapFromUrlDtoResponse(null, null, null, error);
 
         var entity = linksService.GetMindmapFromPrivateUrl(url, userId);
         if (entity == null)
             return new GetPrivateMindmapFromUrlDtoResponse(null,
                                                           null,
+                                                          null,
                                                           "Couldn't retrieve the entity, are you sure that your url is good ?");
-
-        return new GetPrivateMindmapFromUrlDtoResponse(entity.nodeid, entity.map.fullmaptext, null);
+        return new GetPrivateMindmapFromUrlDtoResponse(entity.nodeid, entity.map.name, entity.map.fullmaptext, null);
     }
 }
