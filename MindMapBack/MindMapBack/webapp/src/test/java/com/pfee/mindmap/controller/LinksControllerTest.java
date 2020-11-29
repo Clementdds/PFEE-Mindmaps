@@ -103,6 +103,7 @@ public class LinksControllerTest {
         var result = linkController.GetPrivateMindmapFromUrl(authHeader, body.url);
 
         Assert.assertNotNull(result);
+        Assert.assertNull(result.name);
         Assert.assertNull(result.nodeid);
         Assert.assertNull(result.fullmap);
         Assert.assertEquals("Invalid token", result.error);
@@ -122,6 +123,7 @@ public class LinksControllerTest {
         var result = linkController.GetPrivateMindmapFromUrl(authHeader, body.url);
 
         Assert.assertNotNull(result);
+        Assert.assertNull(result.name);
         Assert.assertNull(result.nodeid);
         Assert.assertNull(result.fullmap);
         Assert.assertEquals("Invalid token", result.error);
@@ -137,10 +139,11 @@ public class LinksControllerTest {
 
         var body = new GetPrivateMindmapFromUrlDtoRequest("urlDeTest");
 
-        String authHeader = "Bearer " + TokenManager.ProduceToken(10, "WrongEmail@epita.fr");
+        String authHeader = "Bearer " + TokenManager.ProduceToken(10000, "WrongEmail@epita.fr");
         var result = linkController.GetPrivateMindmapFromUrl(authHeader, body.url);
 
         Assert.assertNotNull(result);
+        Assert.assertNull(result.name);
         Assert.assertNull(result.nodeid);
         Assert.assertNull(result.fullmap);
         Assert.assertEquals("User does not exist", result.error);
@@ -160,6 +163,7 @@ public class LinksControllerTest {
         var result = linkController.GetPrivateMindmapFromUrl(authHeader, body.url);
 
         Assert.assertNotNull(result);
+        Assert.assertNull(result.name);
         Assert.assertNull(result.nodeid);
         Assert.assertNull(result.fullmap);
         Assert.assertEquals("Couldn't retrieve the entity, are you sure that your url is good ?", result.error);
@@ -179,8 +183,9 @@ public class LinksControllerTest {
         var result = linkController.GetPrivateMindmapFromUrl(authHeader, body.url);
 
         Assert.assertNotNull(result);
-        Assert.assertEquals(BigInteger.valueOf(123467), linkModel.getNodeid());
-        Assert.assertEquals("FULLMAPDETEST", mapModel.getFullmaptext());
+        Assert.assertEquals(BigInteger.valueOf(123467), result.nodeid);
+        Assert.assertEquals("name", result.name);
+        Assert.assertEquals("FULLMAPDETEST", result.fullmap);
         Assert.assertNull(result.error);
     }
 
@@ -196,8 +201,61 @@ public class LinksControllerTest {
         var result = linkController.GetPrivateMindmapFromUrl(authHeader, body.url);
 
         Assert.assertNotNull(result);
-        Assert.assertEquals(BigInteger.valueOf(123467), linkModel.getNodeid());
-        Assert.assertEquals("FULLMAPDETEST", mapModel.getFullmaptext());
+        Assert.assertEquals(BigInteger.valueOf(123467), result.nodeid);
+        Assert.assertEquals("name", result.name);
+        Assert.assertEquals("FULLMAPDETEST", result.fullmap);
+        Assert.assertNull(result.error);
+    }
+
+
+    @Test
+    public void GetPublicMindmapFromUrlWithWrongUrl() {
+        var userModel = userRepository.save(new UserModel(1, EMAIL, PWD, null));
+        var mapModel = mindmapRepository.save(new MindmapModel(1, "FULLMAPDETEST", "name", true, null, null));
+        var linkModel = linksRepository.save(new LinksModel(1, BigInteger.valueOf(123467), mapModel, "urlDeTest"));
+
+        var body = new GetPrivateMindmapFromUrlDtoRequest("WrongUrl");
+
+        var result = linkController.GetPublicMindmapFromUrl(body.url);
+
+        Assert.assertNotNull(result);
+        Assert.assertNull(result.name);
+        Assert.assertNull(result.nodeid);
+        Assert.assertNull(result.fullmap);
+        Assert.assertEquals("Couldn't retrieve the entity, are you sure that your url is good ?", result.error);
+    }
+
+    @Test
+    public void GetPublicMindmapFromUrlWithGoodUrlButNotPublic() {
+        var userModel = userRepository.save(new UserModel(1, EMAIL, PWD, null));
+        var mapModel = mindmapRepository.save(new MindmapModel(1, "FULLMAPDETEST", "name", false, null, null));
+        var linkModel = linksRepository.save(new LinksModel(1, BigInteger.valueOf(123467), mapModel, "urlDeTest"));
+
+        var body = new GetPrivateMindmapFromUrlDtoRequest("urlDeTest");
+
+        var result = linkController.GetPublicMindmapFromUrl(body.url);
+
+        Assert.assertNotNull(result);
+        Assert.assertNull(result.name);
+        Assert.assertNull(result.nodeid);
+        Assert.assertNull(result.fullmap);
+        Assert.assertEquals("Couldn't retrieve the entity, are you sure that your url is good ?", result.error);
+    }
+
+    @Test
+    public void GetPublicMindmapFromUrlWithGoodUrl() {
+        var userModel = userRepository.save(new UserModel(1, EMAIL, PWD, null));
+        var mapModel = mindmapRepository.save(new MindmapModel(1, "FULLMAPDETEST", "name", true, null, null));
+        var linkModel = linksRepository.save(new LinksModel(1, BigInteger.valueOf(123467), mapModel, "urlDeTest"));
+
+        var body = new GetPrivateMindmapFromUrlDtoRequest("urlDeTest");
+
+        var result = linkController.GetPublicMindmapFromUrl(body.url);
+
+        Assert.assertNotNull(result);
+        Assert.assertEquals(BigInteger.valueOf(123467), result.nodeid);
+        Assert.assertEquals("name", result.name);
+        Assert.assertEquals("FULLMAPDETEST", result.fullmap);
         Assert.assertNull(result.error);
     }
 
