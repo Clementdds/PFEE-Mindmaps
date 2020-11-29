@@ -39,5 +39,12 @@ export const FORM_LOADING = "FORM_LOADING";
 export const FORM_RESET_LOADING = "FORM_RESET_LOADING";
 export const FORM_CLEAR_STATE = "FORM_CLEAR_STATE";
 
+// Link
+export const LINK_SET_URL = "LINK_SET_URL";
+export const LINK_RESET_URL = "LINK_RESET_URL";
+export const LINK_SET_ERROR = "LINK_SET_ERROR";
+export const LINK_RESET_ERROR = "LINK_RESET_ERROR";
+export const LINK_CLEAR_STATE = "LINK_CLEAR_STATE";
+
 // All
 export const CLEAR_ALL_STATE = "CLEAR_ALL_STATE";

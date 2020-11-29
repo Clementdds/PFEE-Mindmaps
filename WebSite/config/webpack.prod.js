@@ -6,6 +6,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // config files
 const common = require('./webpack.common.js');
@@ -44,17 +45,30 @@ const configureTerser = () => {
     };
 };
 
+// Configure Bundle Analyzer
+const configureBundleAnalyzer = () => {
+    return {
+        analyzerMode: 'static',
+        reportFilename: 'report-legacy.html',
+    };
+};
+
 // Production module exports
 module.exports = [
     merge(common.legacyConfig, {
+        output: {
+            filename: path.join('js/','[name].[chunkhash].js'),
+        },
         mode: 'production',
         devtool: 'source-map',
         optimization: configureOptimization(),
         plugins: [
             new MiniCssExtractPlugin({
                 path: path.resolve(__dirname, settings.paths.dist.base),
-                filename: path.join('./css/', '[name].[chunkhash].css'),
+                filename: path.join('css/', '[name].[chunkhash].css'),
             }),
+            new BundleAnalyzerPlugin(configureBundleAnalyzer()),
         ],
     }),
 ];
+
