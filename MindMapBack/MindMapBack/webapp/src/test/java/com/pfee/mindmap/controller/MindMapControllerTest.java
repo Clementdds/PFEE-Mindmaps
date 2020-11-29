@@ -4,6 +4,8 @@ import com.pfee.mindmap.domain.entity.UserEntity;
 import com.pfee.mindmap.domain.service.MindmapService;
 import com.pfee.mindmap.domain.service.UserMapsService;
 import com.pfee.mindmap.domain.service.UserService;
+import com.pfee.mindmap.exceptions.InvalidTokenException;
+import com.pfee.mindmap.exceptions.UserDoesNotExistException;
 import com.pfee.mindmap.modeltoentity.MindmapModelToEntity;
 import com.pfee.mindmap.modeltoentity.UserMapsModelToEntity;
 import com.pfee.mindmap.modeltoentity.UserModelToEntity;
@@ -95,5 +97,47 @@ public class MindMapControllerTest {
         Assert.assertEquals(EMAIL, um.getUser().getUsername());
         Assert.assertEquals(result.id, um.getMap().getId());
         Assert.assertEquals(0, (long) um.getUserRole());
+    }
+
+    @Test
+    public void CreateMindMapWrongLoginTest() {
+
+        mindmapRepository.deleteAll();
+        userMapsRepository.deleteAll();
+
+        CreateMindMapDtoRequest body = new CreateMindMapDtoRequest("json body", "MyMindMap", true, null);
+
+        String authHeader = "Bearer " + TokenManager.ProduceToken(1000, "WrongEmail@epita.fr");
+        try {
+            mindmapController.CreateMindMap(authHeader, body);
+        }
+        catch (UserDoesNotExistException e) {
+            return;
+        }
+        catch (Exception e) {
+            Assert.fail("Wrong exception");
+        }
+        Assert.fail("Should throw exception");
+    }
+
+    @Test
+    public void CreateMindMapWrongTokenTest() {
+
+        mindmapRepository.deleteAll();
+        userMapsRepository.deleteAll();
+
+        CreateMindMapDtoRequest body = new CreateMindMapDtoRequest("json body", "MyMindMap", true, null);
+
+        String authHeader = "Bearer " + TokenManager.ProduceToken(-1, "WrongEmail@epita.fr");
+        try {
+            mindmapController.CreateMindMap(authHeader, body);
+        }
+        catch (InvalidTokenException e) {
+            return;
+        }
+        catch (Exception e) {
+            Assert.fail("Wrong exception");
+        }
+        Assert.fail("Should throw exception");
     }
 }
