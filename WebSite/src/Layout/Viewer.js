@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import "../Assets/Css/App.css"
 import * as d3 from "d3";
 
-const Viewer = ({file, nodeid, name}) => {
+const Viewer = ({file, mindmapId, nodeid, name}) => {
 
     let DisplayScore = false;
     let minDate = 0;

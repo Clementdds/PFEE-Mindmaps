@@ -13,7 +13,7 @@ const PublicMindmap = ({url, file, nodeId, name, error}) => {
         <React.Fragment>
             {file != null ?
                 <div>
-                    <Viewer file={file} nodeid={nodeId} name={name}/>
+                    <Viewer file={file} nodeid={nodeId} name={name} mindmapId={null}/>
                 </div>
                 :
                 <div>
