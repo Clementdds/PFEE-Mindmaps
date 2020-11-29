@@ -180,7 +180,7 @@ public class MindmapController implements CanLog {
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getMindmapFromId")
     public GetMindmapFromIdDtoResponse GetMindmapFromid(@RequestHeader(value="Authorization") String header,
-                                                  @RequestParam String mapId)
+                                                        @RequestParam String mapId)
     {
         String error = null;
         Integer id = -1;
