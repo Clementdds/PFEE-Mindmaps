@@ -92,7 +92,7 @@ public class LinksService implements CanLog {
             return null;
 
         //We don't check role here because the user is either "shared" or "owner"
-        var usermapsByUserIdAndMapId = usermapsByUserId.stream().filter(usermap -> usermap.getMap().getId().equals(linkEntity.id)).collect(Collectors.toList());
+        var usermapsByUserIdAndMapId = usermapsByUserId.stream().filter(usermap -> usermap.getMap().getId().equals(linkEntity.map.id)).collect(Collectors.toList());
         if (usermapsByUserIdAndMapId.isEmpty())
             return null;
 
