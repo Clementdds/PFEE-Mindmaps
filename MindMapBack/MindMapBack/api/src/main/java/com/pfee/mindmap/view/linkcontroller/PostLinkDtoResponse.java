@@ -6,11 +6,9 @@ public class PostLinkDtoResponse {
 
     public String url;
     public String error;
-    public List<String> addedEmails;
 
-    public PostLinkDtoResponse(final String url, final String error, final List<String> addedEmails) {
+    public PostLinkDtoResponse(final String url, final String error) {
         this.url = url;
         this.error = error;
-        this.addedEmails = addedEmails;
     }
 }

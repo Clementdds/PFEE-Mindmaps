@@ -72,18 +72,19 @@ public class LinkController implements CanLog {
             error = "User does not exist";
 
         if (error != null) {
-            logger().error("Error when trying to get mindmap from id: " + error);
-            return new PostLinkDtoResponse(null, error, null);
+            logger().error("Error with user/token: " + error);
+            return new PostLinkDtoResponse(null, error);
         }
 
-        logger().trace("Start TX change mindmap visibility");
+        /*logger().trace("Start TX change mindmap visibility");
         var mapEntity = mindmapService.ChangeMindmapVisibility(request.isPublic, request.idMindmap);
         logger().trace("End TX change mindmap visibility");
 
         if (mapEntity == null) {
             logger().error("Error while trying to change mindmap visibility");
-            return new PostLinkDtoResponse(null, "Couldn't change mapEntity visibility", null);
-        }
+            return new PostLinkDtoResponse(null, "Couldn't change mapEntity visibility");
+        }*/
+        var mapEntity = mindmapService.findMindmapById(request.idMindmap);
 
         logger().trace("Start TX add link");
         var linkEntity = linksService.CreateLinkToMindmap(mapEntity, request.nodeid);
@@ -91,15 +92,15 @@ public class LinkController implements CanLog {
 
         if (linkEntity == null) {
             logger().error("Error while trying to add link");
-            return new PostLinkDtoResponse(null, "Couldn't add link", null);
+            return new PostLinkDtoResponse(null, "Couldn't add link");
         }
 
-        if (request.isPublic)
-            return new PostLinkDtoResponse(linkEntity.url, null, null);
+        /*if (request.isPublic)
+            return new PostLinkDtoResponse(linkEntity.url, null);*/
 
         //request is private so must share to other users
-        var addedUsers = userMapsService.addUsersForPrivateMap(request.emails, userId, mapEntity.id);
-        return new PostLinkDtoResponse(linkEntity.url, null, addedUsers);
+        //var addedUsers = userMapsService.addUsersForPrivateMap(request.emails, userId, mapEntity.id);
+        return new PostLinkDtoResponse(linkEntity.url, null);
     }
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, path = "getPublicMindmapFromUrl")
