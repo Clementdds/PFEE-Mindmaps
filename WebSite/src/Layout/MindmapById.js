@@ -8,6 +8,8 @@ const MindmapById = ({id, file, nodeId, name, error}) => {
 
     useEffect(() => {
         d3.select("g").remove();
+        mindmapsService.getOwnedMindmaps();
+        mindmapsService.getSharedMindmaps();
         mindmapsService.getMindmapsById({id: id});
     }, [id]);
 

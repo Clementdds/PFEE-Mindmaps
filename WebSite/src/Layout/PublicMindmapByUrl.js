@@ -2,10 +2,14 @@ import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import Viewer from "./Viewer";
 import mindmapsService from "../Services/MindMapsService";
+import * as d3 from "d3";
 
 const PublicMindmapByUrl = ({url, file, nodeId, name, error}) => {
 
     useEffect(() => {
+        d3.select("g").remove();
+        mindmapsService.getOwnedMindmaps();
+        mindmapsService.getSharedMindmaps();
         mindmapsService.getMindmapsByUrl({url: url, Public: true});
     }, [url]);
 

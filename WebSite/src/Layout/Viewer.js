@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import "../Assets/Css/App.css"
 import * as d3 from "d3";
+import linkService from "../Services/LinksService";
 
 const Viewer = ({file, mindmapId, nodeid, name}) => {
 
@@ -368,8 +369,8 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                 .attr('height', 10)
                .attr("xlink:href", "../Ressources/Share.png")
                .on("click", d => {
-                    //SHARED FUNCTION
-               })
+                    linkService.createLink({idMindmap: mindmapId, nodeid: null})
+               });
 
 
           

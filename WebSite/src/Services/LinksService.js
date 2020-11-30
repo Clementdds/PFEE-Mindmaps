@@ -7,6 +7,15 @@ import * as actionTypes from "../Actions/ActionsTypes";
 const API_POST_CREATE_LINKS_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/links/postLink";
 
 /*
+ * Open link in new tab
+ */
+
+const openInNewTab = (url) => {
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (newWindow) newWindow.opener = null;
+};
+
+/*
  * Add a link to mindmap
  */
 
@@ -16,7 +25,6 @@ const callCreateLink = ({idMindmap, nodeid}) => {
         headers: requestHeader.AuthPostHeader(),
         body: JSON.stringify({idMindmap: idMindmap, nodeid: nodeid})
     };
-    console.log(requestOptions);
 
     return fetch(API_POST_CREATE_LINKS_ENDPOINT, requestOptions)
         .then(callHandler.handleResponse);
@@ -26,11 +34,32 @@ const createLink = ({idMindmap, nodeid}) => {
     console.log("Create link service");
 
     store.dispatch({type: actionTypes.LINK_CLEAR_STATE});
+    console.log(idMindmap);
 
     callCreateLink({idMindmap, nodeid})
         .then((data) => {
                 if (data) {
-                    store.dispatch({type: actionTypes.LINK_SET_URL, payload: data.url});
+                    const ownedMap = store.getState().Mindmaps.ownedMindmapsList.find(map => map.id.toString() === idMindmap.toString());
+                    const sharedMap = store.getState().Mindmaps.sharedMindmapsList.find(map => map.id.toString() === idMindmap.toString());
+                    let url = "";
+                    if (ownedMap){
+                        if (ownedMap.isPublic){
+                            url = '/links/public/';
+                        }
+                        else {
+                            url = '/links/private/';
+                        }
+                    }
+                    else if (sharedMap){
+                        if (ownedMap.isPublic){
+                            url = '/links/public/';
+                        }
+                        else {
+                            url = '/links/private/';
+                        }
+                    }
+                    store.dispatch({type: actionTypes.LINK_SET_URL, payload: url + data.url});
+                    openInNewTab(url + data.url);
                 }
             },
             () => {
