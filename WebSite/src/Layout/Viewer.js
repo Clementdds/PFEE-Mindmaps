@@ -547,10 +547,21 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
    
     };
     return (
-            <div className="Viewer-div" id="viewer_div">              
-                <p id="value-time"/>              
-                <input type="range" className="slider" id="myRangeTime"/>
-                <input type="checkbox" id="displayScore"/>
+            <div className="Viewer-div" id="viewer_div">   
+             <div className="row">
+                <div className="col-2 text-center">
+                    <p id="value-time"/>              
+                    <input type="range" className="slider" id="myRangeTime"/>
+                </div>
+                <div className="col text-left">
+                    <p>
+                        Afficher les scores :
+                        <input type="checkbox" id="displayScore"/>
+                    </p>
+                </div>
+             </div>
+               
+                
                 <svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
         );

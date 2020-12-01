@@ -3,8 +3,9 @@ import userService from "../Services/UserService";
 import {Link} from "react-router-dom";
 import '../Assets/Scss/Header.scss'
 import PrivateComponent from "../Components/Private/PrivateComponent";
+import {connect} from "react-redux";
 
-const Header = () => {
+const Header = ({isSignedIn}) => {
     return (
         <header>
             <nav className="navbar ">
@@ -22,13 +23,21 @@ const Header = () => {
                         </h1>
                     </Link>
                 </PrivateComponent>
-
+                {isSignedIn && 
                 <button className="btn btn-outline-light btn-sm" onClick={userService.logout}>
                     Déconnexion
                 </button>
+                }
             </nav>
         </header>
     );
 };
 
-export default Header;
+const MapStateToProps = state => {
+    return {
+        isSignedIn: state.User.isSignedIn
+    };
+};
+
+
+export default connect(MapStateToProps)(Header);
