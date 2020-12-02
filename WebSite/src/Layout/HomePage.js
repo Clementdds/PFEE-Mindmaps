@@ -14,29 +14,34 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
 
     return (
         <React.Fragment>
-            <div className="form-group row marginTop2p" >
+            <div className="form-group row marginTop2p width-100">
                 <div className="col"/>
                 <div className="col">
-                    <div>
-                        {ownedMindmapsList.length ?
-                            ownedMindmapsList.map((x) => {
-                                return (
-                                    <MindmapData Mindmap={x} key={x.id} shared={false}/>
-                                );
-                            }) :
-                            <div/>
-                        }
+
+                    {(!ownedMindmapsList.length && !sharedMindmapsList.length) &&
+                    <div className={"margin-center-homepage"}>
+                        Vous ne possedez aucun mindmap.
                     </div>
-                    <div>
-                    {sharedMindmapsList.length ?
+                    }
+
+                    <React.Fragment>
+                        {ownedMindmapsList.length !== 0 &&
+                        ownedMindmapsList.map((x) => {
+                            return (
+                                <MindmapData Mindmap={x} key={x.id} shared={false}/>
+                            );
+                        })
+                        }
+                    </React.Fragment>
+                    <React.Fragment>
+                        {sharedMindmapsList.length !== 0 &&
                         sharedMindmapsList.map((x) => {
                             return (
                                 <MindmapData Mindmap={x} key={x.id} shared={true}/>
                             );
-                        }) :
-                        <div/>
-                    }
-                    </div>
+                        })
+                        }
+                    </React.Fragment>
                 </div>
                 <div className="col"/>
             </div>
