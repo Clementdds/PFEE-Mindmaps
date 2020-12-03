@@ -47,7 +47,7 @@ public class UserControllerTest {
         Assert.assertEquals(1, test.size());
         UserModel m = test.iterator().next();
         Assert.assertEquals("user.user@user.fr", m.getUsername());
-        Assert.assertEquals("ouioui123", m.getPassword());
+        Assert.assertEquals(userService.hashPwd("ouioui123"), m.getPassword());
         Assert.assertNotNull(result);
         Assert.assertNull(result.error);
         Assert.assertNotNull(result.token);

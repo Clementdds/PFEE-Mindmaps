@@ -36,7 +36,7 @@ public class UserControllerWithContextTest {
         userService = new UserService(userRepository, new UserModelToEntity());
         userController = new UserController(userService);
 
-        UserEntity defaultEntity = userService.save(new UserEntity(0, EMAIL, PWD));
+        UserEntity defaultEntity = userService.save(new UserEntity(0, EMAIL, userService.hashPwd(PWD)));
         token = TokenManager.ProduceToken(defaultEntity.id, EMAIL);
     }
 
