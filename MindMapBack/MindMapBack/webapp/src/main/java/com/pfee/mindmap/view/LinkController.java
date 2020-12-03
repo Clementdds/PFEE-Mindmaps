@@ -5,6 +5,10 @@ import com.pfee.mindmap.domain.service.LinksService;
 import com.pfee.mindmap.domain.service.MindmapService;
 import com.pfee.mindmap.domain.service.UserMapsService;
 import com.pfee.mindmap.domain.service.UserService;
+import com.pfee.mindmap.exceptions.DatabaseInsertionException;
+import com.pfee.mindmap.exceptions.InvalidTokenException;
+import com.pfee.mindmap.exceptions.ResourceNotFoundException;
+import com.pfee.mindmap.exceptions.UserDoesNotExistException;
 import com.pfee.mindmap.view.linkcontroller.GetAllLinksDtoResponse;
 import com.pfee.mindmap.view.linkcontroller.GetPrivateMindmapFromUrlDtoResponse;
 import com.pfee.mindmap.view.linkcontroller.GetPublicMindmapFromUrlDtoResponse;
@@ -66,24 +70,15 @@ public class LinkController implements CanLog {
         String error = null;
         Integer id = -1;
         Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
-        if (userId == -1)
+        if (userId == -1) {
             error = "Invalid token";
-        if (error == null && !userService.userExists(userId))
+            throw new InvalidTokenException();
+        }
+        if (!userService.userExists(userId)) {
             error = "User does not exist";
-
-        if (error != null) {
-            logger().error("Error with user/token: " + error);
-            return new PostLinkDtoResponse(null, error);
+            throw new UserDoesNotExistException();
         }
 
-        /*logger().trace("Start TX change mindmap visibility");
-        var mapEntity = mindmapService.ChangeMindmapVisibility(request.isPublic, request.idMindmap);
-        logger().trace("End TX change mindmap visibility");
-
-        if (mapEntity == null) {
-            logger().error("Error while trying to change mindmap visibility");
-            return new PostLinkDtoResponse(null, "Couldn't change mapEntity visibility");
-        }*/
         var mapEntity = mindmapService.findMindmapById(request.idMindmap);
 
         logger().trace("Start TX add link");
@@ -92,14 +87,9 @@ public class LinkController implements CanLog {
 
         if (linkEntity == null) {
             logger().error("Error while trying to add link");
-            return new PostLinkDtoResponse(null, "Couldn't add link");
+            throw new DatabaseInsertionException();
         }
 
-        /*if (request.isPublic)
-            return new PostLinkDtoResponse(linkEntity.url, null);*/
-
-        //request is private so must share to other users
-        //var addedUsers = userMapsService.addUsersForPrivateMap(request.emails, userId, mapEntity.id);
         return new PostLinkDtoResponse(linkEntity.url, null);
     }
 
@@ -107,11 +97,7 @@ public class LinkController implements CanLog {
     public GetPublicMindmapFromUrlDtoResponse GetPublicMindmapFromUrl(@RequestParam String url) {
         var entity = linksService.GetMindmapFromPublicUrl(url);
         if (entity == null)
-            return new GetPublicMindmapFromUrlDtoResponse(null,
-                                                          null,
-                                                          null,
-                                                          "Couldn't retrieve the entity, are you sure that your url " +
-                                                                  "is good ?");
+            throw new ResourceNotFoundException();
 
         return new GetPublicMindmapFromUrlDtoResponse(entity.nodeid, entity.map.name, entity.map.fullmaptext, null);
     }
@@ -120,22 +106,20 @@ public class LinkController implements CanLog {
     public GetPrivateMindmapFromUrlDtoResponse GetPrivateMindmapFromUrl(@RequestHeader(value = "Authorization") String header,
                                                                         @RequestParam String url) {
         String error = null;
-        Integer userId = -1;
-        if (header != null && !header.equals(""))
-            userId = TokenManager.GetIdFromAuthorizationHeader(header);
-        if (userId == -1)
+        Integer id = -1;
+        Integer userId = TokenManager.GetIdFromAuthorizationHeader(header);
+        if (userId == -1) {
             error = "Invalid token";
-        if (error == null && !userService.userExists(userId))
+            throw new InvalidTokenException();
+        }
+        if (!userService.userExists(userId)) {
             error = "User does not exist";
-        if (error != null)
-            return new GetPrivateMindmapFromUrlDtoResponse(null, null, null, error);
+            throw new UserDoesNotExistException();
+        }
 
         var entity = linksService.GetMindmapFromPrivateUrl(url, userId);
         if (entity == null)
-            return new GetPrivateMindmapFromUrlDtoResponse(null,
-                                                          null,
-                                                          null,
-                                                          "Couldn't retrieve the entity, are you sure that your url is good ?");
+            throw new ResourceNotFoundException();
         return new GetPrivateMindmapFromUrlDtoResponse(entity.nodeid, entity.map.name, entity.map.fullmaptext, null);
     }
 }

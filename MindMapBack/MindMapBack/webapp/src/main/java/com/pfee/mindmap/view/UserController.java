@@ -55,7 +55,7 @@ public class UserController implements CanLog {
             logger().trace("Finish user find email : not found");
         UserEntity user = new UserEntity(0,
                                          body.email,
-                                         body.password);
+                                         userService.hashPwd(body.password));
         UserEntity resultEntity = null;
         logger().trace("Start TX user save");
         resultEntity = userService.save(user);

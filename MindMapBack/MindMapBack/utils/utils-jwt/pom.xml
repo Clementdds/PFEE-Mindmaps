@@ -11,5 +11,11 @@
 
     <artifactId>utils-jwt</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.epita.pfee</groupId>
+            <artifactId>api</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
