@@ -11,7 +11,9 @@ import utils.IterableUtils;
 import utils.Pair;
 import utils.TokenManager;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.security.MessageDigest;
 
 /**
  * @author thomas.curti(thomas.curti @ epita.fr)
@@ -25,9 +27,16 @@ public class UserService implements CanLog {
 
     private final UserModelToEntity userModelToEntity;
 
+    private MessageDigest messageDigest;
+
     public UserService(final UserRepository userRepository, final UserModelToEntity userModelToEntity) {
         this.userRepository = userRepository;
         this.userModelToEntity = userModelToEntity;
+        try {
+            this.messageDigest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<UserEntity> findAllUsers() {
@@ -48,6 +57,12 @@ public class UserService implements CanLog {
         if (model == null)
             return null;
         return userModelToEntity.convert(model);
+    }
+
+    public String hashPwd(String password)
+    {
+        messageDigest.update(password.getBytes());
+        return new String(messageDigest.digest());
     }
 
     public boolean userExists(Integer userId)
@@ -73,7 +88,8 @@ public class UserService implements CanLog {
         UserModel user = userRepository.findByUsername(email);
         if (user == null)
             return new Pair<>(false, "Email not registered");
-        if (user.getPassword().equals(password)) {
+        String hashedPassword = hashPwd(password);
+        if (user.getPassword().equals(hashedPassword)) {
             String token = TokenManager.ProduceToken(user.getId(), user.getUsername());
             return new Pair<>(true, token);
         }
