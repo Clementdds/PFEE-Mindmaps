@@ -2,6 +2,7 @@ package com.pfee.mindmap.domain.service;
 
 import com.pfee.mindmap.domain.entity.LinkEntity;
 import com.pfee.mindmap.domain.entity.MindmapEntity;
+import com.pfee.mindmap.exceptions.UserActionNotAllowed;
 import com.pfee.mindmap.modeltoentity.LinksModelToEntity;
 import com.pfee.mindmap.modeltoentity.MindmapModelToEntity;
 import com.pfee.mindmap.persistence.model.LinksModel;
@@ -89,7 +90,7 @@ public class LinksService implements CanLog {
         var usermapsByUserId = usermaps.stream().filter(usermap -> usermap.getUser().getId() == userid).collect(Collectors.toList());
 
         if (usermapsByUserId.isEmpty())
-            return null;
+            throw new UserActionNotAllowed();
 
         //We don't check role here because the user is either "shared" or "owner"
         var usermapsByUserIdAndMapId = usermapsByUserId.stream().filter(usermap -> usermap.getMap().getId().equals(linkEntity.map.id)).collect(Collectors.toList());
