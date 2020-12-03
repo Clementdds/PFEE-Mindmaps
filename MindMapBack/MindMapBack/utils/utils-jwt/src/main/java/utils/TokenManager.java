@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.pfee.mindmap.exceptions.InvalidTokenException;
 
 public class TokenManager {
     private static String Issuer = "PFEE-Mindmaps";
@@ -36,8 +37,8 @@ public class TokenManager {
                     .withIssuer(Issuer)
                     .build(); //Reusable verifier instance
             jwt = verifier.verify(token);
-        } catch (JWTVerificationException exception){
-            return -1;
+        } catch (Exception exception){
+            throw new InvalidTokenException();
         }
         return jwt.getClaim("userId").asInt();
     }
