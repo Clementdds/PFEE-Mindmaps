@@ -25,7 +25,6 @@ const callCreateLink = ({idMindmap, nodeid}) => {
         headers: requestHeader.AuthPostHeader(),
         body: JSON.stringify({idMindmap: idMindmap, nodeid: nodeid})
     };
-
     return fetch(API_POST_CREATE_LINKS_ENDPOINT, requestOptions)
         .then(callHandler.handleResponse);
 };
@@ -34,7 +33,8 @@ const createLink = ({idMindmap, nodeid}) => {
     console.log("Create link service");
 
     store.dispatch({type: actionTypes.LINK_CLEAR_STATE});
-    console.log(idMindmap);
+ //   console.log(idMindmap);
+  //  console.log("---> " + nodeid);
 
     callCreateLink({idMindmap, nodeid})
         .then((data) => {

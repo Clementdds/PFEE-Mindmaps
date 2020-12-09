@@ -133,8 +133,10 @@ const callGetMindmapsByUrl = ({url, Public}) => {
         method: 'GET',
         headers: requestHeader.AuthHeader(),
     };
-
+  
     const urlAPI = Public ? API_GET_PUBLIC_MINDMAPS_BY_URL_ENDPOINT : API_GET_PRIVATE_MINDMAPS_BY_URL_ENDPOINT;
+    
+    console.log(urlAPI + "?url=" + url, requestOptions);
 
     return fetch(urlAPI + "?url=" + url, requestOptions)
         .then(callHandler.handleResponse);
@@ -142,13 +144,12 @@ const callGetMindmapsByUrl = ({url, Public}) => {
 
 const getMindmapsByUrl = ({url, Public}) => {
     console.log("Get Mindmaps by url service");
-
+    
     mindmapStartLoading();
     store.dispatch({type: actionTypes.VIEWER_CLEAR_STATE});
 
     callGetMindmapsByUrl({url, Public})
         .then((data) => {
-                console.log(data);
                 store.dispatch({type: actionTypes.VIEWER_SET_INPUT_FILE, payload: data.fullmap});
                 store.dispatch({type: actionTypes.VIEWER_SET_NAME, payload: data.name});
                 store.dispatch({type: actionTypes.VIEWER_SET_NODE_ID, payload: data.nodeid});

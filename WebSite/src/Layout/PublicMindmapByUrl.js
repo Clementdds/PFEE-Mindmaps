@@ -5,11 +5,11 @@ import mindmapsService from "../Services/MindMapsService";
 import * as d3 from "d3";
 
 const PublicMindmapByUrl = ({url, file, nodeId, name, error}) => {
-
+    d3.select("g").remove();
     useEffect(() => {
         d3.select("g").remove();
         mindmapsService.getOwnedMindmaps();
-        mindmapsService.getSharedMindmaps();
+        mindmapsService.getSharedMindmaps();   
         mindmapsService.getMindmapsByUrl({url: url, Public: true});
     }, [url]);
 

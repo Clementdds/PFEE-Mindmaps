@@ -5,6 +5,7 @@ import linkService from "../Services/LinksService";
 
 const Viewer = ({file, mindmapId, nodeid, name}) => {
 
+  
     let DisplayScore = false;
     let minDate = 0;
     let maxDate = 0;
@@ -23,6 +24,7 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
 
     const recurseD3Data = function recurse(root, newColor = "", id=0) {
         let currentData = {
+            nodeId:"",
             name: "",
             children: null,
             value: 0,
@@ -30,7 +32,6 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
             score:"",
             id:id,
             countBreak: 1,
-
         };
 
         if (root.attributes !== undefined && root.attributes !== null) {
@@ -49,6 +50,10 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
         {
             value = parseInt(root.attributes.CREATED);
         }
+        if(value === undefined)
+        {
+            value = 0
+        }
         if(value < minDate || minDate === 0)
         {
             minDate = value;
@@ -58,15 +63,12 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
         {
             maxDate = value;
         }
-        
-        //value = new Date(value);
         if (root.elements.length === 0) {
 
-          
-           // let createDate = parseInt(root.attributes.CREATED);
             let count = CountBreakLine(root.attributes.TEXT);
 
             currentData = {
+                nodeId:root.attributes.ID,
                 name: root.attributes.TEXT,
                 value: value,
                 color: newColor,
@@ -88,12 +90,21 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                     children.push(recurse(root.elements[i], newColor, id));
                 }
             }
+            
+         //   console.log(root.attributes.ID + " " + nodeid)
+           /* console.log(root.attributes.ID + " " + nodeid)
+            if(nodeid != null &&  root.attributes.ID != nodeid)
+            {
+               
+                return;
+            }*/
             if(newColor === "")
             {
                 newColor ="#000000"
             }
             let count = CountBreakLine(root.attributes.TEXT);
             currentData = {
+                nodeId:root.attributes.ID,
                 name: root.attributes.TEXT,
                 value: value,
                 children: children,
@@ -267,15 +278,86 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
             }
             return (a.parent === b.parent ? (1 + sep/1.5) : 1 + sep );
         });
+        
+        let itsFinish = false;
+        let pathNodeList = []
+        function searchCorrectNode(actualNode, searchId)
+        {   
+            if(actualNode.value === undefined)
+            {
+                return null  
+            }
+          
+            if(searchId === null)
+            {
+                return actualNode
+            }
+            if( actualNode.nodeId === searchId)
+            {
+                itsFinish = true;
+                return actualNode
+            }
+            if(actualNode.children !== null && actualNode.children !== undefined)
+            {
+                let res = actualNode;
+                let nbChild = actualNode.children.length
+                for (let i = 0; i < nbChild; i++) {
+                    
+                    if(itsFinish === false)
+                    {
+                      
+                        res = searchCorrectNode(actualNode.children[i], searchId)
+                        if(res)
+                        {
+                            pathNodeList.push(actualNode.children[i].nodeId)
+                        }
+                            
+                    }
+                }  
+                return res;
+            }
+        }
+        console.log(pathNodeList)
+        let nodeRoot = data
+        if(nodeid != null)
+        {
+            nodeRoot = searchCorrectNode(data,"ID_" + nodeid)
+        }
 
-        const root = d3.hierarchy(data);
-
+       let root = d3.hierarchy(data)
+       root.children.forEach(item=>item._children = item.children)
+       
         root.x0 = dy / 2;
         root.y0 = 30;
+
+        
         root.descendants().forEach((d, i) => {
             d.id = i;
             d._children = d.children;
-            if (d.depth) d.children = null;
+           
+            if(pathNodeList.length <=  0)
+            {
+                if (d.depth) d.children = null;
+            }
+            else{
+                let notHere = true;
+                for(let i = 0; i < pathNodeList.length; i++)
+                {
+                    if(d.data.nodeId === root.data.nodeId)
+                    {
+                        break
+                    }
+                    if(d.data.nodeId === pathNodeList[i])
+                    {
+                        notHere = false;
+                        break  
+                    }
+                }
+                if(notHere === true)
+                {
+                    if (d.depth) d.children = null;
+                }
+            }
         });
 
         let slider = d3.select("#myRangeTime")
@@ -361,16 +443,21 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                 .attr("stroke-opacity", 1)
                 .attr("id", d => d.id);
              
-            
-           const shareButton = nodeEnter.append("svg:image")
+           if(pathNodeList.length === 0)
+           {
+                const shareButton = nodeEnter.append("svg:image")
                 .attr('x', -10)
                 .attr('y', 0)
                 .attr('width', 10)
                 .attr('height', 10)
-               .attr("xlink:href", "../Ressources/Share.png")
-               .on("click", d => {
-                    linkService.createLink({idMindmap: mindmapId, nodeid: null})
-               });
+                .attr("xlink:href", "../Ressources/Share.png")
+                .on("click", d => {
+                    let tmp = d.data.nodeId.split('_');
+                    let NodeId = parseInt(tmp[1]);
+                    linkService.createLink({idMindmap: mindmapId, nodeid: NodeId})
+                });
+           } 
+          
 
 
           
@@ -432,17 +519,20 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
               .attr("y",  0)
               .each(function (d)
                 {
-                    var arr = d.data.name.split('\n');
-                    d.data.countBreak = arr.length
-                    for (let i = 0; i < arr.length; i++) {
-                        d3.select(this).append("tspan")
-                            .attr("id", "tspan"+d.id + i)
-                            .text(arr[i])
-                            .attr("dy", i ? "1.2em" : 0)
-                            .attr("x", 5)
-                            .attr("text-anchor", "start");
-                          
+                    if(d.data.name != undefined)
+                    {
+                        let arr = d.data.name.split('\n');
+                        d.data.countBreak = arr.length
+                        for (let i = 0; i < arr.length; i++) {
+                            d3.select(this).append("tspan")
+                                .attr("id", "tspan"+d.id + i)
+                                .text(arr[i])
+                                .attr("dy", i ? "1.2em" : 0)
+                                .attr("x", 5)
+                                .attr("text-anchor", "start");
+                        }
                     }
+                   
                 })
                 //.attr("x", d => d._children ? -6 : 6)
                 //.attr("y", d => d._children ? -7 : 0)
@@ -560,8 +650,6 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                     </p>
                 </div>
              </div>
-               
-                
                 <svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
         );
