@@ -16,7 +16,6 @@ header {
   padding: 5px;
   background: #009688;
   color: white;
-  
 }
 
 .Title {  
@@ -59,4 +58,8 @@ header {
 
 .width-100{
   width: 100%;
+}
+
+.viewerNavBar{
+  background-color: #b2dfdb;
 }

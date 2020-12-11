@@ -5,7 +5,6 @@ import linkService from "../Services/LinksService";
 
 const Viewer = ({file, mindmapId, nodeid, name}) => {
 
-  
     let DisplayScore = false;
     let minDate = 0;
     let maxDate = 0;
@@ -90,14 +89,7 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                     children.push(recurse(root.elements[i], newColor, id));
                 }
             }
-            
-         //   console.log(root.attributes.ID + " " + nodeid)
-           /* console.log(root.attributes.ID + " " + nodeid)
-            if(nodeid != null &&  root.attributes.ID != nodeid)
-            {
-               
-                return;
-            }*/
+
             if(newColor === "")
             {
                 newColor ="#000000"
@@ -638,18 +630,23 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
     };
     return (
             <div className="Viewer-div" id="viewer_div">   
-             <div className="row">
-                <div className="col-2 text-center">
-                    <p id="value-time"/>              
-                    <input type="range" className="slider" id="myRangeTime"/>
+                <div className="row viewerNavBar">
+                    <div className="col-2 text-center">
+                        <p id="value-time"/>              
+                        <input type="range" className="slider" id="myRangeTime"/>
+                    </div>
+                    <div className="col-2 text-left">
+                        <p>
+                            Afficher les scores :
+                            <input type="checkbox" id="displayScore"/>
+                        </p>
+                    </div>
+                    <div className="col-2"></div>
+                    <div className="col">  
+                        <h1 className="Title" >{name}</h1>  
+                    </div>
+                    <div className="col"></div>
                 </div>
-                <div className="col text-left">
-                    <p>
-                        Afficher les scores :
-                        <input type="checkbox" id="displayScore"/>
-                    </p>
-                </div>
-             </div>
                 <svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
         );
