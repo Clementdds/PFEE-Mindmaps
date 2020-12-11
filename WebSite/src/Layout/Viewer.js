@@ -5,6 +5,7 @@ import linkService from "../Services/LinksService";
 
 const Viewer = ({file, mindmapId, nodeid, name}) => {
 
+  console.log("The Name ---->" + name);
     let DisplayScore = false;
     let minDate = 0;
     let maxDate = 0;
@@ -89,7 +90,14 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                     children.push(recurse(root.elements[i], newColor, id));
                 }
             }
-
+            
+         //   console.log(root.attributes.ID + " " + nodeid)
+           /* console.log(root.attributes.ID + " " + nodeid)
+            if(nodeid != null &&  root.attributes.ID != nodeid)
+            {
+               
+                return;
+            }*/
             if(newColor === "")
             {
                 newColor ="#000000"

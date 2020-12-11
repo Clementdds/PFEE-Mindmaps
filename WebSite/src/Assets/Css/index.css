@@ -63,3 +63,7 @@ header {
 .viewerNavBar{
   background-color: #b2dfdb;
 }
+
+.alignRight{
+  text-align: right;
+}
