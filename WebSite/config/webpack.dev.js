@@ -36,7 +36,7 @@ const configureDevServer = () => {
 module.exports = merge(common.legacyConfig,
     {
         output: {
-            filename: './js/[name].[hash].js',
+            filename: path.join('js/','[name].[hash].js'),
             publicPath: settings.devServerConfig.public() + '/',
         },
         mode: 'development',
