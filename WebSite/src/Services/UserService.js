@@ -96,7 +96,7 @@ const signUP = ({email, password}) => {
                 }
             },
             () => {
-                store.dispatch({type: actionTypes.USER_ERROR, payload: "Cloud not signUp."})
+                store.dispatch({type: actionTypes.USER_ERROR, payload: "Could not signUp."})
             }
         )
         .finally(userStopLoggingIn);
