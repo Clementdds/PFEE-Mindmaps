@@ -17,7 +17,7 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
             <div className="form-group row marginTop2p width-100">
                 <div className="col"/>
                 <div className="col">
-                    <div class="active-cyan-4 mb-4">
+                <div class="active-cyan-4 mb-4">
                         <input class="form-control" id="myInput" type="text" placeholder="Search" aria-label="Search"/>
                     </div>
                     {(!ownedMindmapsList.length && !sharedMindmapsList.length) &&

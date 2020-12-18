@@ -319,11 +319,14 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
         }
         console.log(pathNodeList)
         let nodeRoot = data
-        if(nodeid != null)
+        if(nodeid !== null)
         {
             nodeRoot = searchCorrectNode(data,"ID_" + nodeid)
         }
 
+        console.log("nodeRoot")
+        console.log(nodeid)
+        
        let root = d3.hierarchy(data)
        root.children.forEach(item=>item._children = item.children)
        
@@ -336,11 +339,11 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
             d._children = d.children;
            
             if(pathNodeList.length <=  0)
-            {
+            {  
                 if (d.depth) d.children = null;
             }
             else{
-                let notHere = true;
+                let notHere = true;              
                 for(let i = 0; i < pathNodeList.length; i++)
                 {
                     if(d.data.nodeId === root.data.nodeId)
@@ -443,7 +446,7 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                 .attr("stroke-opacity", 1)
                 .attr("id", d => d.id);
              
-           if(pathNodeList.length === 0)
+           if(pathNodeList.length === 0 && nodeid === null)
            {
                 const shareButton = nodeEnter.append("svg:image")
                 .attr('x', -10)
