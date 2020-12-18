@@ -239,7 +239,7 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
             i++;
         }
     }
-    
+    var pathNodeList = []
     let allLink = [];
     const constructTree = (data) => {
 
@@ -280,7 +280,7 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
         });
         
         let itsFinish = false;
-        let pathNodeList = []
+        pathNodeList = []
         function searchCorrectNode(actualNode, searchId)
         {   
             if(actualNode.value === undefined)
@@ -640,18 +640,24 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
    
     };
     return (
-            <div className="Viewer-div" id="viewer_div">   
+            <div className="Viewer-div" id="viewer_div"> 
                 <div className="row viewerNavBar">
-                    <div className="col-2 text-center">
-                        <p id="value-time"/>              
-                        <input type="range" className="slider" id="myRangeTime"/>
-                    </div>
-                    <div className="col-2 text-left">
-                        <p>
-                            Afficher les scores :
-                            <input type="checkbox" id="displayScore"/>
-                        </p>
-                    </div>
+                <div className="col">
+                { pathNodeList.length === 0 && nodeid === null &&
+                        <div className="row">
+                            <div className="col text-center">
+                                <p id="value-time"/>              
+                                <input type="range" className="slider" id="myRangeTime"/>
+                            </div>
+                            <div className="coltext-left">
+                                <p>
+                                    Afficher les scores :
+                                    <input type="checkbox" id="displayScore"/>
+                                </p>
+                            </div>
+                        </div>
+                }
+                </div>
                     <div className="col-2"></div>
                     <div className="col">  
                         <h1 className="Title" >{name}</h1>  
