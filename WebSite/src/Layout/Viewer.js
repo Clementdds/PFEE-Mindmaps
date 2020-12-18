@@ -3,9 +3,8 @@ import "../Assets/Css/App.css"
 import * as d3 from "d3";
 import linkService from "../Services/LinksService";
 
-const Viewer = ({file, mindmapId, nodeid, name}) => {
+const Viewer = ({file, mindmapId, nodeid, name, isshared}) => {
 
-  console.log("The Name ---->" + name);
     let DisplayScore = false;
     let minDate = 0;
     let maxDate = 0;
@@ -90,14 +89,6 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                     children.push(recurse(root.elements[i], newColor, id));
                 }
             }
-            
-         //   console.log(root.attributes.ID + " " + nodeid)
-           /* console.log(root.attributes.ID + " " + nodeid)
-            if(nodeid != null &&  root.attributes.ID != nodeid)
-            {
-               
-                return;
-            }*/
             if(newColor === "")
             {
                 newColor ="#000000"
@@ -242,7 +233,6 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
     var pathNodeList = []
     let allLink = [];
     const constructTree = (data) => {
-
         const margin = ({top: 10, right: 120, bottom: 10, left: 40});
         const width = window.innerWidth;
 
@@ -317,15 +307,11 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                 return res;
             }
         }
-        console.log(pathNodeList)
         let nodeRoot = data
         if(nodeid !== null)
         {
             nodeRoot = searchCorrectNode(data,"ID_" + nodeid)
         }
-
-        console.log("nodeRoot")
-        console.log(nodeid)
         
        let root = d3.hierarchy(data)
        root.children.forEach(item=>item._children = item.children)
@@ -446,8 +432,9 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                 .attr("stroke-opacity", 1)
                 .attr("id", d => d.id);
              
-           if(pathNodeList.length === 0 && nodeid === null)
+           if(/*pathNodeList.length === 0 && nodeid === null*/ isshared === false)
            {
+               
                 const shareButton = nodeEnter.append("svg:image")
                 .attr('x', -10)
                 .attr('y', 0)
@@ -524,15 +511,20 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                 {
                     if(d.data.name != undefined)
                     {
+                        
                         let arr = d.data.name.split('\n');
                         d.data.countBreak = arr.length
                         for (let i = 0; i < arr.length; i++) {
-                            d3.select(this).append("tspan")
-                                .attr("id", "tspan"+d.id + i)
-                                .text(arr[i])
-                                .attr("dy", i ? "1.2em" : 0)
-                                .attr("x", 5)
-                                .attr("text-anchor", "start");
+                            let tmp =   d3.select(this).append("tspan")
+                            .attr("id", "tspan"+d.id + i)
+                            .text(arr[i])
+                            .attr("dy", i ? "1.2em" : 0)
+                            .attr("x", 5)
+                            .attr("text-anchor", "start")
+                            if(("ID_"+ nodeid) ===  d.data.nodeId)
+                            {
+                              tmp.attr("font-weight","bold");
+                            }   
                         }
                     }
                    
@@ -643,7 +635,7 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
             <div className="Viewer-div" id="viewer_div"> 
                 <div className="row viewerNavBar">
                 <div className="col">
-                { pathNodeList.length === 0 && nodeid === null &&
+                { isshared === false &&
                         <div className="row">
                             <div className="col text-center">
                                 <p id="value-time"/>              

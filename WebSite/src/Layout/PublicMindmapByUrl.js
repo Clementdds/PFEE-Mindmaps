@@ -5,7 +5,12 @@ import mindmapsService from "../Services/MindMapsService";
 import * as d3 from "d3";
 
 const PublicMindmapByUrl = ({url, file, nodeId, name, error}) => {
-    d3.select("g").remove();
+    if(nodeId !== null)
+    {
+     
+        d3.select("g").remove();
+    }
+
     useEffect(() => {
         d3.select("g").remove();
         mindmapsService.getOwnedMindmaps();
@@ -17,7 +22,7 @@ const PublicMindmapByUrl = ({url, file, nodeId, name, error}) => {
         <React.Fragment>
             {file != null ?
                 <div>
-                    <Viewer file={file} nodeid={nodeId} name={name} mindmapId={null}/>
+                    <Viewer file={file} nodeid={nodeId} name={name} mindmapId={null} isshared={true}/>
                 </div>
                 :
                 <div>
