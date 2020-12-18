@@ -7,7 +7,6 @@ import * as d3 from "d3";
 const PublicMindmapByUrl = ({url, file, nodeId, name, error}) => {
     if(nodeId !== null)
     {
-     
         d3.select("g").remove();
     }
 

@@ -172,19 +172,19 @@ const Viewer = ({file, mindmapId, nodeid, name, isshared}) => {
             return 'grey'
         }
         let scoreNumber = parseInt(score)
-        if(scoreNumber>= 0 && scoreNumber <=4)
+        if(scoreNumber>= 0 && scoreNumber <=200)
         {
             return  'darkred';
         }
-        else if(scoreNumber>= 5 && scoreNumber <=8)
+        else if(scoreNumber>= 5 && scoreNumber <=400)
         {
             return  'red';
         }
-        else if(scoreNumber>= 9 && scoreNumber <=12)
+        else if(scoreNumber>= 9 && scoreNumber <=600)
         {
             return  'gold';
         }
-        else if(scoreNumber>= 13 && scoreNumber <=16)
+        else if(scoreNumber>= 13 && scoreNumber <=800)
         {
             return  'green';
         }
