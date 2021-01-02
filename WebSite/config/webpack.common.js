@@ -152,9 +152,9 @@ const browsersConfig = {
 // Put here base values to be passed to the website, use .env if you want to changes values for yourself
 const valuesConfig = {
     plugins: [
-        new EnvironmentPlugin([
-            'API_BackEnd',
-          ]),
+        new EnvironmentPlugin({
+            API_BackEnd: undefined,
+        }),
     ],
 };
 
