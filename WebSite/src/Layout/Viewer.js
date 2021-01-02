@@ -350,6 +350,7 @@ const Viewer = ({file, mindmapId, nodeid, name, isshared}) => {
         });
 
         let slider = d3.select("#myRangeTime")
+        .style("width", "100%")
         .attr("type", "range")
         .attr("value", minDate)
         .attr("min", minDate)
@@ -638,8 +639,7 @@ const Viewer = ({file, mindmapId, nodeid, name, isshared}) => {
                 { isshared === false &&
                         <div className="row">
                             <div className="col text-center">
-                                <p id="value-time"/>              
-                                <input type="range" className="slider" id="myRangeTime"/>
+                                <p id="value-time"/>                 
                             </div>
                             <div className="coltext-left">
                                 <p>
@@ -654,7 +654,15 @@ const Viewer = ({file, mindmapId, nodeid, name, isshared}) => {
                     <div className="col">  
                         <h1 className="Title" >{name}</h1>  
                     </div>
-                    <div className="col"></div>
+                    <div className="col"></div>             
+                </div>
+                <div className="row viewerNavBar">
+                { isshared === false &&
+                    <div className="col text-center">
+                                  
+                        <input type="range" className="slider" id="myRangeTime"/>
+                    </div>
+                }
                 </div>
                 <svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
