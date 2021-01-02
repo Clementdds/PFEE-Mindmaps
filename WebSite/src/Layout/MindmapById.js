@@ -16,7 +16,7 @@ const MindmapById = ({id, file, nodeId, name, error}) => {
     return (
         <React.Fragment>
             {file != null ?
-                <Viewer file={file} nodeid={nodeId} name={name} mindmapId={id}/>
+                <Viewer file={file} nodeid={nodeId} name={name} mindmapId={id} isshared={false}/>
                 :
                 <div>
                     {error}

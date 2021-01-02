@@ -38,8 +38,6 @@ const callLogin = ({email, password}) => {
 };
 
 const login = ({email, password}) => {
-    console.log("Login service");
-    console.log(email, password);
 
     userIsLoggingIn();
 
@@ -79,8 +77,6 @@ const callSignUP = ({email, password}) => {
 };
 
 const signUP = ({email, password}) => {
-    console.log("Sign up service");
-    console.log(email, password);
 
     userIsLoggingIn();
 
@@ -117,7 +113,6 @@ const callLogout = () => {
 };
 
 const logout = () => {
-    console.log("Logout service");
 
     callLogout()
         .finally(() => {

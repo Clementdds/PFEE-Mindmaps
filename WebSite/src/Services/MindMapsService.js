@@ -39,7 +39,6 @@ const callGetOwnedMindmaps = () => {
 };
 
 const getOwnedMindmaps = () => {
-    console.log("Get owned Mindmaps service");
 
     mindmapStartLoading();
 
@@ -73,7 +72,6 @@ const callGetSharedMindmaps = () => {
 };
 
 const getSharedMindmaps = () => {
-    console.log("Get shared Mindmaps service");
 
     mindmapStartLoading();
 
@@ -107,7 +105,6 @@ const callGetMindmapsById = ({id}) => {
 };
 
 const getMindmapsById = ({id}) => {
-    console.log("Get Mindmaps by id service");
 
     mindmapStartLoading();
     store.dispatch({type: actionTypes.VIEWER_CLEAR_STATE});
@@ -135,15 +132,12 @@ const callGetMindmapsByUrl = ({url, Public}) => {
     };
   
     const urlAPI = Public ? API_GET_PUBLIC_MINDMAPS_BY_URL_ENDPOINT : API_GET_PRIVATE_MINDMAPS_BY_URL_ENDPOINT;
-    
-    console.log(urlAPI + "?url=" + url, requestOptions);
 
     return fetch(urlAPI + "?url=" + url, requestOptions)
         .then(callHandler.handleResponse);
 };
 
 const getMindmapsByUrl = ({url, Public}) => {
-    console.log("Get Mindmaps by url service");
     
     mindmapStartLoading();
     store.dispatch({type: actionTypes.VIEWER_CLEAR_STATE});
@@ -172,21 +166,16 @@ const callDeleteMindmapsById = ({id}) => {
         headers: requestHeader.AuthHeader(),
     };
 
-    console.log(requestOptions);
-
     return fetch(API_DELETE_MINDMAPS_BY_ID_ENDPOINT + id, requestOptions)
         .then(callHandler.handleResponse);
 };
 
 const deleteMindmapsById = ({id}) => {
-    console.log("Delete Mindmaps by id service");
 
     mindmapStartLoading();
 
     callDeleteMindmapsById({id})
-        .then((data) => {
-                console.log(data)
-            },
+        .then(() => {},
             () => {
                 store.dispatch({type: actionTypes.MINDMAPS_ERROR, payload: "Could not delete mindmap."})
             }

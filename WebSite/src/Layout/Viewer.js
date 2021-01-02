@@ -1,11 +1,11 @@
 import React, {useEffect} from "react";
+import Share from "../../public/Share.png"
 import "../Assets/Css/App.css"
 import * as d3 from "d3";
 import linkService from "../Services/LinksService";
 
-const Viewer = ({file, mindmapId, nodeid, name}) => {
+const Viewer = ({file, mindmapId, nodeid, name, isshared}) => {
 
-  
     let DisplayScore = false;
     let minDate = 0;
     let maxDate = 0;
@@ -90,14 +90,6 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                     children.push(recurse(root.elements[i], newColor, id));
                 }
             }
-            
-         //   console.log(root.attributes.ID + " " + nodeid)
-           /* console.log(root.attributes.ID + " " + nodeid)
-            if(nodeid != null &&  root.attributes.ID != nodeid)
-            {
-               
-                return;
-            }*/
             if(newColor === "")
             {
                 newColor ="#000000"
@@ -181,19 +173,19 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
             return 'grey'
         }
         let scoreNumber = parseInt(score)
-        if(scoreNumber>= 0 && scoreNumber <=4)
+        if(scoreNumber>= 0 && scoreNumber <=200)
         {
             return  'darkred';
         }
-        else if(scoreNumber>= 5 && scoreNumber <=8)
+        else if(scoreNumber>= 5 && scoreNumber <=400)
         {
             return  'red';
         }
-        else if(scoreNumber>= 9 && scoreNumber <=12)
+        else if(scoreNumber>= 9 && scoreNumber <=600)
         {
             return  'gold';
         }
-        else if(scoreNumber>= 13 && scoreNumber <=16)
+        else if(scoreNumber>= 13 && scoreNumber <=800)
         {
             return  'green';
         }
@@ -239,10 +231,9 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
             i++;
         }
     }
-    
+    var pathNodeList = []
     let allLink = [];
     const constructTree = (data) => {
-
         const margin = ({top: 10, right: 120, bottom: 10, left: 40});
         const width = window.innerWidth;
 
@@ -280,7 +271,7 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
         });
         
         let itsFinish = false;
-        let pathNodeList = []
+        pathNodeList = []
         function searchCorrectNode(actualNode, searchId)
         {   
             if(actualNode.value === undefined)
@@ -317,13 +308,12 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                 return res;
             }
         }
-        console.log(pathNodeList)
         let nodeRoot = data
-        if(nodeid != null)
+        if(nodeid !== null)
         {
             nodeRoot = searchCorrectNode(data,"ID_" + nodeid)
         }
-
+        
        let root = d3.hierarchy(data)
        root.children.forEach(item=>item._children = item.children)
        
@@ -336,11 +326,11 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
             d._children = d.children;
            
             if(pathNodeList.length <=  0)
-            {
+            {  
                 if (d.depth) d.children = null;
             }
             else{
-                let notHere = true;
+                let notHere = true;              
                 for(let i = 0; i < pathNodeList.length; i++)
                 {
                     if(d.data.nodeId === root.data.nodeId)
@@ -361,6 +351,7 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
         });
 
         let slider = d3.select("#myRangeTime")
+        .style("width", "100%")
         .attr("type", "range")
         .attr("value", minDate)
         .attr("min", minDate)
@@ -443,14 +434,15 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                 .attr("stroke-opacity", 1)
                 .attr("id", d => d.id);
              
-           if(pathNodeList.length === 0)
+           if(/*pathNodeList.length === 0 && nodeid === null*/ isshared === false)
            {
+               
                 const shareButton = nodeEnter.append("svg:image")
                 .attr('x', -10)
                 .attr('y', 0)
                 .attr('width', 10)
                 .attr('height', 10)
-                .attr("xlink:href", "../Ressources/Share.png")
+                .attr("xlink:href", Share)
                 .on("click", d => {
                     let tmp = d.data.nodeId.split('_');
                     let NodeId = parseInt(tmp[1]);
@@ -521,15 +513,20 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
                 {
                     if(d.data.name != undefined)
                     {
+                        
                         let arr = d.data.name.split('\n');
                         d.data.countBreak = arr.length
                         for (let i = 0; i < arr.length; i++) {
-                            d3.select(this).append("tspan")
-                                .attr("id", "tspan"+d.id + i)
-                                .text(arr[i])
-                                .attr("dy", i ? "1.2em" : 0)
-                                .attr("x", 5)
-                                .attr("text-anchor", "start");
+                            let tmp =   d3.select(this).append("tspan")
+                            .attr("id", "tspan"+d.id + i)
+                            .text(arr[i])
+                            .attr("dy", i ? "1.2em" : 0)
+                            .attr("x", 5)
+                            .attr("text-anchor", "start")
+                            if(("ID_"+ nodeid) ===  d.data.nodeId)
+                            {
+                              tmp.attr("font-weight","bold");
+                            }   
                         }
                     }
                    
@@ -637,19 +634,37 @@ const Viewer = ({file, mindmapId, nodeid, name}) => {
    
     };
     return (
-            <div className="Viewer-div" id="viewer_div">   
-             <div className="row">
-                <div className="col-2 text-center">
-                    <p id="value-time"/>              
-                    <input type="range" className="slider" id="myRangeTime"/>
+            <div className="Viewer-div" id="viewer_div"> 
+                <div className="row viewerNavBar">
+                <div className="col">
+                { isshared === false &&
+                        <div className="row">
+                            <div className="col text-center">
+                                <p id="value-time"/>                 
+                            </div>
+                            <div className="coltext-left">
+                                <p>
+                                    Afficher les scores :
+                                    <input type="checkbox" id="displayScore"/>
+                                </p>
+                            </div>
+                        </div>
+                }
                 </div>
-                <div className="col text-left">
-                    <p>
-                        Afficher les scores :
-                        <input type="checkbox" id="displayScore"/>
-                    </p>
+                    <div className="col-2"></div>
+                    <div className="col">  
+                        <h1 className="Title" >{name}</h1>  
+                    </div>
+                    <div className="col"></div>             
                 </div>
-             </div>
+                <div className="row viewerNavBar">
+                { isshared === false &&
+                    <div className="col text-center">
+                                  
+                        <input type="range" className="slider" id="myRangeTime"/>
+                    </div>
+                }
+                </div>
                 <svg  className = "Viewer-svg"   viewBox="0 0 30 30"   id = "svg" />
             </div>
         );

@@ -5,7 +5,7 @@ import '../Assets/Scss/Header.scss'
 import PrivateComponent from "../Components/Private/PrivateComponent";
 import {connect} from "react-redux";
 
-const Header = ({isSignedIn}) => {
+const Header = ({isSignedIn, userEmail}) => {
     return (
         <header>
             <nav className="navbar ">
@@ -23,10 +23,19 @@ const Header = ({isSignedIn}) => {
                         </h1>
                     </Link>
                 </PrivateComponent>
+               
                 {isSignedIn && 
-                <button className="btn btn-outline-light btn-sm" onClick={userService.logout}>
-                    Déconnexion
-                </button>
+                <div>
+                    {userEmail}
+                    <div className="alignRight">
+                        <button className="btn btn-outline-light btn-sm" onClick={userService.logout}>
+                        Déconnexion
+                    </button>
+                    </div>
+                    
+                  
+                </div>
+               
                 }
             </nav>
         </header>
@@ -35,7 +44,8 @@ const Header = ({isSignedIn}) => {
 
 const MapStateToProps = state => {
     return {
-        isSignedIn: state.User.isSignedIn
+        isSignedIn: state.User.isSignedIn,
+        userEmail: state.User.email
     };
 };
 

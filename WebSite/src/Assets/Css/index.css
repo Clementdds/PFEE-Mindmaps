@@ -14,9 +14,8 @@ code {
 
 header {
   padding: 5px;
-  background: #009688;
+  background: #2982F0;
   color: white;
-  
 }
 
 .Title {  
@@ -25,12 +24,12 @@ header {
 }
 
 .text-icon{
-  color: #009688;
+  color: #2982F0;
 }
 
 .formulaire{
   margin-top: 10%;
-  background-color: #b2dfdb;
+  background-color: #88CCFF;
 }
 
 .marginBottom{
@@ -59,4 +58,12 @@ header {
 
 .width-100{
   width: 100%;
+}
+
+.viewerNavBar{
+  background-color:#88CCFF ;
+}
+
+.alignRight{
+  text-align: right;
 }
