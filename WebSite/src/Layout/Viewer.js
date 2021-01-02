@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import Share from "../../public/Share.png"
 import "../Assets/Css/App.css"
 import * as d3 from "d3";
 import linkService from "../Services/LinksService";
@@ -441,7 +442,7 @@ const Viewer = ({file, mindmapId, nodeid, name, isshared}) => {
                 .attr('y', 0)
                 .attr('width', 10)
                 .attr('height', 10)
-                .attr("xlink:href", "../Ressources/Share.png")
+                .attr("xlink:href", Share)
                 .on("click", d => {
                     let tmp = d.data.nodeId.split('_');
                     let NodeId = parseInt(tmp[1]);

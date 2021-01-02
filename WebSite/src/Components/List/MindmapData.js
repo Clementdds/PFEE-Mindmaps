@@ -1,4 +1,5 @@
 import React from "react";
+import ShareIcon from "../../../public/Share.png"
 import {Link} from "react-router-dom";
 import mindmapsService from "../../Services/MindMapsService";
 import linkService from "../../Services/LinksService";
@@ -71,7 +72,7 @@ const MindmapData = ({Mindmap, shared}) => {
                             </svg>
                         </button>
                         <button onClick={handleCreateLinkClick} className="btn btn-light">
-                            <img src="../../Ressources/Share.png" width="25" height="25"/>
+                            <img src={ShareIcon} width="25" height="25"/>
                            
                         </button>
                     </div>
