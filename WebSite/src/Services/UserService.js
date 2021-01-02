@@ -1,13 +1,13 @@
-import {API_AUTHENTICATION_ENDPOINT_HTTP} from "../config";
+import {API_BackEnd} from "../config";
 import requestHeader from "../Helpers/AuthHeaders";
 import history from "../Helpers/History";
 import * as actionTypes from '../Actions/ActionsTypes'
 import store from "../Store/ConfigureStore";
 import callHandler from "../Helpers/HandleResponse";
 
-const API_SIGN_IN_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/users/login";
-const API_SIGN_UP_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/users/signup";
-const API_SIGN_OUT_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/users/logout";
+const API_SIGN_IN_ENDPOINT = API_BackEnd + "/users/login";
+const API_SIGN_UP_ENDPOINT = API_BackEnd + "/users/signup";
+const API_SIGN_OUT_ENDPOINT = API_BackEnd + "/users/logout";
 
 /*
  * Function called to set logging in to true/false and reset error since (new error / no error) is supposed to be set

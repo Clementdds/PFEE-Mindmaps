@@ -1,15 +1,15 @@
-import {API_AUTHENTICATION_ENDPOINT_HTTP} from "../config";
+import {API_BackEnd} from "../config";
 import requestHeader from "../Helpers/AuthHeaders";
 import * as actionTypes from '../Actions/ActionsTypes'
 import store from "../Store/ConfigureStore";
 import callHandler from "../Helpers/HandleResponse";
 
-const API_GET_MINDMAPS_OWNED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getowned";
-const API_GET_MINDMAPS_SHARED_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getshared";
-const API_GET_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/getMindmapFromId";
-const API_DELETE_MINDMAPS_BY_ID_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/";
-const API_GET_PUBLIC_MINDMAPS_BY_URL_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/links/getPublicMindmapFromUrl";
-const API_GET_PRIVATE_MINDMAPS_BY_URL_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/links/getPrivateMindmapFromUrl";
+const API_GET_MINDMAPS_OWNED_ENDPOINT = API_BackEnd + "/mindmaps/getowned";
+const API_GET_MINDMAPS_SHARED_ENDPOINT = API_BackEnd + "/mindmaps/getshared";
+const API_GET_MINDMAPS_BY_ID_ENDPOINT = API_BackEnd + "/mindmaps/getMindmapFromId";
+const API_DELETE_MINDMAPS_BY_ID_ENDPOINT = API_BackEnd + "/mindmaps/";
+const API_GET_PUBLIC_MINDMAPS_BY_URL_ENDPOINT = API_BackEnd + "/links/getPublicMindmapFromUrl";
+const API_GET_PRIVATE_MINDMAPS_BY_URL_ENDPOINT = API_BackEnd + "/links/getPrivateMindmapFromUrl";
 
 /*
  * Function called to set loading to true/false and reset error since (new error / no error) is supposed to be set

@@ -1,10 +1,10 @@
-import {API_AUTHENTICATION_ENDPOINT_HTTP} from "../config";
+import {API_BackEnd} from "../config";
 import requestHeader from "../Helpers/AuthHeaders";
 import * as actionTypes from '../Actions/ActionsTypes'
 import store from "../Store/ConfigureStore";
 import callHandler from "../Helpers/HandleResponse";
 
-const API_POST_MINDMAPS_CREATE_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/mindmaps/create";
+const API_POST_MINDMAPS_CREATE_ENDPOINT = API_BackEnd + "/mindmaps/create";
 
 /*
  * Function called to set loading to true/false and reset error since (new error / no error) is supposed to be set

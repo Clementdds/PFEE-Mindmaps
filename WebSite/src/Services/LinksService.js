@@ -1,10 +1,10 @@
-import {API_AUTHENTICATION_ENDPOINT_HTTP} from "../config";
+import {API_BackEnd} from "../config";
 import requestHeader from "../Helpers/AuthHeaders";
 import callHandler from "../Helpers/HandleResponse";
 import store from "../Store/ConfigureStore";
 import * as actionTypes from "../Actions/ActionsTypes";
 
-const API_POST_CREATE_LINKS_ENDPOINT = API_AUTHENTICATION_ENDPOINT_HTTP + "/links/postLink";
+const API_POST_CREATE_LINKS_ENDPOINT = API_BackEnd + "/links/postLink";
 
 /*
  * Open link in new tab

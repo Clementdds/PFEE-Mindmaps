@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-export const API_AUTHENTICATION_ENDPOINT_HTTP = process.env
-    .API_AUTHENTICATION_ENDPOINT_HTTP
-    ? process.env.API_AUTHENTICATION_ENDPOINT_HTTP
+export const API_BackEnd = process.env
+    .API_BackEnd
+    ? process.env.API_BackEnd
     : 'http://localhost:9999';
