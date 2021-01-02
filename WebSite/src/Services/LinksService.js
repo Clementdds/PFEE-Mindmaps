@@ -30,11 +30,8 @@ const callCreateLink = ({idMindmap, nodeid}) => {
 };
 
 const createLink = ({idMindmap, nodeid}) => {
-    console.log("Create link service");
 
     store.dispatch({type: actionTypes.LINK_CLEAR_STATE});
- //   console.log(idMindmap);
-  //  console.log("---> " + nodeid);
 
     callCreateLink({idMindmap, nodeid})
         .then((data) => {

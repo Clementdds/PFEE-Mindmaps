@@ -37,7 +37,6 @@ const callPostCreateMindmaps = ({file, name, isPublic, emails}) => {
 };
 
 const postCreateMindmaps = ({file, name, isPublic, emails}) => {
-    console.log("Create Mindmaps");
 
     formStartLoading();
 
