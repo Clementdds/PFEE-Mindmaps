@@ -40,9 +40,10 @@ sleep 19 #backend take around 19 sec to start
 #Website
 cd ../../WebSite
 
-export API_AUTHENTICATION_ENDPOINT_HTTP="http://$(curl ifconfig.me)/"
-echo "$API_AUTHENTICATION_ENDPOINT_HTTP" > /tmp/auth_endpoint.txt
-sudo sed -i "s/localhost/$(curl ifconfig.me)/g" src/config.js
+API_BackEnd="http://$(curl ifconfig.me):9999"
+echo "$API_BackEnd" > /tmp/auth_endpoint.txt
+echo API_BackEnd="$API_BackEnd" > .env
+#sudo sed -i "s/localhost/$(curl ifconfig.me)/g" src/config.js
 
 sudo npm install
 sudo npm run-script build > /tmp/log_build_website.txt

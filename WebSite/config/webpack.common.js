@@ -123,7 +123,6 @@ const baseConfig = {
     entry: configureEntries(),
     output: {
         path: path.resolve(__dirname, settings.paths.dist.base),
-        filename: './js/[name].[hash].js',
     },
     module: {
         rules: [configureImageLoader(), configureScssLoader()],
