@@ -58,7 +58,7 @@ module.exports = [
     merge(common.legacyConfig, {
         output: {
             publicPath: '/',
-            filename: path.join('/js/','[name].[chunkhash].js'),
+            filename: path.join('js/','[name].[chunkhash].js'),
         },
         mode: 'production',
         devtool: 'source-map',
