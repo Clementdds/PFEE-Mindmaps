@@ -12,35 +12,36 @@ data "template_file" "init_website" {
   }
 }
 
-resource "aws_instance" "site" {
-  security_groups = [ aws_security_group.ec2.id ]
-  ami             = "ami-0885b1f6bd170450c"
-  instance_type   = "t2.micro"
-  key_name        = "admin"
-  subnet_id = aws_subnet.subnet-public-1.id
+resource "aws_launch_configuration" "launch-conf-asp" {
+  name   = "tf-launch-config"
+  image_id    = "ami-0885b1f6bd170450c"
+  instance_type  = "t2.micro"
   user_data = data.template_file.init_website.rendered 
+  key_name = "admin"
+
+  security_groups = [ aws_security_group.ec2.id ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 output rds_endpoint {
   value       = aws_db_instance.postgres.endpoint
   description = "rds endpoint"
-  depends_on  = [ aws_instance.site ]
 }
 
 output rds_password {
   value       = var.database_admin_password
   description = "rds password"
-  depends_on  = [ aws_instance.site ]
 }
 
 output rds_dbname {
   value       = var.database_name
   description = "rds dbname"
-  depends_on  = [ aws_instance.site ]
 }
 
 output rds_database_admin_username {
   value       = var.database_admin_username
   description = "rds db admin username"
-  depends_on  = [ aws_instance.site ]
 }
