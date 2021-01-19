@@ -3,12 +3,8 @@ import {connect} from "react-redux";
 import * as actionTypes from '../Actions/ActionsTypes'
 import ListEmailValidator from "../Components/Forms/ListEmailValidator";
 import formService from "../Services/FormService";
-import { useHistory } from "react-router-dom";
-
 
 const FormNewMindmap = ({error, dispatch}) => {
-
-    let history = useHistory();
 
     const [name, setName] = useState('');
     const [isPublic, setIsPublic] = useState(false);
@@ -98,11 +94,6 @@ const FormNewMindmap = ({error, dispatch}) => {
                         name: name,
                         emails: (isPublic || listEmails === '') ? null : listEmails.trim().split(';')
                     });
-
-                    if (error == null){
-                        history.push("/");
-                    }
-
 
                 } catch (e) {
                     dispatch({type: actionTypes.FORM_ERROR, payload: "File does not respect xml format"});

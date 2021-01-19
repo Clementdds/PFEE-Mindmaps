@@ -6,6 +6,9 @@ const initialState = {
     sharedMindmapsList: [],
     url: null,
     error: null,
+    searchText: '',
+    searchOwnedMindmapsList: [],
+    searchSharedMindmapsList: [],
 };
 
 const MindmapsReducer = (state = initialState, action) => {
@@ -56,6 +59,42 @@ const MindmapsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 error: null,
+            };
+
+        // Search
+        // Input
+        case actionTypes.SEARCH_TEXT_SET:
+            return {
+                ...state,
+                searchText: action.payload,
+            };
+        case actionTypes.SEARCH_TEXT_RESET:
+            return {
+                ...state,
+                searchText: '',
+            };
+
+        // Result
+        case actionTypes.SEARCH_RESULT_SET:
+            const searchTextLowerCase = state.searchText.toLowerCase();
+            const searchOwned = state.ownedMindmapsList.filter((item) => {
+                const itemLowerCase = item.name.toLowerCase();
+                return itemLowerCase.includes(searchTextLowerCase);
+            });
+            const searchShared = state.sharedMindmapsList.filter((item) => {
+                const itemLowerCase = item.name.toLowerCase();
+                return itemLowerCase.includes(searchTextLowerCase);
+            });
+            return {
+                ...state,
+                searchOwnedMindmapsList: searchOwned,
+                searchSharedMindmapsList: searchShared,
+            };
+        case actionTypes.SEARCH_RESULT_RESET:
+            return {
+                ...state,
+                searchOwnedMindmapsList: state.ownedMindmapsList,
+                searchSharedMindmapsList: state.sharedMindmapsList,
             };
 
         // Clear state

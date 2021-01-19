@@ -22,6 +22,7 @@ const mindmapStartLoading = () => {
 
 const mindmapStopLoading = () => {
     store.dispatch({type: actionTypes.MINDMAPS_RESET_LOADING});
+    store.dispatch({type: actionTypes.SEARCH_TEXT_RESET});
 };
 
 /*

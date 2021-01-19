@@ -1,10 +1,21 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import {connect} from "react-redux";
 import mindmapsService from "../Services/MindMapsService";
 import MindmapData from "../Components/List/MindmapData";
 import * as actionTypes from '../Actions/ActionsTypes'
 
-const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
+const HomePage = ({searchOwnedMindmapsList, searchSharedMindmapsList, error, dispatch}) => {
+
+    const cancelShowSearch = useCallback(() => {
+        dispatch({type: actionTypes.SEARCH_TEXT_RESET});
+        document.getElementById('myInput').value = '';
+    }, [dispatch]);
+
+    const handleOnChange = useCallback((e) => {
+        dispatch({type: actionTypes.SEARCH_TEXT_SET, payload: e.target.value});
+    }, [
+        dispatch,
+    ]);
 
     useEffect(() => {
         mindmapsService.getOwnedMindmaps();
@@ -18,16 +29,18 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
                 <div className="col"/>
                 <div className="col">
                 <div className="active-cyan-4 mb-4">
-                        <input className="form-control" id="myInput" type="text" placeholder="Search" aria-label="Search"/>
+                        <input className="form-control" id="myInput" type="text" placeholder="Search" aria-label="Search"
+                            onFocus={cancelShowSearch}
+                            onChange={handleOnChange}/>
                     </div>
-                    {(!ownedMindmapsList.length && !sharedMindmapsList.length) &&
+                    {(!searchOwnedMindmapsList.length && !searchSharedMindmapsList.length) &&
                     <div className={"margin-center-homepage"}>
                         Vous ne possedez aucun mindmap.
                     </div>
                     }
                     <React.Fragment>
-                        {ownedMindmapsList.length !== 0 &&
-                        ownedMindmapsList.map((x) => {
+                        {searchOwnedMindmapsList.length !== 0 &&
+                        searchOwnedMindmapsList.map((x) => {
                             return (
                                 <MindmapData Mindmap={x} key={x.id} shared={false}/>
                             );
@@ -35,8 +48,8 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
                         }
                     </React.Fragment>
                     <React.Fragment>
-                        {sharedMindmapsList.length !== 0 &&
-                        sharedMindmapsList.map((x) => {
+                        {searchSharedMindmapsList.length !== 0 &&
+                        searchSharedMindmapsList.map((x) => {
                             return (
                                 <MindmapData Mindmap={x} key={x.id} shared={true}/>
                             );
@@ -53,8 +66,8 @@ const HomePage = ({ownedMindmapsList, sharedMindmapsList, error, dispatch}) => {
 
 const MapStateToProps = state => {
     return {
-        ownedMindmapsList: state.Mindmaps.ownedMindmapsList,
-        sharedMindmapsList: state.Mindmaps.sharedMindmapsList,
+        searchOwnedMindmapsList: state.Mindmaps.searchOwnedMindmapsList,
+        searchSharedMindmapsList: state.Mindmaps.searchSharedMindmapsList,
         error: state.Mindmaps.error,
     };
 };
