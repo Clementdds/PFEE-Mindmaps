@@ -1,10 +1,10 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {connect} from "react-redux";
 import userService from '../Services/UserService'
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import * as actionTypes from "../Actions/ActionsTypes";
 
-const SignUpPage = ({error, dispatch}) => {
+const SignUpPage = ({isSignedIn, error, dispatch}) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -59,6 +59,10 @@ const SignUpPage = ({error, dispatch}) => {
 
     return (
         <div>
+
+            {
+                isSignedIn && <Redirect to="/"/>
+            }
               <div className="form-group row" >
                 <div className="col"/>
                 <div className="col  formulaire">
@@ -145,6 +149,7 @@ const SignUpPage = ({error, dispatch}) => {
 
 const MapStateToProps = state => {
     return {
+        isSignedIn: state.User.isSignedIn,
         error: state.User.error
     };
 };
