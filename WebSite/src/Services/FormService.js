@@ -43,7 +43,7 @@ const postCreateMindmaps = ({file, name, isPublic, emails}) => {
     callPostCreateMindmaps({file, name, isPublic, emails})
         .then((data) => {
                 if (data) {
-                    const result = "Mindmap successfully created with id " + data.id;
+                    const result = "Mindmap '" + name + "' successfully created.";
                     store.dispatch({type: actionTypes.FORM_RESULT, payload: result});
                 }
             },
